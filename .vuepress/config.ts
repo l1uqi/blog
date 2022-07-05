@@ -45,7 +45,7 @@ export default defineUserConfig({
     [
       { text: '首页', link: '/' },
       { text: '分类', link: '/categories/Coding/1/' },
-      { text: '标签', link: '/tags/tag1/1/' },
+      { text: '标签', link: '/tags/CSS/1/' },
     ],
     // valineConfig 配置与 1.x 一致
     // valineConfig: {
