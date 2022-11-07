@@ -1,0 +1,84 @@
+# Header
+menu:
+  首页: /
+  时间轴: /archives/
+  标签: /tags/
+  分类: /categories/
+rss: /atom.xml
+
+# Content
+excerpt_link: Read More
+fancybox: true
+
+# Sidebar
+sidebar: right
+widgets:
+- category
+- tag
+- tagcloud
+- archive
+- recent_posts
+
+# display widgets at the bottom of index pages (pagination == 2)
+index_widgets:
+# - category
+# - tagcloud
+# - archive
+
+# widget behavior
+archive_type: 'monthly'
+show_count: false
+
+# Miscellaneous
+google_analytics:
+gauges_analytics:
+favicon: /favicon.png
+twitter:
+google_plus:
+fb_admins:
+fb_app_id:
+aside:
+  enable: true
+  hide: false
+  button: true
+  mobile: true # display on mobile
+  position: right # left or right
+  display:
+    archive: true
+    tag: true
+    category: true
+  card_author:
+    enable: true
+    description:
+    button:
+      enable: true
+      icon: fab fa-github
+      text: Follow Me
+      link: https://github.com/l1uqi
+disable_top_img: true
+# Avatar (头像)
+avatar:
+  img: https://avatars.githubusercontent.com/u/70128222?v=4
+  effect: false
+social:
+  fab fa-github: https://github.com/l1uqi || Github
+  fas fa-envelope: chyi_fox@foxmail.com || Email
+footer:
+  owner:
+    enable: true
+    since: 2019
+runtimeshow:
+  enable: true
+  publish_date: 1/1/2019 00:00:00  
+busuanzi:
+  site_uv: true
+  site_pv: true
+  page_pv: true
+cover:
+  # 是否顯示文章封面
+  index_enable: true
+post_meta:
+  page:
+    tags: true
+  post:
+    tags: true
