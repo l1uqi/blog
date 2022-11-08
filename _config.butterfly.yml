@@ -76,7 +76,7 @@ busuanzi:
   page_pv: true
 cover:
   # 是否顯示文章封面
-  index_enable: true
+  index_enable: false
 post_meta:
   page:
     tags: true
