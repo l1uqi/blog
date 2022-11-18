@@ -6,7 +6,7 @@ categories:
   - 前端
 tags:
   - 图片加载
-cover: https://user-images.githubusercontent.com/70128222/194988917-dc95c10c-a1b2-4dfb-b322-af1d8671e0de.png
+cover: https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/1007338.jpg
 ---
 
 ## 背景
@@ -15,7 +15,7 @@ cover: https://user-images.githubusercontent.com/70128222/194988917-dc95c10c-a1b
 业务场景是在列表中监听商品是否曝光, 如果用户可见就进行商品上报。
 上报是用 Image()传输。
 
-[为什么要用 image 进行埋点上报 3.埋点上报](https://hello7cat.com/2022/11/07/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9)
+[为什么要用 image 进行埋点上报](https://hello7cat.com/2022/11/10/前端业务埋点数据上报/)
 
 ```js
 // str 传参

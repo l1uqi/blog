@@ -71,9 +71,9 @@ runtimeshow:
   enable: true
   publish_date: 1/1/2019 00:00:00  
 busuanzi:
-  site_uv: true
-  site_pv: true
-  page_pv: true
+  site_uv: false
+  site_pv: false
+  page_pv: false
 cover:
   # 是否顯示文章封面
   index_enable: false
