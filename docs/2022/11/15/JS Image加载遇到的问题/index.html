@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>JS Image加载遇到的问题 | L1uqi</title><meta name="author" content="L1uqi,chyi_fox@foxmail.com"><meta name="copyright" content="L1uqi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="背景最近在做前端业务埋点, 遇到的问题。业务场景是在列表中监听商品是否曝光, 如果用户可见就进行商品上报。上报是用 Image()传输。 为什么要用 image 进行埋点上报 123&#x2F;&#x2F; str 传参const img &#x3D; new Image();img.src &#x3D; &#96;$&amp;#123;url&amp;#125;?$&amp;#123;str&amp;#125;&#96;;  问题浏览器并发请求资源数浏览器的并发请求数目限制是针对同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS Image加载遇到的问题">
+<meta property="og:url" content="https://hello7cat.com/2022/11/15/JS%20Image%E5%8A%A0%E8%BD%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="L1uqi">
+<meta property="og:description" content="背景最近在做前端业务埋点, 遇到的问题。业务场景是在列表中监听商品是否曝光, 如果用户可见就进行商品上报。上报是用 Image()传输。 为什么要用 image 进行埋点上报 123&#x2F;&#x2F; str 传参const img &#x3D; new Image();img.src &#x3D; &#96;$&amp;#123;url&amp;#125;?$&amp;#123;str&amp;#125;&#96;;  问题浏览器并发请求资源数浏览器的并发请求数目限制是针对同">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/1007338.jpg">
+<meta property="article:published_time" content="2022-11-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-16T02:05:43.664Z">
+<meta property="article:author" content="L1uqi">
+<meta property="article:tag" content="图片加载">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/1007338.jpg"><link rel="shortcut icon" href="/favicon.png"><link rel="canonical" href="https://hello7cat.com/2022/11/15/JS%20Image%E5%8A%A0%E8%BD%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JS Image加载遇到的问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-11-16 10:05:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://avatars.githubusercontent.com/u/70128222?v=4" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">L1uqi</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">JS Image加载遇到的问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-14T16:00:00.000Z" title="发表于 2022-11-15 00:00:00">2022-11-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-16T02:05:43.664Z" title="更新于 2022-11-16 10:05:43">2022-11-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></span></div><div class="meta-secondline"></div></div></div><article class="post-content" id="article-container"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近在做前端业务埋点, 遇到的问题。<br>业务场景是在列表中监听商品是否曝光, 如果用户可见就进行商品上报。<br>上报是用 Image()传输。</p>
+<p><a href="https://hello7cat.com/2022/11/10/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9%E6%95%B0%E6%8D%AE%E4%B8%8A%E6%8A%A5/">为什么要用 image 进行埋点上报</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// str 传参</span></span><br><span class="line"><span class="keyword">const</span> img = <span class="keyword">new</span> <span class="title class_">Image</span>();</span><br><span class="line">img.<span class="property">src</span> = <span class="string">`<span class="subst">$&#123;url&#125;</span>?<span class="subst">$&#123;str&#125;</span>`</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/20474326">浏览器并发请求资源数</a><br>浏览器的并发请求数目限制是针对同一域名的。<br>同一时间针对同一域名下的请求有一定数量限制。超过限制数目的请求会被阻塞。</p>
+<p>以 chrome 为例浏览器同域名下资源加载的最大并发连接数为 6，当资源文件大于 6 时，多于 6 个的文件就会进入待定，等第一批加载完才会加载第二批的 6 个图片资源，这样就增加了等待时间。无形中就增加用户加载网页等待的时间；</p>
+<p>当时在测试环境下, 后端接口在更新, 导致上报请求未能完成。<br>列表曝光又是逐个进行上报(偷懒了没有合并上传), 遇上了浏览器并发请求限制!<br>当时页面与接口又是同域名, 从而导致用户无法进行操作(因为网络请求阻塞导致)</p>
+<hr>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><h3 id="域名分片"><a href="#域名分片" class="headerlink" title="域名分片"></a>域名分片</h3><p>由于浏览器限制了每个域（domain）的活动连接数。为了可以同时下载超过该限制数的资源，域名分片（domain sharding）会将内容拆分到多个子域中。当使用多个域来处理多个资源时，浏览器能够同时下载更多资源，从而缩短了页面加载时间并改善了用户体验。</p>
+<p>比如 jd.com 随便找张图片<br>如下:<br><a target="_blank" rel="noopener" href="https://img10.360buyimg.com/seckillcms/s280x280_jfs/t1/216379/19/19449/40977/628c9742Ee1612b6f/e032fe03d144ce2c.jpg.avif">https://img10.360buyimg.com/seckillcms/s280x280_jfs/t1/216379/19/19449/40977/628c9742Ee1612b6f/e032fe03d144ce2c.jpg.avif</a><br><a target="_blank" rel="noopener" href="https://img11.360buyimg.com/seckillcms/s280x280_jfs/t1/216379/19/19449/40977/628c9742Ee1612b6f/e032fe03d144ce2c.jpg.avif">https://img11.360buyimg.com/seckillcms/s280x280_jfs/t1/216379/19/19449/40977/628c9742Ee1612b6f/e032fe03d144ce2c.jpg.avif</a><br><a target="_blank" rel="noopener" href="https://img12.360buyimg.com/seckillcms/s280x280_jfs/t1/216379/19/19449/40977/628c9742Ee1612b6f/e032fe03d144ce2c.jpg.avif">https://img12.360buyimg.com/seckillcms/s280x280_jfs/t1/216379/19/19449/40977/628c9742Ee1612b6f/e032fe03d144ce2c.jpg.avif</a></p>
+<p>修改 img1, 10, 11, 12.. 都能够访问</p>
+<h3 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h3><p>由于 HTTP/2 没有限制并发请求（unlimited concurrent requests），因此启用 HTTP/2 后，就没必要再使用域名分片来解决并发限制了。</p>
+<blockquote>
+<p>由于以上都不适用埋点上报的场景 T T.<br>Image() 又不能设置请求超时时间, 所以只能进行 src 置空<br>用setTimeout 设置1s后替换src为空(埋点上报1s足够了)<br>目前看起来是没问题了。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> timeout = <span class="number">1000</span>;</span><br><span class="line"><span class="keyword">const</span> img = <span class="keyword">new</span> <span class="title class_">Image</span>();</span><br><span class="line">img.<span class="property">src</span> = <span class="string">`<span class="subst">$&#123;url&#125;</span>?<span class="subst">$&#123;str&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  img.<span class="property">src</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;, timeout);</span><br></pre></td></tr></table></figure>
+
+<p>如有错误, 还望指正！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://hello7cat.com">L1uqi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://hello7cat.com/2022/11/15/JS%20Image%E5%8A%A0%E8%BD%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">https://hello7cat.com/2022/11/15/JS%20Image%E5%8A%A0%E8%BD%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hello7cat.com" target="_blank">L1uqi</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD/">图片加载</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/1007338.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/03/JS%E5%AF%B9%E8%B1%A1%E4%B8%ADaddEventListener%20this%E6%8C%87%E5%90%91/"><img class="prev-cover" src="https://img0.baidu.com/it/u=2395867072,4290056404&amp;fm=253&amp;fmt=auto&amp;app=120&amp;f=JPEG?w=798&amp;h=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">JS对象中addEventListener this指向</div></div></a></div><div class="next-post pull-right"><a href="/2022/11/10/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9%E6%95%B0%E6%8D%AE%E4%B8%8A%E6%8A%A5/"><img class="next-cover" src="https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/899633.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">前端业务埋点-数据上报</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://avatars.githubusercontent.com/u/70128222?v=4" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">L1uqi</div><div class="author-info__description">记录生活点滴</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/l1uqi"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/l1uqi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/chyi_fox@foxmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D%E5%88%86%E7%89%87"><span class="toc-number">3.1.</span> <span class="toc-text">域名分片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-2"><span class="toc-number">3.2.</span> <span class="toc-text">HTTP&#x2F;2</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/JS%E5%AF%B9%E8%B1%A1%E4%B8%ADaddEventListener%20this%E6%8C%87%E5%90%91/" title="JS对象中addEventListener this指向"><img src="https://img0.baidu.com/it/u=2395867072,4290056404&amp;fm=253&amp;fmt=auto&amp;app=120&amp;f=JPEG?w=798&amp;h=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JS对象中addEventListener this指向"/></a><div class="content"><a class="title" href="/2023/02/03/JS%E5%AF%B9%E8%B1%A1%E4%B8%ADaddEventListener%20this%E6%8C%87%E5%90%91/" title="JS对象中addEventListener this指向">JS对象中addEventListener this指向</a><time datetime="2023-02-02T16:00:00.000Z" title="发表于 2023-02-03 00:00:00">2023-02-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/15/JS%20Image%E5%8A%A0%E8%BD%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="JS Image加载遇到的问题"><img src="https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/1007338.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JS Image加载遇到的问题"/></a><div class="content"><a class="title" href="/2022/11/15/JS%20Image%E5%8A%A0%E8%BD%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="JS Image加载遇到的问题">JS Image加载遇到的问题</a><time datetime="2022-11-14T16:00:00.000Z" title="发表于 2022-11-15 00:00:00">2022-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/10/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9%E6%95%B0%E6%8D%AE%E4%B8%8A%E6%8A%A5/" title="前端业务埋点-数据上报"><img src="https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/899633.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端业务埋点-数据上报"/></a><div class="content"><a class="title" href="/2022/11/10/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9%E6%95%B0%E6%8D%AE%E4%B8%8A%E6%8A%A5/" title="前端业务埋点-数据上报">前端业务埋点-数据上报</a><time datetime="2022-11-09T16:00:00.000Z" title="发表于 2022-11-10 00:00:00">2022-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9%E6%9B%9D%E5%85%89%E5%AE%9E%E7%8E%B0/" title="前端业务埋点-曝光实现"><img src="https://raw.githubusercontent.com/l1uqi/PicGo/main/blog/1063297.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端业务埋点-曝光实现"/></a><div class="content"><a class="title" href="/2022/11/08/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9%E6%9B%9D%E5%85%89%E5%AE%9E%E7%8E%B0/" title="前端业务埋点-曝光实现">前端业务埋点-曝光实现</a><time datetime="2022-11-07T16:00:00.000Z" title="发表于 2022-11-08 00:00:00">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/05/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9/" title="前端业务埋点-SDK实践"><img src="https://user-images.githubusercontent.com/70128222/200491092-d00d8a32-5b63-40b9-96c3-fcc92de8716d.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端业务埋点-SDK实践"/></a><div class="content"><a class="title" href="/2022/11/05/%E5%89%8D%E7%AB%AF%E4%B8%9A%E5%8A%A1%E5%9F%8B%E7%82%B9/" title="前端业务埋点-SDK实践">前端业务埋点-SDK实践</a><time datetime="2022-11-04T16:00:00.000Z" title="发表于 2022-11-05 00:00:00">2022-11-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2023 By L1uqi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadWaline () {
+  function insertCSS () {
+    const link = document.createElement("link")
+    link.rel = "stylesheet"
+    link.href = "https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css"
+    document.head.appendChild(link)
+  }
+
+  function initWaline () {
+    const waline = Waline.init(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-blog-p6bnlbvru-liuqi1112.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+  }
+
+  if (typeof Waline === 'function') initWaline()
+  else {
+    insertCSS()
+    getScript('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js').then(initWaline)
+  }
+}
+
+if ('Waline' === 'Waline' || !true) {
+  if (true) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+  else setTimeout(loadWaline, 0)
+} else {
+  function loadOtherComment () {
+    loadWaline()
+  }
+}</script></div></div></body></html>
