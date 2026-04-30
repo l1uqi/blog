@@ -1,0 +1,26 @@
+<div class="max-w-content mx-auto">
+  <h1 class="font-heading text-3xl sm:text-4xl font-medium mb-10">
+    <% if (page.tag) { %>
+    #<%= page.tag %>
+    <% } else { %>
+    <%= __('menu.tags') || 'Tags' %>
+    <% } %>
+  </h1>
+
+  <% if (page.tag) { %>
+    <%# Tag detail page — list posts with this tag %>
+    <% page.posts.forEach(function(item) { %>
+      <%- partial('_partial/article', {item: item}) %>
+    <% }) %>
+    <%- partial('_partial/pagination') %>
+  <% } else { %>
+    <%# Tags index — show all tags %>
+    <div class="flex flex-wrap gap-3">
+      <% site.tags.sort('name').forEach(function(tag) { %>
+      <a href="<%- url_for(tag.path) %>" class="inline-block px-3 py-1.5 text-sm border border-border-light dark:border-border-dark rounded-full text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
+        #<%= tag.name %> <span class="text-xs opacity-60">(<%= tag.length %>)</span>
+      </a>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

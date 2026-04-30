@@ -1,0 +1,58 @@
+# hexo-theme-pretext site configuration
+
+menu:
+  Home: /
+  Archives: /archives
+  Tags: /tags
+
+profile:
+  name: "L1uqi"
+  avatar: ""
+  bio: "记录生活点滴"
+  social:
+    github: "l1uqi"
+    twitter: ""
+    email: "chyi_fox@foxmail.com"
+
+pretext:
+  hero:
+    enable: true
+    text: "L1uqi"
+    font: "16px JetBrains Mono"
+    animation: "wave"
+  post_ornament:
+    enable: true
+    style: "geometric"
+  archive_flow:
+    enable: true
+  page_404:
+    enable: true
+    art: "cat"
+
+comments:
+  provider: false
+
+features:
+  toc: true
+  reading_time: true
+  word_count: true
+  code_copy: true
+  back_to_top: true
+  search:
+    enable: false
+    type: "local"
+
+highlight:
+  theme: "github-dark"
+  theme_light: "github"
+
+fonts:
+  body: "Noto Serif SC"
+  heading: "Noto Serif SC"
+  code: "JetBrains Mono"
+
+seo:
+  google_analytics: ""
+  google_site_verification: ""
+
+rss: /atom.xml

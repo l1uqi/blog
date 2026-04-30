@@ -1,0 +1,25 @@
+<% if (page.total > 1) { %>
+<nav class="mt-12 flex items-center justify-center gap-4 text-sm">
+  <% if (page.prev > 0) { %>
+  <a href="<%- url_for(page.prev_link) %>" class="px-4 py-2 border border-border-light dark:border-border-dark rounded hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
+    &larr; <%= __('pagination.prev') || 'Prev' %>
+  </a>
+  <% } else { %>
+  <span class="px-4 py-2 border border-border-light dark:border-border-dark rounded opacity-40 cursor-not-allowed">
+    &larr; <%= __('pagination.prev') || 'Prev' %>
+  </span>
+  <% } %>
+  <span class="text-text-secondary dark:text-text-secondary-dark">
+    <%= page.current %> / <%= page.total %>
+  </span>
+  <% if (page.next > 0) { %>
+  <a href="<%- url_for(page.next_link) %>" class="px-4 py-2 border border-border-light dark:border-border-dark rounded hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
+    <%= __('pagination.next') || 'Next' %> &rarr;
+  </a>
+  <% } else { %>
+  <span class="px-4 py-2 border border-border-light dark:border-border-dark rounded opacity-40 cursor-not-allowed">
+    <%= __('pagination.next') || 'Next' %> &rarr;
+  </span>
+  <% } %>
+</nav>
+<% } %>

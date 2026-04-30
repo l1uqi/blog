@@ -1,0 +1,33 @@
+<% if (theme.comments.giscus && theme.comments.giscus.repo) { %>
+<script>
+(function() {
+  var isDark = document.documentElement.classList.contains('dark');
+  var script = document.createElement('script');
+  script.src = 'https://giscus.app/client.js';
+  script.setAttribute('data-repo', '<%= theme.comments.giscus.repo %>');
+  script.setAttribute('data-repo-id', '<%= theme.comments.giscus.repo_id %>');
+  script.setAttribute('data-category', '<%= theme.comments.giscus.category %>');
+  script.setAttribute('data-category-id', '<%= theme.comments.giscus.category_id %>');
+  script.setAttribute('data-mapping', '<%= theme.comments.giscus.mapping || "pathname" %>');
+  script.setAttribute('data-reactions-enabled', '<%= theme.comments.giscus.reactions_enabled || 1 %>');
+  script.setAttribute('data-emit-metadata', '<%= theme.comments.giscus.emit_metadata || 0 %>');
+  script.setAttribute('data-input-position', 'top');
+  script.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  script.setAttribute('data-lang', '<%= config.language || "en" %>');
+  script.setAttribute('crossorigin', 'anonymous');
+  script.async = true;
+  document.currentScript.parentElement.appendChild(script);
+
+  new MutationObserver(function() {
+    var dark = document.documentElement.classList.contains('dark');
+    var iframe = document.querySelector('iframe.giscus-frame');
+    if (iframe) {
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: dark ? 'dark' : 'light' } } },
+        'https://giscus.app'
+      );
+    }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
+<% } %>

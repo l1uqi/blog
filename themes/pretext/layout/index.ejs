@@ -1,0 +1,78 @@
+<%
+var posts = page.posts.toArray().slice(0, 5);
+var showHero = theme.pretext && theme.pretext.hero && theme.pretext.hero.enable;
+%>
+<div class="max-w-wide mx-auto">
+  <div class="flex flex-col lg:flex-row lg:gap-6">
+    <%# On mobile: bunny shows first (via order). On desktop: bunny is on right %>
+    <% if (showHero) { %>
+    <div class="order-first lg:order-last lg:flex-1 flex items-center justify-center">
+      <%- partial('_partial/pretext/hero') %>
+    </div>
+    <% } %>
+
+    <%# Article list in terminal frame %>
+    <div class="flex-shrink-0 lg:w-[50%] py-4">
+      <div class="relative border border-dashed border-border-light dark:border-border-dark rounded-sm">
+        <%# Terminal title bar %>
+        <div class="absolute -top-3 left-4 px-2 bg-bg-light dark:bg-bg-dark font-mono text-xs text-text-secondary dark:text-text-secondary-dark">
+          &#x250C;&#x2500; recent posts &#x2500;&#x2510;
+        </div>
+
+        <div class="px-5 pt-6 pb-4">
+          <ul class="space-y-0">
+            <% posts.forEach(function(item, idx) { %>
+            <li class="group">
+              <a href="<%- url_for(item.path) %>" class="block py-3 <%= idx < posts.length - 1 ? 'border-b border-dotted border-border-light dark:border-border-dark' : '' %> hover:border-accent dark:hover:border-accent-dark transition-colors">
+                <div class="flex items-start gap-2.5">
+                  <span class="font-mono text-xs text-text-secondary dark:text-text-secondary-dark mt-0.5 flex-shrink-0 group-hover:text-accent dark:group-hover:text-accent-dark transition-colors">&gt;</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <time class="font-mono text-[11px] text-text-secondary dark:text-text-secondary-dark tabular-nums flex-shrink-0" datetime="<%= date_xml(item.date) %>">
+                        <%= date(item.date, 'YYYY-MM-DD') %>
+                      </time>
+                      <span class="font-mono text-[11px] text-text-secondary dark:text-text-secondary-dark opacity-40">&#x2502;</span>
+                      <% if (item.categories && item.categories.length) { %>
+                      <span class="font-mono text-[11px] text-text-secondary dark:text-text-secondary-dark flex-shrink-0">
+                        <% item.categories.forEach(function(cat, i) { %><%= cat.name %><% if (i < item.categories.length - 1) { %> / <% } %><% }) %>
+                      </span>
+                      <% } %>
+                    </div>
+                    <h2 class="text-sm font-medium leading-snug group-hover:text-accent dark:group-hover:text-accent-dark transition-colors">
+                      <%= item.title || (__('post.untitled') || 'Untitled') %>
+                    </h2>
+                    <% if (item.excerpt) { %>
+                    <p class="mt-1 text-xs text-text-secondary dark:text-text-secondary-dark line-clamp-2 leading-relaxed">
+                      <%- strip_html(item.excerpt).substring(0, 120) %>
+                    </p>
+                    <% } %>
+                    <% if (item.tags && item.tags.length) { %>
+                    <div class="mt-0.5 flex flex-wrap gap-1.5">
+                      <% item.tags.forEach(function(tag) { %>
+                      <span class="font-mono text-[10px] text-text-secondary dark:text-text-secondary-dark opacity-50">#<%= tag.name %></span>
+                      <% }) %>
+                    </div>
+                    <% } %>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <% }) %>
+          </ul>
+
+          <div class="mt-4 pt-3 border-t border-dashed border-border-light dark:border-border-dark">
+            <a href="<%- url_for('/archives') %>" class="inline-flex items-center gap-2 font-mono text-[11px] text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
+              <span>&gt;</span>
+              <span>view all archives &rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <%# Terminal bottom border label %>
+        <div class="absolute -bottom-3 right-4 px-2 bg-bg-light dark:bg-bg-dark font-mono text-xs text-text-secondary dark:text-text-secondary-dark">
+          &#x2514;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2518;
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

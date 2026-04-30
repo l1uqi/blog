@@ -1,0 +1,27 @@
+menu:
+  home: Home
+  archives: Archives
+  tags: Tags
+  categories: Categories
+  about: About
+post:
+  read_more: Read More
+  posted_on: Posted on
+  updated_on: Updated on
+  tags: Tags
+  categories: Categories
+  toc: Table of Contents
+  prev: Prev
+  next: Next
+  comments: Comments
+  untitled: Untitled
+  words: words
+pagination:
+  prev: Prev
+  next: Next
+footer:
+  powered_by: Powered by
+  theme: Theme
+error:
+  not_found: Page not found
+  back_home: Back to Home

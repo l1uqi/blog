@@ -1,0 +1,33 @@
+<header class="w-full border-b border-border-light dark:border-border-dark">
+  <nav class="max-w-wide mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <a href="<%- url_for('/') %>" class="font-heading text-xl font-medium tracking-wide hover:text-accent dark:hover:text-accent-dark transition-colors">
+      <%= config.title %>
+    </a>
+    <div class="flex items-center gap-6">
+      <ul class="hidden sm:flex items-center gap-6 text-sm">
+        <% for (var label in theme.menu) { %>
+        <li>
+          <a href="<%- url_for(theme.menu[label]) %>" class="text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
+            <%= __('menu.' + label.toLowerCase()) || label %>
+          </a>
+        </li>
+        <% } %>
+      </ul>
+      <%- partial('dark-mode-toggle') %>
+      <button id="mobile-menu-btn" class="sm:hidden p-1 text-text-secondary dark:text-text-secondary-dark" aria-label="<%= __('menu.home') || 'Menu' %>">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div id="mobile-menu" class="sm:hidden hidden border-t border-border-light dark:border-border-dark">
+    <ul class="px-4 py-3 space-y-2">
+      <% for (var label in theme.menu) { %>
+      <li>
+        <a href="<%- url_for(theme.menu[label]) %>" class="block py-1 text-sm text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
+          <%= __('menu.' + label.toLowerCase()) || label %>
+        </a>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+</header>

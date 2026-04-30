@@ -1,0 +1,13 @@
+<% if (theme.comments.waline && theme.comments.waline.server_url) { %>
+<div id="waline"></div>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css">
+<script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+  init({
+    el: '#waline',
+    serverURL: '<%= theme.comments.waline.server_url %>',
+    lang: '<%= theme.comments.waline.lang || config.language || "en" %>',
+    dark: 'html.dark',
+  });
+</script>
+<% } %>

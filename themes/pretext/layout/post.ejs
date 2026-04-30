@@ -1,0 +1,7 @@
+<%- partial('_partial/article-full') %>
+
+<% if (theme.comments && theme.comments.provider) { %>
+<div class="max-w-content mx-auto mt-12">
+  <%- partial('_partial/comment/index') %>
+</div>
+<% } %>

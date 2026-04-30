@@ -1,0 +1,25 @@
+<%
+var art404 = (theme.pretext && theme.pretext.page_404 && theme.pretext.page_404.art) || 'cat';
+%>
+<section class="pretext-404 flex flex-col items-center justify-center py-20">
+  <canvas
+    id="pretext-404-canvas"
+    class="w-full max-w-lg"
+    style="height: 300px;"
+    data-art="<%= art404 %>"
+    aria-hidden="true"
+  ></canvas>
+  <noscript>
+    <div class="text-center">
+      <pre class="font-mono text-4xl sm:text-6xl text-text-secondary dark:text-text-secondary-dark leading-none mb-8">404</pre>
+      <p class="text-lg text-text-secondary dark:text-text-secondary-dark mb-6"><%= __('error.not_found') || 'Page not found' %></p>
+      <a href="<%- url_for('/') %>" class="text-accent dark:text-accent-dark hover:underline"><%= __('error.back_home') || 'Back to Home' %></a>
+    </div>
+  </noscript>
+  <div id="pretext-404-fallback" class="hidden text-center">
+    <pre class="font-mono text-6xl sm:text-8xl text-text-secondary dark:text-text-secondary-dark leading-none mb-8">404</pre>
+  </div>
+  <p class="mt-6 text-lg text-text-secondary dark:text-text-secondary-dark"><%= __('error.not_found') || 'Page not found' %></p>
+  <a href="<%- url_for('/') %>" class="mt-4 text-accent dark:text-accent-dark hover:underline"><%= __('error.back_home') || 'Back to Home' %></a>
+</section>
+<script type="module" src="<%- url_for('js/pretext-404.js') %>"></script>

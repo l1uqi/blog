@@ -1,0 +1,26 @@
+<aside class="w-full lg:w-64 lg:flex-shrink-0">
+  <% if (theme.profile && theme.profile.name) { %>
+  <div class="mb-8 text-center lg:text-left">
+    <% if (theme.profile.avatar) { %>
+    <img src="<%- url_for(theme.profile.avatar) %>" alt="<%= theme.profile.name %>" class="w-20 h-20 rounded-full mx-auto lg:mx-0 mb-3" loading="lazy">
+    <% } %>
+    <h3 class="font-heading text-lg font-medium"><%= theme.profile.name %></h3>
+    <% if (theme.profile.bio) { %>
+    <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary-dark"><%= theme.profile.bio %></p>
+    <% } %>
+  </div>
+  <% } %>
+
+  <% if (site.tags && site.tags.length) { %>
+  <div class="mb-8">
+    <h3 class="font-heading text-sm font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary-dark mb-3"><%= __('post.tags') || 'Tags' %></h3>
+    <div class="flex flex-wrap gap-2">
+      <% site.tags.sort('name').forEach(function(tag) { %>
+      <a href="<%- url_for(tag.path) %>" class="text-xs px-2 py-0.5 rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
+        <%= tag.name %> (<%= tag.length %>)
+      </a>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+</aside>

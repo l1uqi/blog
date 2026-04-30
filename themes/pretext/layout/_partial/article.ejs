@@ -1,0 +1,45 @@
+<%
+var showExcerpt = item.excerpt && item.excerpt.length > 0;
+%>
+<article class="mb-10 pb-10 border-b border-border-light dark:border-border-dark last:border-b-0">
+  <% if (item.photos && item.photos.length) { %>
+  <div class="mb-4 overflow-hidden rounded">
+    <img src="<%- url_for(item.photos[0]) %>" alt="<%= item.title || 'Post image' %>" class="w-full h-auto" loading="lazy">
+  </div>
+  <% } %>
+  <header>
+    <h2 class="font-heading text-xl sm:text-2xl font-medium leading-tight">
+      <% if (item.title) { %>
+      <a href="<%- url_for(item.path) %>" class="hover:text-accent dark:hover:text-accent-dark transition-colors">
+        <%= item.title %>
+      </a>
+      <% } else { %>
+      <a href="<%- url_for(item.path) %>" class="hover:text-accent dark:hover:text-accent-dark transition-colors">
+        <%= __('post.untitled') || 'Untitled' %>
+      </a>
+      <% } %>
+    </h2>
+    <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-text-secondary dark:text-text-secondary-dark">
+      <time datetime="<%= date_xml(item.date) %>">
+        <%= date(item.date, config.date_format) %>
+      </time>
+      <% if (item.categories && item.categories.length) { %>
+      <span class="flex items-center gap-1">
+        <% item.categories.forEach(function(cat, i) { %>
+        <a href="<%- url_for(cat.path) %>" class="hover:text-accent dark:hover:text-accent-dark transition-colors"><%= cat.name %></a><% if (i < item.categories.length - 1) { %>,<% } %>
+        <% }) %>
+      </span>
+      <% } %>
+    </div>
+  </header>
+  <% if (showExcerpt) { %>
+  <div class="mt-4 text-text-secondary dark:text-text-secondary-dark prose-excerpt">
+    <%- item.excerpt %>
+  </div>
+  <div class="mt-4">
+    <a href="<%- url_for(item.path) %>#more" class="inline-block text-sm text-accent dark:text-accent-dark hover:underline">
+      <%= __('post.read_more') || 'Read More' %> &rarr;
+    </a>
+  </div>
+  <% } %>
+</article>

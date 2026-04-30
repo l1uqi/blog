@@ -1,0 +1,29 @@
+<div class="max-w-content mx-auto">
+  <h1 class="font-heading text-3xl sm:text-4xl font-medium mb-10">
+    <% if (page.category) { %>
+    <%= page.category %>
+    <% } else { %>
+    <%= __('menu.categories') || 'Categories' %>
+    <% } %>
+  </h1>
+
+  <% if (page.category) { %>
+    <%# Category detail page — list posts in this category %>
+    <% page.posts.forEach(function(item) { %>
+      <%- partial('_partial/article', {item: item}) %>
+    <% }) %>
+    <%- partial('_partial/pagination') %>
+  <% } else { %>
+    <%# Categories index — show all categories %>
+    <ul class="space-y-2">
+      <% site.categories.sort('name').forEach(function(cat) { %>
+      <li>
+        <a href="<%- url_for(cat.path) %>" class="text-lg hover:text-accent dark:hover:text-accent-dark transition-colors">
+          <%= cat.name %>
+        </a>
+        <span class="text-sm text-text-secondary dark:text-text-secondary-dark ml-2">(<%= cat.length %>)</span>
+      </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</div>

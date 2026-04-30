@@ -1,0 +1,11 @@
+<% var tocContent = toc(page.content, {list_number: false, max_depth: 3}); %>
+<% if (tocContent) { %>
+<details class="mb-8 p-4 border border-border-light dark:border-border-dark rounded-lg" open>
+  <summary class="cursor-pointer font-heading text-sm font-medium text-text-secondary dark:text-text-secondary-dark uppercase tracking-wider">
+    <%= __('post.toc') || 'Table of Contents' %>
+  </summary>
+  <nav class="mt-3 toc-nav text-sm leading-loose text-text-secondary dark:text-text-secondary-dark">
+    <%- tocContent %>
+  </nav>
+</details>
+<% } %>

@@ -1,0 +1,83 @@
+# hexo-theme-pretext configuration
+
+# Navigation menu
+menu:
+  Home: /
+  Archives: /archives
+  Tags: /tags
+
+# Profile
+profile:
+  name: ""
+  avatar: ""
+  bio: ""
+  social:
+    github: ""
+    twitter: ""
+    email: ""
+
+# Pretext animations
+pretext:
+  hero:
+    enable: true
+    text: "hexo-theme-pretext"
+    font: "16px JetBrains Mono"
+    animation: "wave"           # wave | breathe | glitch
+  post_ornament:
+    enable: true
+    style: "geometric"          # geometric | dots | lines
+  archive_flow:
+    enable: true
+  page_404:
+    enable: true
+    art: "cat"                  # cat | mountain | maze
+
+# Comment system
+comments:
+  provider: false               # giscus | disqus | waline | false
+
+  giscus:
+    repo: ""
+    repo_id: ""
+    category: ""
+    category_id: ""
+    mapping: "pathname"
+    reactions_enabled: 1
+    emit_metadata: 0
+
+  disqus:
+    shortname: ""
+
+  waline:
+    server_url: ""
+    lang: "zh-CN"
+
+# Features
+features:
+  toc: true
+  reading_time: true
+  word_count: true
+  code_copy: true
+  back_to_top: true
+  search:
+    enable: false
+    type: "local"
+
+# Code highlight
+highlight:
+  theme: "github-dark"
+  theme_light: "github"
+
+# Fonts (override defaults)
+fonts:
+  body: "Noto Serif JP"
+  heading: "Shippori Mincho"
+  code: "JetBrains Mono"
+
+# SEO
+seo:
+  google_analytics: ""
+  google_site_verification: ""
+
+# RSS
+rss: /atom.xml

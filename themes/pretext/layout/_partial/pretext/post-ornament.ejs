@@ -1,0 +1,20 @@
+<%
+var ornamentStyle = (theme.pretext && theme.pretext.post_ornament && theme.pretext.post_ornament.style) || 'geometric';
+%>
+<div class="pretext-ornament flex-shrink-0 mt-1" aria-hidden="true">
+  <canvas
+    id="pretext-ornament-canvas"
+    width="80"
+    height="56"
+    class="w-[80px] h-[56px]"
+  ></canvas>
+  <noscript>
+    <div class="w-[80px] h-[56px] flex items-center justify-center">
+      <span class="block w-3 h-3 bg-accent dark:bg-accent-dark rotate-45"></span>
+    </div>
+  </noscript>
+  <div id="pretext-ornament-fallback" class="hidden w-[80px] h-[56px] items-center justify-center">
+    <span class="block w-3 h-3 bg-accent dark:bg-accent-dark rotate-45"></span>
+  </div>
+</div>
+<script type="module" src="<%- url_for('js/pretext-ornament.js') %>"></script>

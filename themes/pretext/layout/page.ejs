@@ -1,0 +1,22 @@
+<article class="max-w-content mx-auto">
+  <header class="mb-8 sm:mb-12">
+    <h1 class="font-heading text-3xl sm:text-4xl font-medium leading-tight">
+      <%= page.title %>
+    </h1>
+  </header>
+  <div class="prose prose-lg dark:prose-invert max-w-none
+    prose-headings:font-heading prose-headings:font-medium
+    prose-a:text-accent dark:prose-a:text-accent-dark prose-a:no-underline hover:prose-a:underline
+    prose-img:rounded prose-img:mx-auto
+    prose-code:font-mono prose-code:text-sm
+    prose-pre:bg-gray-50 dark:prose-pre:bg-gray-900 prose-pre:rounded-lg
+    prose-blockquote:border-accent dark:prose-blockquote:border-accent-dark">
+    <%- page.content %>
+  </div>
+</article>
+
+<% if (theme.comments && theme.comments.provider && page.comments !== false) { %>
+<div class="max-w-content mx-auto mt-12">
+  <%- partial('_partial/comment/index') %>
+</div>
+<% } %>

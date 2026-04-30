@@ -1,0 +1,28 @@
+<%
+var heroFont = (theme.pretext && theme.pretext.hero && theme.pretext.hero.font) || '14px JetBrains Mono';
+var heroAnimation = (theme.pretext && theme.pretext.hero && theme.pretext.hero.animation) || 'wave';
+%>
+<div class="w-full h-full relative">
+  <canvas
+    id="pretext-hero-canvas"
+    class="w-full h-full"
+    data-font="<%= heroFont %>"
+    data-animation="<%= heroAnimation %>"
+    aria-hidden="true"
+  ></canvas>
+  <noscript>
+    <div class="flex items-center justify-center w-full h-full">
+      <pre class="font-mono text-xs sm:text-sm text-text-primary dark:text-text-primary-dark opacity-70 leading-none">(\(\
+( -.-)
+o_(")(")
+      </pre>
+    </div>
+  </noscript>
+  <div id="pretext-hero-fallback" class="hidden items-center justify-center w-full h-full">
+    <pre class="font-mono text-xs sm:text-sm text-text-primary dark:text-text-primary-dark opacity-70 leading-none">(\(\
+( -.-)
+o_(")(")
+    </pre>
+  </div>
+</div>
+<script type="module" src="<%- url_for('js/pretext-hero.js') %>"></script>

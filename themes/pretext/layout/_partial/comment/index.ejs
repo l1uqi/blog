@@ -1,0 +1,12 @@
+<% if (theme.comments && theme.comments.provider) { %>
+<section class="mt-12 pt-8 border-t border-border-light dark:border-border-dark" id="comments">
+  <h2 class="font-heading text-xl font-medium mb-6"><%= __('post.comments') || 'Comments' %></h2>
+  <% if (theme.comments.provider === 'giscus') { %>
+    <%- partial('giscus') %>
+  <% } else if (theme.comments.provider === 'disqus') { %>
+    <%- partial('disqus') %>
+  <% } else if (theme.comments.provider === 'waline') { %>
+    <%- partial('waline') %>
+  <% } %>
+</section>
+<% } %>

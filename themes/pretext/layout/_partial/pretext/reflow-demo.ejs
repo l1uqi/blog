@@ -1,0 +1,54 @@
+<%
+// Extract plain text from page content (strip HTML tags)
+// Preserve paragraph breaks: convert <p>...</p> and <br> to \n\n before stripping
+var htmlContent = (page.content || '').replace(/\r\n/g, '\n');
+var withBreaks = htmlContent.replace(/<\/p>\s*<p[^>]*>/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n');
+var plainText = strip_html(withBreaks).trim();
+// Decode HTML entities left over from strip_html (e.g. &#x2F; → /, &#39; → ')
+plainText = plainText.replace(/&#x([0-9a-fA-F]+);/g, function(_, hex) { return String.fromCharCode(parseInt(hex, 16)); });
+plainText = plainText.replace(/&#(\d+);/g, function(_, dec) { return String.fromCharCode(parseInt(dec, 10)); });
+plainText = plainText.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+// Escape for HTML data attribute
+var escapedText = plainText.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+%>
+<div class="relative w-full max-w-wide mx-auto">
+  <%# Control buttons %>
+  <div class="sticky top-3 float-right z-10 flex gap-2">
+    <button
+      id="pretext-reflow-add"
+      class="px-3 py-1.5 text-xs font-mono rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-sm"
+    >+ emoji</button>
+    <button
+      id="pretext-reflow-toggle"
+      class="px-3 py-1.5 text-xs font-mono rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-sm"
+    >&#x1f4cb; Select Text</button>
+  </div>
+
+  <%# Canvas interactive layer (default visible) %>
+  <div
+    id="pretext-reflow-container"
+    class="relative w-full"
+    style="min-height: 600px;"
+    data-text="<%= escapedText %>"
+  >
+    <canvas
+      id="pretext-reflow-canvas"
+      class="w-full rounded-lg"
+    ></canvas>
+  </div>
+
+  <%# DOM readable layer (hidden by default, no extra wrapper height) %>
+  <div
+    id="pretext-reflow-dom"
+    style="display: none;"
+    class="prose prose-lg dark:prose-invert max-w-wide mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-6
+      prose-headings:font-heading prose-headings:font-medium
+      prose-a:text-accent dark:prose-a:text-accent-dark prose-a:no-underline hover:prose-a:underline
+      prose-pre:bg-gray-50 dark:prose-pre:bg-gray-900 prose-pre:rounded-lg
+      prose-blockquote:border-accent dark:prose-blockquote:border-accent-dark"
+  >
+    <%- page.content %>
+  </div>
+</div>
+
+<script type="module" src="<%- url_for('js/pretext-reflow.js') %>"></script>

@@ -1,0 +1,27 @@
+menu:
+  home: 首页
+  archives: 归档
+  tags: 标签
+  categories: 分类
+  about: 关于
+post:
+  read_more: 阅读全文
+  posted_on: 发布于
+  updated_on: 更新于
+  tags: 标签
+  categories: 分类
+  toc: 目录
+  prev: 上一篇
+  next: 下一篇
+  comments: 评论
+  untitled: 无标题
+  words: 字
+pagination:
+  prev: 上一页
+  next: 下一页
+footer:
+  powered_by: 驱动
+  theme: 主题
+error:
+  not_found: 页面未找到
+  back_home: 返回首页

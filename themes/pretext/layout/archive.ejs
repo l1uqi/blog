@@ -1,0 +1,39 @@
+<div class="max-w-content mx-auto">
+  <h1 class="font-heading text-3xl sm:text-4xl font-medium mb-10">
+    <%= __('menu.archives') || 'Archives' %>
+  </h1>
+
+  <% if (theme.pretext && theme.pretext.archive_flow && theme.pretext.archive_flow.enable) { %>
+  <%- partial('_partial/pretext/archive-flow') %>
+  <% } %>
+
+  <%
+  var years = {};
+  page.posts.forEach(function(post) {
+    var y = post.date.year();
+    if (!years[y]) years[y] = [];
+    years[y].push(post);
+  });
+  var sortedYears = Object.keys(years).sort(function(a,b){ return b - a; });
+  %>
+
+  <% sortedYears.forEach(function(year) { %>
+  <section class="mb-10 archive-year" data-year="<%= year %>">
+    <h2 class="font-heading text-xl font-medium text-text-secondary dark:text-text-secondary-dark mb-4 tracking-wider"><%= year %></h2>
+    <ul class="space-y-3">
+      <% years[year].forEach(function(post) { %>
+      <li class="flex items-baseline gap-4">
+        <time class="flex-shrink-0 text-sm text-text-secondary dark:text-text-secondary-dark font-mono tabular-nums" datetime="<%= date_xml(post.date) %>">
+          <%= date(post.date, 'MM-DD') %>
+        </time>
+        <a href="<%- url_for(post.path) %>" class="hover:text-accent dark:hover:text-accent-dark transition-colors">
+          <%= post.title || (__('post.untitled') || 'Untitled') %>
+        </a>
+      </li>
+      <% }) %>
+    </ul>
+  </section>
+  <% }) %>
+
+  <%- partial('_partial/pagination') %>
+</div>
