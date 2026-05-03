@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= config.language || 'en' %>">
 <head>
-  <%- fragment_cache('head', function() { return partial('_partial/head'); }) %>
+  <%- partial('_partial/head') %>
 </head>
 <body class="bg-bg-light dark:bg-bg-dark text-text-primary dark:text-text-primary-dark font-body leading-relaxed min-h-screen flex flex-col ">
   <%- fragment_cache('header', function() { return partial('_partial/header'); }) %>
