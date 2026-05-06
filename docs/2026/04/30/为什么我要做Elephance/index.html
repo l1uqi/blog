@@ -17,7 +17,7 @@
 
 
 
-<title>为什么我要做 Elephance：给 AI 一个本地长期记忆层 | L1uqi</title>
+<title>为什么 AI 需要一个本地长期记忆层 | L1uqi</title>
 
 
 
@@ -194,7 +194,7 @@
         </h2>
       </a>
       <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
-        为什么我要做 Elephance：给 AI 一个本地长期记忆层
+        为什么 AI 需要一个本地长期记忆层
       </div>
       <div class="flex-1"></div>
       <div class="flex items-center gap-3">
@@ -270,7 +270,7 @@
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
       <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
-        为什么我要做 Elephance：给 AI 一个本地长期记忆层
+        为什么 AI 需要一个本地长期记忆层
       </h1>
       <div>
         <section class="flex items-center gap-3 text-sm">
@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>9 min</span>
+            <span>11 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>2.7k words</span>
+            <span>3.1k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -302,53 +302,61 @@
   <!-- content -->
   <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
     <blockquote>
-<p>经验声明：本文是 AI 编程协作系列里正式进入 Memory 的第一篇。前面几篇讲了 Rules、Skills、渐进式披露和项目 Map，这一篇开始讲我为什么做 Elephance。</p>
+<p>经验声明：本文是 AI 编程协作系列里正式进入 Memory 的第一篇。前面几篇讲了 Rules、Skills、渐进式披露和项目 Map，这一篇不重点讲产品，而是讲为什么 AI 协作需要一个长期记忆层。</p>
 </blockquote>
-<p>前面几篇文章一直在讲一个问题：AI 编程工具想在真实项目里稳定工作，不能只靠模型本身。</p>
-<p>它至少需要：</p>
+<p>前面几篇文章一直在讲同一个问题：</p>
+<p>AI 编程工具想在真实项目里稳定工作，不能只靠模型本身。</p>
+<p>它至少需要几层外部结构：</p>
 <ul>
-<li>Rules：知道什么不能乱来。</li>
-<li>Skills：知道复杂任务怎么一步步做。</li>
-<li>Project Map：知道当前任务应该先去哪里找。</li>
-<li>Memory：记住过去发生过什么。</li>
+<li>Rules：告诉 AI 哪些边界不能踩。</li>
+<li>Skills：告诉 AI 复杂任务应该怎么推进。</li>
+<li>Project Map：告诉 AI 当前任务应该先去哪里找。</li>
+<li>Memory：让 AI 能在需要时找回过去发生过的事情。</li>
 </ul>
-<p>这篇开始，我想正式讲 Memory。</p>
-<p>也就是我为什么做 <a target="_blank" rel="noopener" href="https://github.com/l1uqi/elephance">Elephance</a>。</p>
-<h2 id="为什么会有-Elephance"><a href="#为什么会有-Elephance" class="headerlink" title="为什么会有 Elephance"></a>为什么会有 Elephance</h2><p>我最早的动机很简单：我发现 AI 工具太容易“失忆”。</p>
-<p>你在一个会话里反复提醒它：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个项目接口错误不能在组件里直接弹 toast。</span><br></pre></td></tr></table></figure>
+<p>这篇要讲的是最后一层：Memory。</p>
+<p>更准确地说，是为什么真实项目里的 AI 协作，不能只停留在“当前会话”和“当前上下文”里。</p>
+<h2 id="剩下的问题是什么"><a href="#剩下的问题是什么" class="headerlink" title="剩下的问题是什么"></a>剩下的问题是什么</h2><p>如果前面已经有了 Rules、Skills 和 Project Map，为什么还需要 Memory？</p>
+<p>因为它们解决的问题不一样。</p>
+<p>Rules 解决的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">以后每次都必须遵守什么？</span><br></pre></td></tr></table></figure>
 
-<p>它当下能记住。</p>
-<p>但换一个会话，或者隔几天再让它做类似任务，它又可能写出同样的问题。</p>
-<p>你告诉它：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个字段虽然叫 status，但业务上只有 1 和 2 是有效状态。</span><br></pre></td></tr></table></figure>
+<p>Skills 解决的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">遇到某类任务时，应该按什么流程做？</span><br></pre></td></tr></table></figure>
 
-<p>它当前能理解。</p>
-<p>但这个信息没有被保存成可检索的长期上下文，下次它又要重新猜。</p>
-<p>这不是单个工具的问题，而是当前 AI 协作方式的结构性问题：<strong>上下文还停留在聊天窗口里。</strong></p>
-<p>聊天窗口适合短期对话，不适合承载长期项目记忆。</p>
-<p>所以我开始想：AI 能不能像人一样，逐渐积累项目经验？</p>
-<p>不是把所有历史都塞进 prompt，而是当任务需要时，能主动检索相关记忆。</p>
-<p>这就是 Elephance 的起点。</p>
-<h2 id="名字为什么叫-Elephance"><a href="#名字为什么叫-Elephance" class="headerlink" title="名字为什么叫 Elephance"></a>名字为什么叫 Elephance</h2><p>Elephance 这个名字来自两个部分：</p>
-<ul>
-<li><strong>Elephant</strong>：大象。</li>
-<li><strong>LanceDB</strong>：底层使用的本地向量数据库。</li>
-</ul>
-<p>大象给人的第一印象就是记忆力强。</p>
-<p>而 LanceDB 是一个适合做本地向量检索的数据库。Elephance 的名字，本质上就是：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elephant + LanceDB = Elephance</span><br></pre></td></tr></table></figure>
+<p>Project Map 解决的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当前任务应该先去哪里找？</span><br></pre></td></tr></table></figure>
 
-<p>它想表达的不是一个复杂概念，而是一个很直白的目标：</p>
-<p><strong>给 AI 一个像大象一样可靠、又基于 LanceDB 的本地记忆层。</strong></p>
-<p>我不希望 AI 每次打开项目都像第一天入职。</p>
-<p>它应该能记住项目偏好、历史决策、schema 信息、踩过的坑，以及用户长期告诉过它的重要背景。</p>
-<h2 id="这不是“把上下文变长”"><a href="#这不是“把上下文变长”" class="headerlink" title="这不是“把上下文变长”"></a>这不是“把上下文变长”</h2><p>很多人一听 Memory，第一反应是：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">那是不是只要模型上下文窗口足够大就好了？</span><br></pre></td></tr></table></figure>
+<p>但真实项目里还有一类信息，不完全属于这三者。</p>
+<p>它们是过去发生过的事情、历史决策、业务背景、踩坑记录、字段含义、线上问题复盘。</p>
+<p>这些信息不一定每次都要出现。</p>
+<p>但当任务相关时，它们必须能被找回来。</p>
+<p>这就是 Memory 要解决的问题：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">过去发生过、未来可能有用的项目背景，如何被保存，并在正确时机被取回？</span><br></pre></td></tr></table></figure>
 
-<p>我觉得不是。</p>
+<h2 id="Memory-不是-Rule"><a href="#Memory-不是-Rule" class="headerlink" title="Memory 不是 Rule"></a>Memory 不是 Rule</h2><p>这里最容易混的是 Memory 和 Rule。</p>
+<p>比如这句话：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接口错误不能在业务组件里直接弹 toast，必须走统一 errorHandler。</span><br></pre></td></tr></table></figure>
+
+<p>这更像 Rule。</p>
+<p>因为它是稳定约束，AI 每次改接口调用时都应该遵守。</p>
+<p>但下面这类信息就不一样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">上次用户资料页保存失败，是因为 token 刷新和资料保存请求同时发起，导致后端拿到了旧 token。</span><br></pre></td></tr></table></figure>
+
+<p>这不是一条每次都要常驻的规则。</p>
+<p>它是一段历史背景。</p>
+<p>平时不需要放进上下文。</p>
+<p>但如果下次又遇到“用户资料页保存失败”“token 刷新”“接口偶发 401”，这段记忆就很有价值。</p>
+<p>所以我更愿意这样区分：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Rule 是必须持续生效的约束。</span><br><span class="line">Memory 是未来某些任务可能需要取回的历史背景。</span><br></pre></td></tr></table></figure>
+
+<p>Rule 太少，AI 会乱来。</p>
+<p>Memory 太少，AI 会重复踩坑。</p>
+<p>Rule 太多，会污染上下文。</p>
+<p>Memory 如果不能按需检索，也会变成另一个上下文垃圾桶。</p>
+<h2 id="Memory-也不是把上下文变长"><a href="#Memory-也不是把上下文变长" class="headerlink" title="Memory 也不是把上下文变长"></a>Memory 也不是把上下文变长</h2><p>很多人一听 Memory，会想到更长的上下文窗口。</p>
+<p>但我不认为问题应该这样解决。</p>
 <p>上下文窗口再大，也不应该把所有历史内容每次都塞进去。</p>
-<p>这会带来三个问题：</p>
+<p>因为这会带来三个问题：</p>
 <ol>
 <li>成本高。</li>
 <li>噪音大。</li>
@@ -362,73 +370,73 @@
 <p>它只需要知道和登录、认证、接口错误、表单校验相关的记忆。</p>
 <p>Memory 的价值不在于保存一切，而在于能在正确时机找回正确的东西。</p>
 <p>这和前面讲的渐进式披露是一回事。</p>
-<h2 id="我看这篇论文时的触发点"><a href="#我看这篇论文时的触发点" class="headerlink" title="我看这篇论文时的触发点"></a>我看这篇论文时的触发点</h2><p>我最近看到一篇论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.08224">Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering</a>，arXiv:2604.08224。</p>
-<p>这篇论文有一个观点，我非常认同：</p>
-<p>现在很多 Agent 能力的提升，并不只是来自模型权重本身，而是来自模型外部运行环境的重新组织。</p>
-<p>换句话说，Agent 不是只靠“脑子更聪明”变强。</p>
-<p>它也会通过外部结构变强：</p>
-<ul>
-<li>Memory 把状态外部化。</li>
-<li>Skills 把流程经验外部化。</li>
-<li>Protocols 把交互结构外部化。</li>
-<li>Harness 把这些东西组织成可执行系统。</li>
-</ul>
-<p>这和我前面几篇文章想表达的东西基本一致。</p>
-<p>Rules、Skills、Project Map、Memory，本质上都是在帮 AI 把原本需要临时猜、临时记、临时组织的东西，变成外部可复用的结构。</p>
-<p>下面这张图来自这篇论文，正好解释了 Memory 在 Agent 系统中的位置。</p>
-<p><img src="/blog/img/elephance/externalized-memory.jpg" alt="Memory as Externalized Agent State"></p>
-<p>图源：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.08224">Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering</a>，arXiv:2604.08224，原图随论文以 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> 发布。</p>
-<p>我自己的理解是：</p>
-<p>Memory 不是把更多东西塞进 prompt。</p>
-<p>Memory 是把短暂的 raw context，整理成可保存、可查询、可复用的外部状态。</p>
-<p>对 AI 编程来说，这个外部状态可能包括：</p>
-<ul>
-<li>项目约定。</li>
-<li>用户偏好。</li>
-<li>历史 Bug。</li>
-<li>业务字段含义。</li>
-<li>数据库 schema。</li>
-<li>模块改造原因。</li>
-<li>某次线上问题的处理结论。</li>
-</ul>
-<p>这些东西不是每次都要进入上下文。</p>
-<p>但当任务需要时，它们必须能被找回来。</p>
-<h2 id="Elephance-想解决的核心问题"><a href="#Elephance-想解决的核心问题" class="headerlink" title="Elephance 想解决的核心问题"></a>Elephance 想解决的核心问题</h2><p>Elephance 不是一个聊天应用。</p>
-<p>它也不是一个新的 AI IDE。</p>
-<p>我更愿意把它定义成：</p>
-<p><strong>一个本地优先的 AI Memory 层。</strong></p>
-<p>它要解决的是 AI Agent 和 AI 编程工具的长期上下文问题。</p>
-<p>具体来说，它想做几件事。</p>
-<h3 id="第一，保存长期记忆"><a href="#第一，保存长期记忆" class="headerlink" title="第一，保存长期记忆"></a>第一，保存长期记忆</h3><p>比如你告诉 AI：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当前项目的接口错误统一由 request 层处理，业务组件不要直接弹错误提示。</span><br></pre></td></tr></table></figure>
+<h2 id="一个更真实的例子"><a href="#一个更真实的例子" class="headerlink" title="一个更真实的例子"></a>一个更真实的例子</h2><p>假设你对 AI 说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户资料页保存失败，帮我看一下。</span><br></pre></td></tr></table></figure>
 
-<p>这条信息不应该只活在当前会话里。</p>
-<p>它应该被保存成一条项目记忆。</p>
-<p>下次 AI 修改接口调用时，可以先检索这类记忆，再决定怎么写。</p>
-<h3 id="第二，按语义检索"><a href="#第二，按语义检索" class="headerlink" title="第二，按语义检索"></a>第二，按语义检索</h3><p>项目经验很多时候不是关键词能完全匹配的。</p>
+<p>如果只有当前上下文，AI 可能会先看表单代码、接口参数、请求日志。</p>
+<p>这些当然都应该看。</p>
+<p>但真实项目里，问题可能和过去发生过的事情有关。</p>
+<p>比如长期记忆里有三条相关记录：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">用户资料页曾经因为 token 刷新时序导致保存接口偶发 401。</span><br><span class="line"></span><br><span class="line">profile.status = 2 表示账号冻结，不是普通保存失败。</span><br><span class="line"></span><br><span class="line">资料保存接口的错误提示统一由 requestErrorHandler 处理，业务组件不要重复 toast。</span><br></pre></td></tr></table></figure>
+
+<p>这三条信息的性质并不一样。</p>
+<p>第一条是历史 Bug。</p>
+<p>第二条是业务字段含义。</p>
+<p>第三条更接近项目 Rule。</p>
+<p>当 AI 能把它们按需取回来时，排查路径会完全不同。</p>
+<p>它不会只盯着表单校验。</p>
+<p>它会知道还要检查 token 刷新时序、字段业务含义，以及错误处理边界。</p>
+<p>这就是长期记忆层的实际价值：</p>
+<p><strong>不是让 AI 记住更多，而是让它少重复从零开始。</strong></p>
+<h2 id="什么信息适合进入-Memory"><a href="#什么信息适合进入-Memory" class="headerlink" title="什么信息适合进入 Memory"></a>什么信息适合进入 Memory</h2><p>不是所有东西都应该进入 Memory。</p>
+<p>我认为适合保存的，通常是这些内容：</p>
+<ul>
+<li>业务字段含义。</li>
+<li>历史 Bug 和处理结论。</li>
+<li>模块设计原因。</li>
+<li>线上事故复盘。</li>
+<li>用户长期偏好。</li>
+<li>项目里的隐性约定。</li>
+<li>数据库表和字段说明。</li>
+<li>某次技术选择背后的取舍。</li>
+</ul>
+<p>这些信息有一个共同点：</p>
+<p>它们不是每次都要强制进入上下文，但未来很可能在某些任务里再次有用。</p>
+<p>所以它们不适合全部写进 Rule。</p>
+<p>也不适合只留在某一次聊天记录里。</p>
+<p>它们需要被保存、索引、检索，并在任务相关时重新进入 Context。</p>
+<h2 id="什么信息不适合进入-Memory"><a href="#什么信息不适合进入-Memory" class="headerlink" title="什么信息不适合进入 Memory"></a>什么信息不适合进入 Memory</h2><p>Memory 也不能什么都收。</p>
+<p>否则它会变成另一个垃圾桶。</p>
+<p>我认为这些内容不适合随便放进长期记忆：</p>
+<ul>
+<li>一次性的临时任务描述。</li>
+<li>已经过期的排查猜测。</li>
+<li>没有验证过的模型推断。</li>
+<li>和项目无关的闲聊。</li>
+<li>可以从代码里稳定读取到的事实。</li>
+<li>必须每次遵守的红线。</li>
+</ul>
+<p>最后一类更适合放进 Rule。</p>
+<p>比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">删除线上数据前必须先询问用户。</span><br></pre></td></tr></table></figure>
+
+<p>这不应该等检索到了才生效。</p>
+<p>它应该是常驻红线。</p>
+<p>所以 Memory 的设计重点不是“记得越多越好”，而是“什么值得记，什么时候取回，取回后怎么使用”。</p>
+<h2 id="为什么是语义检索"><a href="#为什么是语义检索" class="headerlink" title="为什么是语义检索"></a>为什么是语义检索</h2><p>项目经验很多时候不是关键词能完全匹配的。</p>
 <p>你这次问的是：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">保存用户资料失败怎么处理？</span><br></pre></td></tr></table></figure>
 
 <p>但历史记忆里可能写的是：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接口错误统一进入 requestErrorHandler，不在业务组件内 toast。</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">profile update 接口曾经因为 refreshToken 时序导致偶发 401。</span><br></pre></td></tr></table></figure>
 
-<p>这两句话不完全一样，但语义相关。</p>
-<p>所以 Memory 不应该只是简单全文搜索，而应该支持向量检索。</p>
-<p>这也是 Elephance 选择 LanceDB 的原因。</p>
-<h3 id="第三，保存-schema-上下文"><a href="#第三，保存-schema-上下文" class="headerlink" title="第三，保存 schema 上下文"></a>第三，保存 schema 上下文</h3><p>AI 写代码时，经常不是不懂 TypeScript，而是不懂业务字段。</p>
-<p>比如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">status</span><br><span class="line">type</span><br><span class="line">source</span><br><span class="line">channel</span><br><span class="line">is_valid</span><br></pre></td></tr></table></figure>
-
-<p>这些字段看起来很普通，但在真实项目里往往有业务含义。</p>
-<p>如果 AI 不知道这些含义，就很容易写出“语法正确但业务错误”的代码。</p>
-<p>所以 Elephance 里不只考虑普通 memory，也考虑 schema 的存储和查询。</p>
-<h3 id="第四，通过-MCP-接入工具"><a href="#第四，通过-MCP-接入工具" class="headerlink" title="第四，通过 MCP 接入工具"></a>第四，通过 MCP 接入工具</h3><p>我不希望 Elephance 只能服务某一个工具。</p>
-<p>所以它提供了 MCP Server，让 Cursor、Claude Code、Codex 这类支持 MCP 的客户端都能通过协议访问记忆能力。</p>
-<p>这也对应论文里提到的另一个方向：Protocols。</p>
-<p>Memory 本身要外部化，但访问 Memory 的方式也需要协议化。</p>
-<p>否则每个工具都要单独适配，就很难复用。</p>
-<h2 id="为什么是本地优先"><a href="#为什么是本地优先" class="headerlink" title="为什么是本地优先"></a>为什么是本地优先</h2><p>这里还有一个很重要的设计选择：Elephance 是本地优先的。</p>
-<p>原因很简单，项目记忆里可能包含很多敏感信息。</p>
+<p>这两句话没有太多相同关键词，但语义上可能高度相关。</p>
+<p>所以 Memory 不应该只是简单全文搜索。</p>
+<p>它至少应该支持语义检索。</p>
+<p>这也是我会考虑向量数据库的原因。</p>
+<p>不是因为“向量”这个词高级，而是因为真实项目里的历史经验往往换一种说法就找不到了。</p>
+<p>长期记忆如果找不回来，就等于没有。</p>
+<h2 id="为什么要本地优先"><a href="#为什么要本地优先" class="headerlink" title="为什么要本地优先"></a>为什么要本地优先</h2><p>长期记忆里很容易包含敏感信息。</p>
 <p>比如：</p>
 <ul>
 <li>私有项目结构。</li>
@@ -439,10 +447,45 @@
 <li>数据库 schema。</li>
 </ul>
 <p>这些东西不一定适合默认上传到远端服务。</p>
-<p>当然，未来可以支持更多存储方式，但第一步我更倾向于让数据先留在本地。</p>
-<p>本地优先还有一个好处：它更像开发者自己的工具链，而不是一个必须依赖外部平台的服务。</p>
-<p>AI 协作要想真正进入日常工程，我认为这点很重要。</p>
-<h2 id="Elephance-和前几篇文章的关系"><a href="#Elephance-和前几篇文章的关系" class="headerlink" title="Elephance 和前几篇文章的关系"></a>Elephance 和前几篇文章的关系</h2><p>到这里，其实前几篇文章就串起来了。</p>
+<p>所以我更倾向于让第一层 Memory 先本地优先。</p>
+<p>本地优先不是说永远不能同步。</p>
+<p>而是默认控制权应该在开发者和团队手里。</p>
+<p>AI 协作要真正进入日常工程，长期记忆就不能只是某个远端聊天产品里的附属功能。</p>
+<p>它更应该像代码、配置、数据库、日志一样，成为开发者可以理解、迁移、备份和审计的基础设施。</p>
+<h2 id="为什么需要协议化"><a href="#为什么需要协议化" class="headerlink" title="为什么需要协议化"></a>为什么需要协议化</h2><p>Memory 如果只能服务一个工具，价值会被限制。</p>
+<p>今天你可能用 Cursor。</p>
+<p>明天你可能用 Claude Code。</p>
+<p>后天你可能用 Codex。</p>
+<p>如果每个工具都要单独适配一套记忆系统，长期上下文就会继续碎片化。</p>
+<p>所以 Memory 不只需要保存和检索，也需要一套通用访问方式。</p>
+<p>这就是 MCP 这类协议有价值的地方。</p>
+<p>Memory 本身要外部化。</p>
+<p>访问 Memory 的方式也要协议化。</p>
+<p>否则你只是把“记忆困在聊天窗口里”，换成了“记忆困在某一个工具里”。</p>
+<h2 id="Elephance-只是这个理念的一个实现"><a href="#Elephance-只是这个理念的一个实现" class="headerlink" title="Elephance 只是这个理念的一个实现"></a>Elephance 只是这个理念的一个实现</h2><p>在这个背景下，我做了 <a target="_blank" rel="noopener" href="https://github.com/l1uqi/elephance">Elephance</a>。</p>
+<p>但对我来说，产品不是重点。</p>
+<p>重点是这个理念：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AI 编程工具需要一个本地优先、可检索、可协议化接入的长期记忆层。</span><br></pre></td></tr></table></figure>
+
+<p>Elephance 只是我对这个理念的一个实现尝试。</p>
+<p>它目前主要包括两部分：</p>
+<ul>
+<li><code>@elephance/core</code>：核心 SDK，负责记忆和 schema 的存储、查询等能力。</li>
+<li><code>@elephance/mcp</code>：MCP Server，让支持 MCP 的 AI 客户端可以调用这些能力。</li>
+</ul>
+<p>底层使用 LanceDB 做本地向量存储。</p>
+<p>对外暴露的能力围绕两类展开：</p>
+<ul>
+<li>Memory：保存和查询长期记忆。</li>
+<li>Schema：保存和查询项目结构、字段、表等信息。</li>
+</ul>
+<p>比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">memory_upsert</span><br><span class="line">memory_query</span><br><span class="line">schema_replace_source</span><br><span class="line">schema_query</span><br></pre></td></tr></table></figure>
+
+<p>这些接口本身不复杂。</p>
+<p>真正重要的是它们背后的协作方式：</p>
+<p><strong>AI 不应该每次都重新认识你的项目。</strong></p>
+<h2 id="这和前几篇文章如何连起来"><a href="#这和前几篇文章如何连起来" class="headerlink" title="这和前几篇文章如何连起来"></a>这和前几篇文章如何连起来</h2><p>到这里，前几篇文章其实可以连成一条完整路径。</p>
 <p>Rules 解决的是：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AI 必须遵守什么？</span><br></pre></td></tr></table></figure>
 
@@ -452,62 +495,52 @@
 <p>Project Map 解决的是：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AI 应该先去哪里找？</span><br></pre></td></tr></table></figure>
 
-<p>Elephance 解决的是：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">过去沉淀下来的项目背景如何被保存和找回？</span><br></pre></td></tr></table></figure>
+<p>Memory 解决的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">过去沉淀下来的项目背景，如何在需要时被找回？</span><br></pre></td></tr></table></figure>
 
 <p>这四者不是互相替代的关系。</p>
 <p>它们应该协同工作。</p>
-<p>比如一个比较理想的流程是：</p>
+<p>一个更理想的流程是：</p>
 <ol>
-<li>AI 先读项目 Map，判断当前任务涉及用户模块。</li>
+<li>AI 先读 Project Map，判断当前任务涉及用户模块。</li>
 <li>进入接口修改场景后，触发对应 Rule。</li>
 <li>如果任务需要缺陷流转，打开对应 Skill。</li>
-<li>如果涉及历史字段含义或之前踩过的坑，通过 Elephance 查询 Memory。</li>
+<li>如果涉及历史字段含义或之前踩过的坑，再查询 Memory。</li>
 </ol>
 <p>这才是我理解的 AI 工程协作基础设施。</p>
-<h2 id="这个项目目前是什么形态"><a href="#这个项目目前是什么形态" class="headerlink" title="这个项目目前是什么形态"></a>这个项目目前是什么形态</h2><p>Elephance 目前主要包括两部分：</p>
+<h2 id="我看论文时被确认的部分"><a href="#我看论文时被确认的部分" class="headerlink" title="我看论文时被确认的部分"></a>我看论文时被确认的部分</h2><p>后来我看到一篇论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.08224">Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering</a>，arXiv:2604.08224。</p>
+<p>这篇论文里有一个方向和我的感受很接近：</p>
+<p>现在很多 Agent 能力的提升，并不只是来自模型权重本身，而是来自模型外部运行环境的重新组织。</p>
+<p>也就是说，Agent 不是只靠“脑子更聪明”变强。</p>
+<p>它也会通过外部结构变强：</p>
 <ul>
-<li><code>@elephance/core</code>：核心 SDK，负责记忆和 schema 的存储、查询等能力。</li>
-<li><code>@elephance/mcp</code>：MCP Server，让支持 MCP 的 AI 客户端可以调用这些能力。</li>
+<li>Memory 把状态外部化。</li>
+<li>Skills 把流程经验外部化。</li>
+<li>Protocols 把交互结构外部化。</li>
+<li>Harness 把这些东西组织成可执行系统。</li>
 </ul>
-<p>底层使用 LanceDB 做本地向量存储。</p>
-<p>对外暴露的能力会围绕两类展开：</p>
-<ul>
-<li>Memory：保存和查询长期记忆。</li>
-<li>Schema：保存和查询项目结构、字段、表等信息。</li>
-</ul>
-<p>比如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">memory_upsert</span><br><span class="line">memory_query</span><br><span class="line">schema_replace_source</span><br><span class="line">schema_query</span><br></pre></td></tr></table></figure>
-
-<p>这些能力看起来很简单，但它们解决的是一个很基础的问题：AI 怎么跨会话、跨任务、跨工具地获得项目长期上下文。</p>
-<h2 id="我为什么想把它做成开源项目"><a href="#我为什么想把它做成开源项目" class="headerlink" title="我为什么想把它做成开源项目"></a>我为什么想把它做成开源项目</h2><p>因为我觉得这不是我一个人的问题。</p>
-<p>只要团队开始认真使用 AI 编程工具，就一定会遇到类似问题：</p>
-<ul>
-<li>每个人都在重复告诉 AI 项目规则。</li>
-<li>每个会话都在重新解释业务背景。</li>
-<li>很多经验只存在一次对话里，过后就丢了。</li>
-<li>AI 修过的问题，下次可能又犯。</li>
-<li>项目 schema 没有稳定进入 AI 上下文。</li>
-</ul>
-<p>这些问题如果只靠人肉 prompt，很难长期解决。</p>
-<p>它需要一个更稳定的基础设施。</p>
-<p>Elephance 就是我对这个问题的一个回答。</p>
-<p>它不是想替代 Cursor、Claude Code 或 Codex。</p>
-<p>它想成为这些工具背后的本地记忆层。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我做 Elephance，不是因为我觉得 AI 还缺一个“知识库工具”。</p>
-<p>而是因为我越来越确定：真实项目里的 AI 协作，必须有一个外部化的长期记忆层。</p>
+<p>Rules、Skills、Project Map、Memory，本质上都是在帮 AI 把原本需要临时猜、临时记、临时组织的东西，变成外部可复用的结构。</p>
+<p>下面这张图来自这篇论文，正好解释了 Memory 在 Agent 系统中的位置。</p>
+<p><img src="/blog/img/elephance/externalized-memory.jpg" alt="Memory as Externalized Agent State"></p>
+<p>图源：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.08224">Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering</a>，arXiv:2604.08224，原图随论文以 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> 发布。</p>
+<p>这部分对我来说不是起点，而是确认：</p>
+<p>AI 协作变强，不只是换更强模型，也是在模型外部建立更好的记忆、流程、协议和运行环境。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我现在越来越确定，真实项目里的 AI 协作不能只依赖当前会话。</p>
 <p>模型负责推理和生成。</p>
 <p>Rules 负责边界。</p>
 <p>Skills 负责流程。</p>
 <p>Project Map 负责导航。</p>
-<p>Memory 负责长期上下文。</p>
-<p>Elephance 想做的，就是把 Memory 这一层做得足够简单、足够本地、足够容易接入。</p>
-<p>名字里的大象，代表记忆。</p>
-<p>名字里的 Lance，代表 LanceDB。</p>
-<p>而 Elephance 想表达的，是一个朴素但重要的目标：</p>
-<p><strong>让 AI 不要每次都重新认识你的项目。</strong></p>
+<p>Memory 负责长期背景。</p>
+<p>长期记忆层的价值，不是保存一切，也不是把上下文无限拉长。</p>
+<p>它真正要解决的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">过去发生过、未来可能有用的项目经验，如何在正确时机回到 AI 的 Context 里。</span><br></pre></td></tr></table></figure>
+
+<p>Elephance 只是这个理念的一个实现。</p>
+<p>产品会变，工具会变，模型也会变。</p>
+<p>但我认为这个方向不会变：</p>
+<p><strong>AI 不应该每次都重新认识你的项目。</strong></p>
 <h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
-<li>上一篇：<a href="/2026/04/16/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/">为什么 AI 还需要一张项目 Map</a></li>
+<li>上一篇：<a href="/blog/2026/04/16/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/">为什么 AI 还需要一张项目 Map</a></li>
 <li>下一篇：如何用 Elephance 给 AI 工具增加本地记忆（待写）</li>
 </ul>
 <p>参考：</p>
@@ -607,11 +640,38 @@
 <script>
   $(document).ready(() => {
     const maraidConfig = {
-      theme: "default",
+      theme: "base",
       logLevel: 3,
       flowchart: { curve: "linear" },
       gantt: { axisFormat: "%m/%d/%Y" },
       sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
     };
     mermaid.initialize(maraidConfig);
   });

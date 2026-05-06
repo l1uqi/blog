@@ -435,8 +435,8 @@
 <p>需要长期背景时，再查询 Memory。</p>
 <p>这就是渐进式披露的意义。</p>
 <h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
-<li>上一篇：<a href="/2026/03/18/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E5%9E%8BContext%E5%86%B3%E5%AE%9AAI%E7%BC%96%E7%A8%8B%E6%95%88%E6%9E%9C/">为什么模型 Context 决定 AI 编程效果</a></li>
-<li>下一篇：<a href="/2026/04/16/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/">为什么 AI 还需要一张项目 Map</a></li>
+<li>上一篇：<a href="/blog/2026/03/18/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E5%9E%8BContext%E5%86%B3%E5%AE%9AAI%E7%BC%96%E7%A8%8B%E6%95%88%E6%9E%9C/">为什么模型 Context 决定 AI 编程效果</a></li>
+<li>下一篇：<a href="/blog/2026/04/16/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/">为什么 AI 还需要一张项目 Map</a></li>
 </ul>
 
   </article>
@@ -534,11 +534,38 @@
 <script>
   $(document).ready(() => {
     const maraidConfig = {
-      theme: "default",
+      theme: "base",
       logLevel: 3,
       flowchart: { curve: "linear" },
       gantt: { axisFormat: "%m/%d/%Y" },
       sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
     };
     mermaid.initialize(maraidConfig);
   });

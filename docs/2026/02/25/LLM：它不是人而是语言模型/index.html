@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="L1uqi">
+
+
+
+  <meta name="description" content="记录生活点滴">
+
+
+
+<title>LLM：它不是人，而是语言模型 | L1uqi</title>
+
+
+
+<link rel="icon" href="/blog/favicon.png">
+
+
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/nprogress/nprogress.css">
+
+
+
+<script src="/blog/lib/jquery.min.js"></script>
+
+
+<script src="/blog/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/blog/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/blog/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/blog/images/logo.svg" alt="L1uqi" />
+          L1uqi
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        LLM：它不是人，而是语言模型
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/blog/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/blog/categories">Categories</a>
+        
+          <a class="hidden sm:flex" href="/blog/tags">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/l1uqi">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/categories" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/tags" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/blog/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        LLM：它不是人，而是语言模型
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2026-05-06</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>4 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>1.3k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/blog/categories/AI/">AI</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>经验声明：本文是 AI 编程基础概念系列的第一篇。这个系列会把 LLM、Token、Context、Tool、MCP 和 Skill 拆开讲。先从最容易被神化的 LLM 开始。</p>
+</blockquote>
+<p>很多人第一次用 ChatGPT、Claude、Cursor 或 Codex，会下意识觉得它们像一个“懂编程的人”。</p>
+<p>这个感觉不奇怪。</p>
+<p>因为它们会解释代码，会写函数，会看报错，会总结需求，有时候甚至能给出很像资深工程师的建议。</p>
+<p>但如果你想真的用好 AI 编程工具，第一件事不是把它想成一个无所不知的程序员，而是先理解它的底层身份：</p>
+<p><strong>LLM 是 Large Language Model，大语言模型。</strong></p>
+<p>它最核心的能力，不是像人一样生活、记忆和理解世界，而是根据前面的内容，预测后面最可能出现什么。</p>
+<h2 id="LLM-到底在做什么"><a href="#LLM-到底在做什么" class="headerlink" title="LLM 到底在做什么"></a>LLM 到底在做什么</h2><p>你可以先把 LLM 理解成一个很会读文字、接文字、写文字的系统。</p>
+<p>当你输入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">帮我写一个登录接口。</span><br></pre></td></tr></table></figure>
+
+<p>模型并不是像人一样打开 IDE、查需求、回忆项目历史，然后慢慢想业务边界。</p>
+<p>它会根据训练中见过的大量代码、文档、问答、教程和错误日志，推断这个请求后面大概率应该出现什么内容。</p>
+<p>所以它可能会生成：</p>
+<ul>
+<li>一个接口路由。</li>
+<li>一个参数校验逻辑。</li>
+<li>一个数据库查询。</li>
+<li>一个密码校验过程。</li>
+<li>一个 token 生成过程。</li>
+<li>一段解释说明。</li>
+</ul>
+<p>这就是 LLM 的强项：它特别擅长从语言和代码模式里推断下一步。</p>
+<h2 id="为什么-LLM-能写代码"><a href="#为什么-LLM-能写代码" class="headerlink" title="为什么 LLM 能写代码"></a>为什么 LLM 能写代码</h2><p>代码本身也是语言。</p>
+<p>函数名、变量名、类型定义、注释、错误信息、接口文档、README、测试用例，全都是文本。</p>
+<p>LLM 在训练时见过大量这样的文本，所以它不只是会写自然语言，也能生成结构化的代码。</p>
+<p>这也是为什么它适合做这些事：</p>
+<ul>
+<li>解释一段陌生代码。</li>
+<li>根据需求生成代码草案。</li>
+<li>根据报错推测可能原因。</li>
+<li>把复杂逻辑改写得更清楚。</li>
+<li>帮你整理接口文档。</li>
+<li>根据测试失败信息定位问题。</li>
+</ul>
+<p>但这里有一个关键点：</p>
+<p><strong>LLM 会写代码，不代表它天然懂你的项目。</strong></p>
+<p>它不知道你们公司的历史债务，不知道某个字段为什么不能删，不知道某个接口为什么要兼容旧版本，也不知道产品经理上个月临时改过什么规则。</p>
+<p>这些信息如果没有进入它当前能看到的材料里，它就只能凭通用经验推理。</p>
+<h2 id="不要把-LLM-当成全知程序员"><a href="#不要把-LLM-当成全知程序员" class="headerlink" title="不要把 LLM 当成全知程序员"></a>不要把 LLM 当成全知程序员</h2><p>新人最容易踩的坑，是把 LLM 当成一个已经熟悉项目的同事。</p>
+<p>比如直接问：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个功能怎么改？</span><br></pre></td></tr></table></figure>
+
+<p>但你没有告诉它：</p>
+<ul>
+<li>你说的是哪个功能。</li>
+<li>当前代码在哪。</li>
+<li>线上问题是什么。</li>
+<li>不能改哪些边界。</li>
+<li>改完需要跑什么测试。</li>
+</ul>
+<p>这时候模型可能仍然会给你一个回答，而且看起来很完整。</p>
+<p>问题是，这个回答可能只是“合理”，不一定“正确”。</p>
+<p>AI 编程里很多翻车，不是模型完全没能力，而是它拿到的信息不够具体。</p>
+<p>更准确的用法应该是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我在改用户资料页的保存逻辑。</span><br><span class="line">当前问题是提交后接口返回 400。</span><br><span class="line">相关文件是 profile/service.ts 和 profile/form.tsx。</span><br><span class="line">报错信息如下。</span><br><span class="line">请先判断可能原因，不要直接大改结构。</span><br></pre></td></tr></table></figure>
+
+<p>这时 LLM 才开始像一个进入现场的协作者。</p>
+<h2 id="LLM-是大脑，但不是整个系统"><a href="#LLM-是大脑，但不是整个系统" class="headerlink" title="LLM 是大脑，但不是整个系统"></a>LLM 是大脑，但不是整个系统</h2><p>AI 编程工具不只是 LLM。</p>
+<p>如果只有 LLM，它只能根据你贴给它的内容回答。</p>
+<p>真正让 AI 编程工具变强的，是 LLM 周围的能力：</p>
+<ul>
+<li>Token 决定文字怎么被模型处理。</li>
+<li>Context 决定模型这次看到了什么。</li>
+<li>Tool 让模型可以读取文件、运行命令、搜索代码。</li>
+<li>MCP 让外部工具用标准方式接进来。</li>
+<li>Skill 告诉模型某类任务应该按什么流程做。</li>
+</ul>
+<p>所以可以先记住一句话：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LLM 是大脑，但 AI 编程不是只有大脑。</span><br></pre></td></tr></table></figure>
+
+<p>模型本身负责理解、推理和生成。</p>
+<p>但它要想在真实项目里稳定工作，还需要上下文、工具、流程和约束。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果你刚接触 AI 编程，理解 LLM 时先别急着追模型参数、排行榜和各种神奇演示。</p>
+<p>先记住这几点：</p>
+<ul>
+<li>LLM 是大语言模型。</li>
+<li>它的核心能力是基于上下文生成后续内容。</li>
+<li>它很擅长处理文字、代码、日志和文档。</li>
+<li>它不天然知道你的项目和业务背景。</li>
+<li>它需要 Context、Tool 和 Skill 才能真正进入工作流程。</li>
+</ul>
+<p>把 LLM 理解清楚之后，再看 Token 就会容易很多。</p>
+<p>因为模型不是直接“读懂文字”，它会先把文字切成一小块一小块的 token。</p>
+<h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
+<li>上一篇：<a href="/blog/2026/02/18/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BE%88%E5%A4%9A%E4%BA%BA%E7%94%A8%E4%B8%8D%E5%A5%BDAI%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/">为什么很多人用不好 AI 编程工具</a></li>
+<li>下一篇：<a href="/blog/2026/02/26/Token%EF%BC%9A%E6%A8%A1%E5%9E%8B%E7%9C%BC%E9%87%8C%E7%9A%84%E6%96%87%E5%AD%97%E9%A2%97%E7%B2%92/">Token：模型眼里的文字颗粒</a></li>
+</ul>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/AI-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/LLM/">LLM</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/blog/2026/02/26/Token%EF%BC%9A%E6%A8%A1%E5%9E%8B%E7%9C%BC%E9%87%8C%E7%9A%84%E6%96%87%E5%AD%97%E9%A2%97%E7%B2%92/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Token：模型眼里的文字颗粒
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/blog/2026/02/18/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BE%88%E5%A4%9A%E4%BA%BA%E7%94%A8%E4%B8%8D%E5%A5%BDAI%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          为什么很多人用不好 AI 编程工具
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/blog/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "base",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/blog/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/blog/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/blog/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

@@ -182,4 +182,4 @@ Rules 是边界，Context 是工作台，Memory 是让 AI 真正长期参与项�
 ## 上一篇 / 下一篇
 
 - 上一篇：无
-- 下一篇：[AI 编程新人先懂这几个词：LLM、Token、Context、Tool、MCP 和 Skill](/2026/02/25/AI编程新人先懂这几个词：LLM、Token、Context、Tool、MCP和Skill/)
+- 下一篇：[LLM：它不是人，而是语言模型](/blog/2026/02/25/LLM：它不是人而是语言模型/)

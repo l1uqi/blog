@@ -372,5 +372,5 @@ Memory 补历史。
 
 ## 上一篇 / 下一篇
 
-- 上一篇：[为什么 Rules 和 Skills 都需要渐进式披露](/2026/04/02/为什么Rules和Skills都需要渐进式披露/)
-- 下一篇：[为什么我要做 Elephance：给 AI 一个本地长期记忆层](/2026/04/30/为什么我要做Elephance/)
+- 上一篇：[为什么 Rules 和 Skills 都需要渐进式披露](/blog/2026/04/02/为什么Rules和Skills都需要渐进式披露/)
+- 下一篇：[为什么我要做 Elephance：给 AI 一个本地长期记忆层](/blog/2026/04/30/为什么我要做Elephance/)

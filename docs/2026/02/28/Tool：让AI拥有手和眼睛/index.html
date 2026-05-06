@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="L1uqi">
+
+
+
+  <meta name="description" content="记录生活点滴">
+
+
+
+<title>Tool：让 AI 拥有手和眼睛 | L1uqi</title>
+
+
+
+<link rel="icon" href="/blog/favicon.png">
+
+
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/nprogress/nprogress.css">
+
+
+
+<script src="/blog/lib/jquery.min.js"></script>
+
+
+<script src="/blog/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/blog/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/blog/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/blog/images/logo.svg" alt="L1uqi" />
+          L1uqi
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        Tool：让 AI 拥有手和眼睛
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/blog/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/blog/categories">Categories</a>
+        
+          <a class="hidden sm:flex" href="/blog/tags">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/l1uqi">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/categories" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/tags" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/blog/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        Tool：让 AI 拥有手和眼睛
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2026-05-06</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>4 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>1.3k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/blog/categories/AI/">AI</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>经验声明：本文是 AI 编程基础概念系列的第四篇。上一篇讲 Context，这一篇讲 Tool。没有 Tool，AI 更像聊天窗口；有了 Tool，它才开始真正参与工作。</p>
+</blockquote>
+<p>单纯的 LLM 只能生成文字。</p>
+<p>它不能自己读取你的项目文件，不能运行测试，不能查看浏览器页面，不能查询数据库，也不能知道你电脑里刚刚发生了什么。</p>
+<p>但我们现在用的 AI 编程工具，确实可以做这些事。</p>
+<p>原因是平台给模型接入了 Tool。</p>
+<h2 id="Tool-是什么"><a href="#Tool-是什么" class="headerlink" title="Tool 是什么"></a>Tool 是什么</h2><p>Tool 可以理解成 AI 可以调用的外部能力。</p>
+<p>它通常有明确的输入和输出。</p>
+<p>比如：</p>
+<ul>
+<li>搜索代码。</li>
+<li>读取文件。</li>
+<li>修改文件。</li>
+<li>运行终端命令。</li>
+<li>查询数据库。</li>
+<li>打开网页。</li>
+<li>截图浏览器。</li>
+<li>调用接口。</li>
+<li>创建 Git commit。</li>
+</ul>
+<p>模型本身不是直接拥有这些能力。</p>
+<p>它会先判断“我现在需要用哪个工具”，然后由平台执行对应动作，再把结果返回给模型。</p>
+<p>模型再根据这些结果继续推理。</p>
+<h2 id="没有-Tool-时，AI-只能靠你贴材料"><a href="#没有-Tool-时，AI-只能靠你贴材料" class="headerlink" title="没有 Tool 时，AI 只能靠你贴材料"></a>没有 Tool 时，AI 只能靠你贴材料</h2><p>假设你问：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">帮我看一下 TAPD 里这个需求，下步应该怎么做？</span><br></pre></td></tr></table></figure>
+
+<p>如果没有 Tool，AI 只能看你手动贴出来的需求内容。</p>
+<p>你没贴，它就不知道。</p>
+<p>你贴少了，它只能猜。</p>
+<p>你贴错了，它会被误导。</p>
+<p>有 Tool 之后，流程会变成：</p>
+<ol>
+<li>AI 判断需要读取 TAPD 需求。</li>
+<li>平台调用 TAPD Tool。</li>
+<li>Tool 返回需求标题、描述、验收标准和评论。</li>
+<li>AI 把这些内容放进 Context。</li>
+<li>AI 根据需求整理重点和风险。</li>
+<li>AI 给出下一步开发建议。</li>
+</ol>
+<p>这时 AI 就不只是“回答问题”，而是在参与一个真实的工程循环。</p>
+<p>用一个更具体的例子看，会更直观。</p>
+<p>假设你对 AI 说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">帮我看一下 TAPD 需求 12345，整理一下要做什么。</span><br></pre></td></tr></table></figure>
+
+<p>如果 AI 有访问 TAPD 的 Tool，它的工作过程大概会像这样：</p>
+<pre class="mermaid">sequenceDiagram
+    participant User as 用户
+    participant AI as LLM
+    participant Tool as TAPD Tool
+    participant TAPD as TAPD
+
+    User->>AI: 帮我看 TAPD 需求 12345
+    AI->>Tool: 读取需求详情
+    Tool->>TAPD: 查询标题、描述、验收标准、评论
+    TAPD-->>Tool: 返回需求内容
+    Tool-->>AI: 把需求内容放回 Context
+    AI-->>User: 总结要做什么，并提示风险和下一步</pre>
+
+<p>这张图里要注意两点。</p>
+<p>第一，真正访问 TAPD 的不是 LLM 本身，而是外部 Tool。</p>
+<p>第二，Tool 执行完之后，会把结果再放回 Context，LLM 才能继续判断下一步。</p>
+<h2 id="Tool-是-AI-的手和眼睛"><a href="#Tool-是-AI-的手和眼睛" class="headerlink" title="Tool 是 AI 的手和眼睛"></a>Tool 是 AI 的手和眼睛</h2><p>可以这样理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LLM 是脑子。</span><br><span class="line">Context 是摆在脑子面前的材料。</span><br><span class="line">Tool 是 AI 可以伸出去的手和眼睛。</span><br></pre></td></tr></table></figure>
+
+<p>眼睛负责看：</p>
+<ul>
+<li>看文件。</li>
+<li>看网页。</li>
+<li>看日志。</li>
+<li>看测试结果。</li>
+<li>看数据库返回。</li>
+</ul>
+<p>手负责做：</p>
+<ul>
+<li>改代码。</li>
+<li>跑命令。</li>
+<li>调接口。</li>
+<li>生成文件。</li>
+<li>提交变更。</li>
+</ul>
+<p>没有 Tool，AI 只能基于已有上下文推理。</p>
+<p>有了 Tool，AI 才能主动获取新信息，并且通过执行结果修正自己的判断。</p>
+<h2 id="Tool-不是-Skill"><a href="#Tool-不是-Skill" class="headerlink" title="Tool 不是 Skill"></a>Tool 不是 Skill</h2><p>Tool 和 Skill 很容易混。</p>
+<p>Tool 是能力。</p>
+<p>Skill 是流程。</p>
+<p>比如：</p>
+<ul>
+<li>能运行测试，这是 Tool。</li>
+<li>知道修 bug 时要先复现、再定位、再最小修改、最后验证，这是 Skill。</li>
+</ul>
+<p>再比如：</p>
+<ul>
+<li>能访问 TAPD，这是 Tool。</li>
+<li>知道如何读取任务、分析需求、改代码、回写状态，这是一套 Skill。</li>
+</ul>
+<p>所以 Tool 解决的是“能不能做”。</p>
+<p>Skill 解决的是“应该怎么做”。</p>
+<p>这两个要配合起来，AI 编程才会稳。</p>
+<h2 id="Tool-也需要权限边界"><a href="#Tool-也需要权限边界" class="headerlink" title="Tool 也需要权限边界"></a>Tool 也需要权限边界</h2><p>Tool 越强，风险也越高。</p>
+<p>如果 AI 能读文件，就要考虑哪些文件可以读，哪些文件包含敏感信息。</p>
+<p>如果 AI 能运行命令，就要考虑哪些命令是安全的，哪些命令可能删除数据、覆盖文件或泄露凭证。</p>
+<p>如果 AI 能访问业务系统，就要考虑权限、审计和操作确认。</p>
+<p>所以好的 AI 编程环境，不只是给模型很多工具。</p>
+<p>它还会设计清楚：</p>
+<ul>
+<li>工具能做什么。</li>
+<li>工具不能做什么。</li>
+<li>哪些操作需要确认。</li>
+<li>哪些数据不能暴露。</li>
+<li>执行结果如何返回给模型。</li>
+</ul>
+<p>AI 能干活是一件好事，但工程系统里永远不能只看能力，也要看边界。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Tool 让 LLM 从“只会说”，变成“能观察、能执行、能验证”。</p>
+<p>可以先记住这几句话：</p>
+<ul>
+<li>Tool 是 AI 可以调用的外部能力。</li>
+<li>没有 Tool，AI 只能依赖你贴给它的材料。</li>
+<li>有了 Tool，AI 可以读取文件、运行测试、搜索代码和调用系统。</li>
+<li>Tool 是能力，Skill 是流程。</li>
+<li>Tool 越强，越需要权限和安全边界。</li>
+</ul>
+<p>下一篇讲 MCP。</p>
+<p>当工具越来越多时，一个新问题会出现：不同工具怎么用统一方式接入 AI？</p>
+<p>这就是 MCP 要解决的问题。</p>
+<h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
+<li>上一篇：<a href="/blog/2026/02/27/Context%EF%BC%9A%E6%A8%A1%E5%9E%8B%E5%BD%93%E5%89%8D%E8%83%BD%E7%9C%8B%E5%88%B0%E4%BB%80%E4%B9%88/">Context：模型当前能看到什么</a></li>
+<li>下一篇：<a href="/blog/2026/03/01/MCP%EF%BC%9A%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%85%A5AI%E7%9A%84%E6%A0%87%E5%87%86%E6%8E%A5%E5%8F%A3/">MCP：工具接入 AI 的标准接口</a></li>
+</ul>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/AI-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/LLM/">LLM</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Tool/">Tool</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/blog/2026/03/01/MCP%EF%BC%9A%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%85%A5AI%E7%9A%84%E6%A0%87%E5%87%86%E6%8E%A5%E5%8F%A3/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          MCP：工具接入 AI 的标准接口
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/blog/2026/02/27/Context%EF%BC%9A%E6%A8%A1%E5%9E%8B%E5%BD%93%E5%89%8D%E8%83%BD%E7%9C%8B%E5%88%B0%E4%BB%80%E4%B9%88/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          Context：模型当前能看到什么
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/blog/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "base",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/blog/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/blog/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/blog/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

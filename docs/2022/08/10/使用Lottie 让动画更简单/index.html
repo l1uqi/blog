@@ -276,7 +276,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-04-30</time>
+            <time>2026-05-06</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -401,11 +401,38 @@
 <script>
   $(document).ready(() => {
     const maraidConfig = {
-      theme: "default",
+      theme: "base",
       logLevel: 3,
       flowchart: { curve: "linear" },
       gantt: { axisFormat: "%m/%d/%Y" },
       sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
     };
     mermaid.initialize(maraidConfig);
   });
