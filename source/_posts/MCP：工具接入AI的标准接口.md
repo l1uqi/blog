@@ -1,6 +1,6 @@
 ---
 title: MCP：工具接入 AI 的标准接口
-date: 2026-03-01 10:00:00
+date: 2026-03-08 10:00:00
 categories:
   - AI
 tags:

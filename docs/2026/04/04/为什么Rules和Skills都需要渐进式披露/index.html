@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="L1uqi">
+
+
+
+  <meta name="description" content="记录生活点滴">
+
+
+
+<title>为什么 Rules 和 Skills 都需要渐进式披露 | L1uqi</title>
+
+
+
+<link rel="icon" href="/blog/favicon.png">
+
+
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/nprogress/nprogress.css">
+
+
+
+<script src="/blog/lib/jquery.min.js"></script>
+
+
+<script src="/blog/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/blog/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/blog/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/blog/images/logo.svg" alt="L1uqi" />
+          L1uqi
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        为什么 Rules 和 Skills 都需要渐进式披露
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/blog/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/blog/categories">Categories</a>
+        
+          <a class="hidden sm:flex" href="/blog/tags">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/l1uqi">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/categories" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/tags" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/blog/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        为什么 Rules 和 Skills 都需要渐进式披露
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2026-05-06</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>8 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.4k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/blog/categories/AI/">AI</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>经验声明：本文是 AI 编程协作系列的第五篇。前面分别讲了 Rules 和 Context，这一篇继续往下讲：为什么规则、流程和上下文不能一次性全部塞给 AI，而要按任务逐步披露。</p>
+</blockquote>
+<p>前面两篇分别讲了 Rules 和 Context。Rules 解决边界问题，Context 解决模型当前到底看到了什么。</p>
+<p>但当 Rule 越来越多之后，又会出现一个新问题：</p>
+<p><strong>如果把所有 Rules、Skills、项目说明、流程文档都一次性塞给 AI，效果反而会变差。</strong></p>
+<p>这听起来有点反直觉。</p>
+<p>很多人会觉得：既然 AI 缺上下文，那我给它更多上下文不就好了？</p>
+<p>现实不是这样。</p>
+<p>AI 不是看得越多就越稳。它更像一个刚加入项目的新同事：你第一天把所有制度、所有历史需求、所有业务文档、所有代码规范一次性丢给他，他并不会立刻变强，只会抓不住重点。</p>
+<p>所以我们需要一个非常朴素的原则：</p>
+<p><strong>先给方向，再给规则；先给入口，再给细节；先让 AI 知道去哪找，再让它读取具体内容。</strong></p>
+<p>这就是我说的渐进式披露。</p>
+<h2 id="什么是渐进式披露"><a href="#什么是渐进式披露" class="headerlink" title="什么是渐进式披露"></a>什么是渐进式披露</h2><p>用大白话说，渐进式披露就是：</p>
+<p>不要第一轮就把所有东西告诉 AI。</p>
+<p>而是根据任务阶段，一层一层把需要的信息打开。</p>
+<p>比如你让 AI 修一个 bug，第一轮真正需要的可能只是：</p>
+<ul>
+<li>当前任务是什么。</li>
+<li>项目大概是什么结构。</li>
+<li>修 bug 必须遵守哪些红线。</li>
+<li>先从哪里开始排查。</li>
+</ul>
+<p>等 AI 找到相关模块之后，再给它更具体的模块规则。</p>
+<p>等 AI 准备改代码时，再给它代码风格和测试规则。</p>
+<p>等 AI 修完之后，再给它验证和交付流程。</p>
+<p>这个过程和人类协作很像。</p>
+<p>你不会在同事刚开始排查问题时，就把发布流程、数据库设计、组件规范、测试规范、代码 review 模板全部讲一遍。你会先告诉他：“这个问题大概率在订单模块，你先看这几个文件，支付状态那里不要乱改。”</p>
+<p>AI 也一样。</p>
+<h2 id="为什么第一轮不能给太多"><a href="#为什么第一轮不能给太多" class="headerlink" title="为什么第一轮不能给太多"></a>为什么第一轮不能给太多</h2><p>第一轮给太多上下文，至少有三个问题。</p>
+<h3 id="第一，重点会被冲淡"><a href="#第一，重点会被冲淡" class="headerlink" title="第一，重点会被冲淡"></a>第一，重点会被冲淡</h3><p>上下文越多，AI 越容易把不重要的信息当成重要信息。</p>
+<p>比如你只是让它改一个按钮样式，但你给了它完整架构说明、接口规范、数据库 schema、发布流程。它可能会开始过度分析，甚至做一些本来不该做的重构。</p>
+<p>这不是 AI 不努力，而是你给它的“题面”太吵了。</p>
+<h3 id="第二，成本会变高"><a href="#第二，成本会变高" class="headerlink" title="第二，成本会变高"></a>第二，成本会变高</h3><p>每一条 Rule、每一段文档、每一个示例，只要进入上下文，就会占用 token。</p>
+<p>如果每次任务都把所有内容塞进去，简单任务也会变重。</p>
+<p>更麻烦的是，token 被无关信息占掉之后，真正重要的当前代码、错误日志、测试输出反而可能被挤出去。</p>
+<h3 id="第三，规则之间会互相干扰"><a href="#第三，规则之间会互相干扰" class="headerlink" title="第三，规则之间会互相干扰"></a>第三，规则之间会互相干扰</h3><p>真实项目里的规则不是永远同等优先级。</p>
+<p>有些规则只适合前端，有些只适合后端；有些只适合新增需求，有些只适合修 bug；有些只适合发布阶段。</p>
+<p>如果不区分场景全部注入，AI 可能会把发布检查规则套到一个小修复上，也可能把重构规则套到线上紧急 bug 上。</p>
+<p>规则多不代表规则有效。</p>
+<p>能在正确场景触发，才是有效。</p>
+<h2 id="Rules-也需要分层"><a href="#Rules-也需要分层" class="headerlink" title="Rules 也需要分层"></a>Rules 也需要分层</h2><p>我建议把 Rules 分成三层。</p>
+<h3 id="第一层：常驻红线"><a href="#第一层：常驻红线" class="headerlink" title="第一层：常驻红线"></a>第一层：常驻红线</h3><p>这类规则可以 Always Apply，因为它们几乎任何时候都应该生效。</p>
+<p>比如：</p>
+<ul>
+<li>回答语言和沟通风格。</li>
+<li>不要执行危险命令。</li>
+<li>不要主动删除用户代码。</li>
+<li>不要修改生产配置。</li>
+<li>不确定业务逻辑时先查证。</li>
+</ul>
+<p>这一层要短。</p>
+<p>它像安全带，不像说明书。</p>
+<h3 id="第二层：场景规则"><a href="#第二层：场景规则" class="headerlink" title="第二层：场景规则"></a>第二层：场景规则</h3><p>这类规则应该按文件、目录或任务类型触发。</p>
+<p>比如：</p>
+<ul>
+<li>修改 <code>src/api</code> 时触发接口规则。</li>
+<li>修改 <code>src/components</code> 时触发组件规则。</li>
+<li>修改测试文件时触发测试规则。</li>
+<li>处理 TAPD 需求时触发 TAPD 流程规则。</li>
+</ul>
+<p>这一层不应该常驻。</p>
+<p>只有任务真的进入相关区域时，才需要打开。</p>
+<h3 id="第三层：临时上下文"><a href="#第三层：临时上下文" class="headerlink" title="第三层：临时上下文"></a>第三层：临时上下文</h3><p>这类信息只对当前任务有用。</p>
+<p>比如：</p>
+<ul>
+<li>当前 bug 的复现步骤。</li>
+<li>当前需求的验收标准。</li>
+<li>某次接口报错的日志。</li>
+<li>某个页面截图。</li>
+</ul>
+<p>这些不应该写进长期 Rule。</p>
+<p>任务结束后，它们要么进入 Memory，要么自然消失。</p>
+<h2 id="Skills-也需要渐进式披露"><a href="#Skills-也需要渐进式披露" class="headerlink" title="Skills 也需要渐进式披露"></a>Skills 也需要渐进式披露</h2><p>Skills 和 Rules 不一样。</p>
+<p>Rule 更像红线，告诉 AI 什么不能乱来。</p>
+<p>Skill 更像流程，告诉 AI 一件复杂事情应该怎么一步步做。</p>
+<p>比如：</p>
+<ul>
+<li>处理 TAPD 今日任务。</li>
+<li>修复缺陷并回写状态。</li>
+<li>做一次 TDD 开发。</li>
+<li>生成发布说明。</li>
+<li>进行页面视觉验证。</li>
+</ul>
+<p>但 Skills 也不能全部常驻。</p>
+<p>如果你把所有 Skill 的完整内容都放进全局规则，AI 每次都会背着一大包流程上路。明明只是改一行文案，它也可能开始思考 TAPD 回写、发布报告和 E2E 截图。</p>
+<p>更合理的方式是：</p>
+<p>第一轮只告诉 AI：你有哪些 Skill，可以在需要时打开。</p>
+<p>比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">当前项目提供以下 Skills：</span><br><span class="line"></span><br><span class="line">- tapd-today-plan：读取当前项目今日任务。</span><br><span class="line">- tapd-defect-update：修复缺陷后回写 TAPD。</span><br><span class="line">- frontend-tdd：按测试先行流程开发前端需求。</span><br><span class="line">- visual-check：对页面改动进行截图验证。</span><br><span class="line"></span><br><span class="line">当任务需要对应流程时，先说明你准备使用哪个 Skill，再读取具体内容。</span><br></pre></td></tr></table></figure>
+
+<p>注意，这里第一轮只给目录，不给全文。</p>
+<p>这就像你告诉 AI：“公司有这些 SOP，你需要时去查。”而不是把所有 SOP 全部贴在它面前。</p>
+<h2 id="首轮应该给什么"><a href="#首轮应该给什么" class="headerlink" title="首轮应该给什么"></a>首轮应该给什么</h2><p>首轮上下文不应该追求完整，而应该追求导航能力。</p>
+<p>我认为首轮只需要回答四个问题：</p>
+<ol>
+<li>这个项目是什么？</li>
+<li>当前任务大概属于哪类？</li>
+<li>有哪些规则和流程可以查？</li>
+<li>遇到不确定时应该先去哪里找？</li>
+</ol>
+<p>比如一个比较好的首轮上下文是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">这是一个 React + TypeScript 项目。</span><br><span class="line">请先阅读项目 Map，判断当前任务涉及的模块。</span><br><span class="line"></span><br><span class="line">规则使用原则：</span><br><span class="line">- 全局红线始终遵守。</span><br><span class="line">- 进入具体模块后，再读取对应模块规则。</span><br><span class="line">- 需要执行复杂流程时，再打开对应 Skill。</span><br><span class="line">- 不确定业务背景时，优先查询 Memory 或项目文档。</span><br></pre></td></tr></table></figure>
+
+<p>这段话不长，但它给了 AI 一个工作方式。</p>
+<p>它不会让 AI 立刻知道所有细节，却能让 AI 知道下一步应该去哪找。</p>
+<p>这比一开始塞三千行规则更重要。</p>
+<h2 id="什么时候披露更多信息"><a href="#什么时候披露更多信息" class="headerlink" title="什么时候披露更多信息"></a>什么时候披露更多信息</h2><p>渐进式披露不是故意藏信息，而是让信息在正确时机出现。</p>
+<p>我一般按下面几个节点打开更多上下文。</p>
+<h3 id="识别任务阶段"><a href="#识别任务阶段" class="headerlink" title="识别任务阶段"></a>识别任务阶段</h3><p>当 AI 还没判断任务类型时，只给项目概览和规则索引。</p>
+<p>这时它需要的是方向，不是细节。</p>
+<h3 id="定位模块阶段"><a href="#定位模块阶段" class="headerlink" title="定位模块阶段"></a>定位模块阶段</h3><p>当 AI 判断任务涉及某个模块后，再打开模块规则和相关文档。</p>
+<p>比如订单、支付、用户、权限，每个模块都有自己的坑。</p>
+<h3 id="准备修改阶段"><a href="#准备修改阶段" class="headerlink" title="准备修改阶段"></a>准备修改阶段</h3><p>当 AI 准备动代码时，再给代码风格、测试要求、高风险提醒。</p>
+<p>这能减少“分析时背太多规则，真正改代码时反而忘重点”的情况。</p>
+<h3 id="验证交付阶段"><a href="#验证交付阶段" class="headerlink" title="验证交付阶段"></a>验证交付阶段</h3><p>当代码改完后，再打开验证流程、回写流程、发布说明流程。</p>
+<p>不同阶段触发不同规则，AI 的行为会更像一个真实工程师。</p>
+<h2 id="渐进式披露和-Memory-的关系"><a href="#渐进式披露和-Memory-的关系" class="headerlink" title="渐进式披露和 Memory 的关系"></a>渐进式披露和 Memory 的关系</h2><p>这一篇主要讲 Rules 和 Skills，但它其实也在为 Memory 做铺垫。</p>
+<p>因为 Memory 本质上也是按需披露。</p>
+<p>长期记忆不应该每次全部进入上下文。它应该像搜索引擎一样：当前任务需要什么，就检索什么。</p>
+<p>比如你问 AI 修改登录页，它不需要知道所有历史项目决策。它只需要检索和登录、认证、表单、接口错误相关的记忆。</p>
+<p>所以渐进式披露并不是一个写 Rule 的技巧，而是整个 AI 协作体系的底层原则。</p>
+<p>Rules 要渐进式披露。</p>
+<p>Skills 要渐进式披露。</p>
+<p>Memory 也要渐进式披露。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>AI 效果不好，有时候不是因为上下文太少，而是因为上下文给得太粗糙。</p>
+<p>真正好的上下文组织，不是把所有东西一次性塞进去，而是让 AI 逐步看到它当前需要的内容。</p>
+<p>第一轮给方向。</p>
+<p>第二轮给模块。</p>
+<p>第三轮给规则。</p>
+<p>第四轮给流程。</p>
+<p>需要长期背景时，再查询 Memory。</p>
+<p>这就是渐进式披露的意义。</p>
+<h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
+<li>上一篇：<a href="/blog/2026/03/18/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E5%9E%8BContext%E5%86%B3%E5%AE%9AAI%E7%BC%96%E7%A8%8B%E6%95%88%E6%9E%9C/">为什么模型 Context 决定 AI 编程效果</a></li>
+<li>下一篇：<a href="/blog/2026/04/16/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/">为什么 AI 还需要一张项目 Map</a></li>
+</ul>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/AI-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Context/">Context</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Skills/">Skills</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Cursor/">Cursor</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Rules/">Rules</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/blog/2026/04/18/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          为什么 AI 还需要一张项目 Map
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/blog/2026/03/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E5%9E%8BContext%E5%86%B3%E5%AE%9AAI%E7%BC%96%E7%A8%8B%E6%95%88%E6%9E%9C/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          为什么模型 Context 决定 AI 编程效果
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/blog/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "base",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/blog/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/blog/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/blog/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

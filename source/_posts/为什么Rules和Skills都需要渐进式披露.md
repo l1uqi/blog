@@ -1,6 +1,6 @@
 ---
 title: 为什么 Rules 和 Skills 都需要渐进式披露
-date: 2026-04-02 10:00:00
+date: 2026-04-04 10:00:00
 categories:
   - AI
 tags:

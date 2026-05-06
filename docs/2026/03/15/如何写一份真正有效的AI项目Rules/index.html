@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="L1uqi">
+
+
+
+  <meta name="description" content="记录生活点滴">
+
+
+
+<title>如何写一份真正有效的 AI 项目 Rules | L1uqi</title>
+
+
+
+<link rel="icon" href="/blog/favicon.png">
+
+
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/nprogress/nprogress.css">
+
+
+
+<script src="/blog/lib/jquery.min.js"></script>
+
+
+<script src="/blog/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/blog/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/blog/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/blog/images/logo.svg" alt="L1uqi" />
+          L1uqi
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        如何写一份真正有效的 AI 项目 Rules
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/blog/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/blog/categories">Categories</a>
+        
+          <a class="hidden sm:flex" href="/blog/tags">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/l1uqi">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/categories" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/tags" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/blog/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        如何写一份真正有效的 AI 项目 Rules
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2026-05-06</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>14 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>3.9k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/blog/categories/AI/">AI</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>经验声明：本文是 AI 编程协作系列的第三篇。前面先讲了为什么很多人用不好 AI 编程工具，也把 LLM、Token、Context、Tool、MCP 和 Skill 这些基础词说清楚了。这一篇重点讨论项目 Rules。</p>
+</blockquote>
+<p>上一篇讲 Skill 时，我们把它理解成“某类任务的操作手册”。</p>
+<p>但 Skill 讲完之后，最容易产生一个问题：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">既然 Skill 已经告诉 AI 怎么做事了，为什么还要单独讲 Rules？</span><br><span class="line">Rule 不就是 Skill 吗？</span><br></pre></td></tr></table></figure>
+
+<p>我的理解是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Skill 解决“任务怎么推进”。</span><br><span class="line">Rule 解决“哪些边界不能踩”。</span><br></pre></td></tr></table></figure>
+
+<p>一个 Skill 里面当然可以包含 Rule。</p>
+<p>比如“Bug 修复 Skill”里可以写：</p>
+<ul>
+<li>先复现，再修改。</li>
+<li>修改后必须跑测试。</li>
+<li>不要顺手重构无关文件。</li>
+</ul>
+<p>前两条更像流程，最后一条就是 Rule。</p>
+<p>但很多 Rule 不属于某一个具体 Skill，而是整个项目都要遵守的边界。</p>
+<p>比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">所有 API 错误必须经过统一 errorHandler，不要在业务组件里直接 message.error。</span><br></pre></td></tr></table></figure>
+
+<p>这条规则不只影响修 bug，也影响写新功能、做重构、补测试。它是项目级约束。</p>
+<p>所以，Rule 可以是 Skill 的一部分，但 Rule 不等于 Skill。</p>
+<p>这也是为什么我会在讲完 Skill 后，单独写一篇文章讲 Rules。</p>
+<p>很多人用不好 AI 编程工具，一个很重要的原因就是：<strong>流程可能讲了，但项目边界没有沉淀下来。</strong></p>
+<p>但这里很容易产生一个误解：既然 Rules 重要，那是不是应该一开始就认真写一份很完整的规则文档？</p>
+<p>我的答案恰好相反。</p>
+<p><strong>真正有效的 Rule，通常不是一开始手写出来的，而是在一次次错误修正后长出来的。</strong></p>
+<p>这句话很重要。</p>
+<p>因为很多人写 Rules 的方式是这样的：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请你遵循最佳实践。</span><br><span class="line">请你写高质量代码。</span><br><span class="line">请你保持代码简洁。</span><br><span class="line">请你不要破坏现有逻辑。</span><br></pre></td></tr></table></figure>
+
+<p>这些话看起来都对，但实际效果往往很弱。因为它们太泛了，AI 不知道什么叫“当前项目里的最佳实践”，也不知道什么叫“不要破坏现有逻辑”。</p>
+<p>真正有价值的 Rule，必须来自具体场景。</p>
+<h2 id="Rule-不是口号，而是纠错记录"><a href="#Rule-不是口号，而是纠错记录" class="headerlink" title="Rule 不是口号，而是纠错记录"></a>Rule 不是口号，而是纠错记录</h2><p>我现在更愿意把 Rule 看成一种“项目纠错记录”。</p>
+<p>它记录的不是抽象原则，而是：</p>
+<ul>
+<li>AI 曾经在哪些地方做错过。</li>
+<li>为什么这个项目不能那样做。</li>
+<li>下次遇到类似情况应该怎么判断。</li>
+<li>应该优先参考哪些文件。</li>
+<li>哪些操作需要先询问用户。</li>
+</ul>
+<p>比如，下面这条规则就比“不要破坏现有逻辑”有效得多：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">修改支付相关逻辑时，不要直接重构 `paymentStatus` 的枚举判断。</span><br><span class="line">该字段历史上兼容旧版本 App，新增状态必须先查看 `src/constants/payment.ts`</span><br><span class="line">和 `docs/payment-status.md`，再决定是否调整。</span><br></pre></td></tr></table></figure>
+
+<p>这条规则之所以有效，是因为它不是泛泛而谈。它告诉 AI：</p>
+<ul>
+<li>具体模块是什么。</li>
+<li>具体风险是什么。</li>
+<li>应该先看哪些文件。</li>
+<li>不要做什么。</li>
+</ul>
+<p>这才是 Rule 应该具备的密度。</p>
+<h2 id="为什么不要一开始手写完整-Rule"><a href="#为什么不要一开始手写完整-Rule" class="headerlink" title="为什么不要一开始手写完整 Rule"></a>为什么不要一开始手写完整 Rule</h2><p>一开始手写 Rule 最大的问题是：你会写很多“你以为重要”的东西，而漏掉真正会让 AI 出错的东西。</p>
+<p>项目里的隐性规则往往不是靠回忆想出来的，而是在真实任务中暴露出来的。</p>
+<p>比如：</p>
+<ul>
+<li>AI 改了一个公共组件，结果影响了多个页面。</li>
+<li>AI 直接调用 <code>message.error</code>，绕过了统一错误处理。</li>
+<li>AI 写了一个新工具函数，但项目里其实已经有类似封装。</li>
+<li>AI 为了修 bug 顺手重构了整个模块。</li>
+<li>AI 新增接口时没有补 mock，也没有更新类型定义。</li>
+<li>AI 生成 SQL 时误解了某个字段含义。</li>
+</ul>
+<p>这些问题发生之前，你未必能提前想到。</p>
+<p>但一旦发生，它们就是最好的 Rule 来源。</p>
+<p>所以我更推荐的方式是：<strong>先让 AI 在真实任务里工作，再把错误沉淀成规则。</strong></p>
+<p>Rule 不是项目开始前的一次性设计，而是 AI 协作过程中的持续演化。</p>
+<h2 id="一个有效-Rule-的生成闭环"><a href="#一个有效-Rule-的生成闭环" class="headerlink" title="一个有效 Rule 的生成闭环"></a>一个有效 Rule 的生成闭环</h2><p>我通常会按下面这个闭环来维护 Rules。</p>
+<h3 id="第一步：让-AI-正常完成任务"><a href="#第一步：让-AI-正常完成任务" class="headerlink" title="第一步：让 AI 正常完成任务"></a>第一步：让 AI 正常完成任务</h3><p>先不要急着写一大堆规则。</p>
+<p>让 AI 在真实需求中工作，比如修一个 bug、写一个组件、补一个接口、改一个测试。</p>
+<p>这一步的目标不是让它完美，而是观察它在当前项目里最容易犯什么错。</p>
+<h3 id="第二步：发现错误后，不只改代码"><a href="#第二步：发现错误后，不只改代码" class="headerlink" title="第二步：发现错误后，不只改代码"></a>第二步：发现错误后，不只改代码</h3><p>很多人用 AI 时，只会在发现错误后说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不对，这里不能这样写，帮我改掉。</span><br></pre></td></tr></table></figure>
+
+<p>这样当然可以修复当前问题，但下一次 AI 还可能继续犯同样的错。</p>
+<p>更好的做法是，在纠正它之后继续追问一句：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请总结这次错误背后的项目规则，并把它改写成适合长期复用的 AI 项目 Rule。</span><br></pre></td></tr></table></figure>
+
+<p>这一步很关键。</p>
+<p>因为你不是让 AI 只修当前代码，而是让它把“为什么错”抽象成未来可复用的约束。</p>
+<h3 id="第三步：让-AI-自己生成-Rule"><a href="#第三步：让-AI-自己生成-Rule" class="headerlink" title="第三步：让 AI 自己生成 Rule"></a>第三步：让 AI 自己生成 Rule</h3><p>我的观点是：<strong>Rule 不应该主要靠人手写，而应该让 AI 基于错误上下文自己生成。</strong></p>
+<p>原因很简单，Rule 的读者本来就是 AI。</p>
+<p>人类更擅长指出问题和解释业务背景，AI 更擅长把这些内容整理成结构化、可执行的指令。</p>
+<p>你可以这样说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">刚才你在接口错误处理上犯了一个项目级错误。</span><br><span class="line">这个项目不允许在业务组件里直接调用 message.error，</span><br><span class="line">所有接口错误必须进入 requestErrorHandler。</span><br><span class="line"></span><br><span class="line">请基于这次错误生成一条项目 Rule，</span><br><span class="line">要求下次新增接口调用或修改请求逻辑时自动遵守。</span><br></pre></td></tr></table></figure>
+
+<p>AI 生成出来后，人再做审核。</p>
+<p>这比人类凭空写 Rule 更自然，也更贴近真实问题。</p>
+<h3 id="第四步：人工审核和压缩"><a href="#第四步：人工审核和压缩" class="headerlink" title="第四步：人工审核和压缩"></a>第四步：人工审核和压缩</h3><p>虽然我说 Rule 应该让 AI 生成，但不代表完全不需要人工判断。</p>
+<p>人需要做三件事：</p>
+<ol>
+<li>删除废话。</li>
+<li>补充关键文件路径。</li>
+<li>判断这条规则应该放在哪个作用域。</li>
+</ol>
+<p>Rule 最怕两种情况：</p>
+<ul>
+<li>太空，只有价值观，没有操作细节。</li>
+<li>太长，把所有上下文都塞进去，导致每次都浪费 token。</li>
+</ul>
+<p>好的 Rule 应该短、准、具体。</p>
+<h3 id="第五步：下一次任务中验证"><a href="#第五步：下一次任务中验证" class="headerlink" title="第五步：下一次任务中验证"></a>第五步：下一次任务中验证</h3><p>Rule 写进去之后，不要默认它已经有效。</p>
+<p>你需要在下一次类似任务里观察：</p>
+<ul>
+<li>AI 有没有主动遵守。</li>
+<li>是否还需要你重复提醒。</li>
+<li>是否触发范围太大。</li>
+<li>是否对无关任务造成干扰。</li>
+</ul>
+<p>如果仍然出错，就继续修正 Rule。</p>
+<p>所以 Rule 不是写完就结束，而是像测试用例一样，随着项目持续迭代。</p>
+<h2 id="Rules-应该放在哪里"><a href="#Rules-应该放在哪里" class="headerlink" title="Rules 应该放在哪里"></a>Rules 应该放在哪里</h2><p>不同工具有不同的规则入口。比如 Cursor 当前官方文档推荐使用 Project Rules，也就是放在项目的 <code>.cursor/rules</code> 目录中。旧的 <code>.cursorrules</code> 仍然支持，但已经属于 legacy。</p>
+<p>但这只是一个示例。真正重要的不是文件名，而是规则要能被 AI 在合适的场景读取。无论是 <code>.cursor/rules</code>、<code>AGENTS.md</code>，还是其它 Agent 工具的规则文件，本质上都在解决同一个问题：给 AI 提供稳定、可复用、可演化的项目约束。</p>
+<p>以 Cursor 的 Project Rules 为例，它的好处是可以拆分成多个 <code>.mdc</code> 文件，并按场景控制触发方式。</p>
+<p>常见类型包括：</p>
+<ul>
+<li><strong>Always</strong>：总是进入上下文，适合非常核心的项目约束。</li>
+<li><strong>Auto Attached</strong>：当匹配某些文件路径时自动附加，适合前端、后端、测试等分区规则。</li>
+<li><strong>Agent Requested</strong>：AI 可以根据描述主动选择是否使用。</li>
+<li><strong>Manual</strong>：只有显式 <code>@ruleName</code> 时才使用。</li>
+</ul>
+<p>这比把所有东西塞进一个单一规则文件更清晰。</p>
+<h2 id="我推荐的-Rules-目录结构"><a href="#我推荐的-Rules-目录结构" class="headerlink" title="我推荐的 Rules 目录结构"></a>我推荐的 Rules 目录结构</h2><p>一个项目刚开始可以不用复杂，但至少可以这样拆：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.cursor/rules/</span><br><span class="line">├── project-overview.mdc</span><br><span class="line">├── code-style.mdc</span><br><span class="line">├── frontend.mdc</span><br><span class="line">├── api-request.mdc</span><br><span class="line">├── testing.mdc</span><br><span class="line">└── dangerous-changes.mdc</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li><code>project-overview.mdc</code>：项目技术栈、目录结构、核心约定。</li>
+<li><code>code-style.mdc</code>：命名、组件写法、类型习惯。</li>
+<li><code>frontend.mdc</code>：页面、组件、状态管理相关规则。</li>
+<li><code>api-request.mdc</code>：接口请求、错误处理、类型生成规则。</li>
+<li><code>testing.mdc</code>：单测、E2E、验证命令。</li>
+<li><code>dangerous-changes.mdc</code>：高风险文件和禁止行为。</li>
+</ul>
+<p>不要追求一步到位。</p>
+<p>一开始哪怕只有两三个文件也可以。重要的是每一条都来自真实问题。</p>
+<h2 id="一个从错误生成-Rule-的例子"><a href="#一个从错误生成-Rule-的例子" class="headerlink" title="一个从错误生成 Rule 的例子"></a>一个从错误生成 Rule 的例子</h2><p>假设 AI 在项目中犯了这样一个错误：</p>
+<p>它新增接口调用时，直接在组件里写了：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">updateUserProfile</span>(data);</span><br><span class="line">&#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">  message.<span class="title function_">error</span>(<span class="string">&quot;保存失败&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但你的项目里规定，接口错误必须交给统一请求层处理，业务组件不能直接弹错误。</p>
+<p>这时不要只让 AI 改代码。</p>
+<p>你可以继续说：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">这次错误需要沉淀成项目 Rule。</span><br><span class="line">请生成一条适合放进 `.cursor/rules/api-request.mdc` 的规则：</span><br><span class="line"></span><br><span class="line">1. 说明业务组件不能直接处理接口错误弹窗。</span><br><span class="line">2. 要求优先使用项目已有 request 封装。</span><br><span class="line">3. 修改接口调用前先查看现有同类代码。</span><br><span class="line">4. 给出一个错误示例和正确示例。</span><br></pre></td></tr></table></figure>
+
+<p>最后可能生成这样的 Rule：</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">description: API request and error handling conventions</span><br><span class="line">globs:</span><br><span class="line"><span class="bullet">  -</span> &quot;src/<span class="strong">**/<span class="emphasis">*.ts&quot;</span></span></span><br><span class="line"><span class="emphasis"><span class="strong">  - &quot;src/*</span><span class="emphasis">*/*</span>.tsx&quot;</span></span><br><span class="line"><span class="strong">alwaysApply: false</span></span><br><span class="line"><span class="strong">---</span></span><br><span class="line"><span class="strong"></span></span><br><span class="line"><span class="strong"># API Request Rules</span></span><br><span class="line"><span class="strong"></span></span><br><span class="line"><span class="strong">- Do not call `message.error`, `toast.error`, or similar UI error notifications directly inside business components for API failures.</span></span><br><span class="line"><span class="strong">- API errors must go through the existing request layer and shared error handling flow.</span></span><br><span class="line"><span class="strong">- Before adding a new API call, search for existing usage of the same service module and follow the local pattern.</span></span><br><span class="line"><span class="strong">- If a request needs special error handling, explain why before adding component-level handling.</span></span><br><span class="line"><span class="strong"></span></span><br><span class="line"><span class="strong">Bad:</span></span><br><span class="line"><span class="strong"></span></span><br><span class="line"><span class="strong">```ts</span></span><br><span class="line"><span class="strong">try &#123;</span></span><br><span class="line"><span class="strong">  await updateUserProfile(data);</span></span><br><span class="line"><span class="strong">&#125; catch (error) &#123;</span></span><br><span class="line"><span class="strong">  message.error(&quot;保存失败&quot;);</span></span><br><span class="line"><span class="strong">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Good:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> <span class="title function_">updateUserProfile</span>(data);</span><br></pre></td></tr></table></figure>
+
+<p>Let the shared request layer handle API errors unless this feature has a documented exception.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这条 Rule 就是从真实错误里生长出来的。</span><br><span class="line"></span><br><span class="line">它不是抽象口号，而是项目经验。</span><br><span class="line"></span><br><span class="line">## 什么内容适合写进 Rule</span><br><span class="line"></span><br><span class="line">我认为适合写进 Rule 的内容有几类。</span><br><span class="line"></span><br><span class="line">### 高频重复提醒</span><br><span class="line"></span><br><span class="line">如果你发现自己已经第三次提醒 AI 同一件事，它就应该进入 Rule。</span><br><span class="line"></span><br><span class="line">比如：</span><br><span class="line"></span><br><span class="line">- 回答必须使用中文。</span><br><span class="line">- 不要直接改生成文件。</span><br><span class="line">- 修改组件后必须补测试。</span><br><span class="line">- 不要绕过统一请求层。</span><br><span class="line"></span><br><span class="line">### 项目特有约定</span><br><span class="line"></span><br><span class="line">这些内容对人类团队来说可能是常识，但 AI 不知道。</span><br><span class="line"></span><br><span class="line">比如：</span><br><span class="line"></span><br><span class="line">- 目录命名规则。</span><br><span class="line">- 状态管理方式。</span><br><span class="line">- 权限判断入口。</span><br><span class="line">- 业务枚举含义。</span><br><span class="line">- 数据转换层位置。</span><br><span class="line"></span><br><span class="line">### 高风险操作</span><br><span class="line"></span><br><span class="line">这类规则尤其重要。</span><br><span class="line"></span><br><span class="line">比如：</span><br><span class="line"></span><br><span class="line">- 不要主动执行数据库迁移。</span><br><span class="line">- 不要删除历史兼容逻辑。</span><br><span class="line">- 不要重构支付、登录、权限等核心模块，除非用户明确要求。</span><br><span class="line">- 修改公共组件前先分析影响范围。</span><br><span class="line"></span><br><span class="line">### 固定工作流</span><br><span class="line"></span><br><span class="line">例如：</span><br><span class="line"></span><br><span class="line">- 修 bug 前先复现。</span><br><span class="line">- 改代码后跑对应测试。</span><br><span class="line">- 前端视觉改动后截图验证。</span><br><span class="line">- 完成需求后生成变更摘要。</span><br><span class="line"></span><br><span class="line">这些内容都适合沉淀成 Rule。</span><br><span class="line"></span><br><span class="line">## 什么内容不适合写进 Rule</span><br><span class="line"></span><br><span class="line">不是所有东西都应该放进 Rule。</span><br><span class="line"></span><br><span class="line">下面这些内容我一般不建议写进去：</span><br><span class="line"></span><br><span class="line">- 很长的业务文档。</span><br><span class="line">- 大量数据库 schema。</span><br><span class="line">- 某次临时需求的细节。</span><br><span class="line">- 很少触发的一次性流程。</span><br><span class="line">- 需要按需检索的历史信息。</span><br><span class="line"></span><br><span class="line">这些更适合放进 Memory 或文档里，再通过 MCP、Elephance 这类本地记忆工具按需检索。</span><br><span class="line"></span><br><span class="line">Rule 应该是“必须持续生效的约束”，不是项目知识库的垃圾桶。</span><br><span class="line"></span><br><span class="line">## 一条 Rule 的判断标准</span><br><span class="line"></span><br><span class="line">我通常用下面几个问题判断一条 Rule 是否值得保留：</span><br><span class="line"></span><br><span class="line">1. 它是否来自真实错误或真实重复提醒？</span><br><span class="line">2. 它是否足够具体，能指导下一次行为？</span><br><span class="line">3. 它是否有明确适用范围？</span><br><span class="line">4. 它是否会频繁触发？</span><br><span class="line">5. 它是否比放在 Memory 里更适合常驻上下文？</span><br><span class="line"></span><br><span class="line">如果答案大多是否定的，就不要急着写进 Rule。</span><br><span class="line"></span><br><span class="line">## 好 Rule 和坏 Rule 的区别</span><br><span class="line"></span><br><span class="line">坏 Rule：</span><br><span class="line"></span><br><span class="line">```text</span><br><span class="line">请写高质量代码，遵循最佳实践，保证可维护性。</span><br></pre></td></tr></table></figure>
+
+<p>好 Rule：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">新增 React 组件时，优先使用 `src/components` 中已有的组合方式。</span><br><span class="line">不要新增独立状态管理方案。</span><br><span class="line">如果组件需要跨页面共享状态，先检查 `src/store` 中是否已有对应 slice。</span><br></pre></td></tr></table></figure>
+
+<p>坏 Rule：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不要随便改代码。</span><br></pre></td></tr></table></figure>
+
+<p>好 Rule：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">修改 `src/shared` 下的公共组件前，先搜索调用方并说明影响范围。</span><br><span class="line">如果只是修复单个页面问题，优先在页面层处理，避免扩大公共组件行为变化。</span><br></pre></td></tr></table></figure>
+
+<p>差别就在于：坏 Rule 是态度，好 Rule 是行动指南。</p>
+<h2 id="最实用的一句提示词"><a href="#最实用的一句提示词" class="headerlink" title="最实用的一句提示词"></a>最实用的一句提示词</h2><p>如果只记一句，我建议记这个：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">请把这次错误总结成一条项目 Rule，</span><br><span class="line">要求它能防止你下次在类似场景中犯同样的错误。</span><br><span class="line">规则要具体、可执行，并说明适用范围。</span><br></pre></td></tr></table></figure>
+
+<p>这句话非常好用。</p>
+<p>每次 AI 犯错之后，不要只让它修。让它反思，让它沉淀，让它把错误变成规则。</p>
+<p>时间久了，你的项目 Rules 会越来越像一个真正懂项目的老同事留下来的经验手册。</p>
+<h2 id="Rules-和-Memory-的边界"><a href="#Rules-和-Memory-的边界" class="headerlink" title="Rules 和 Memory 的边界"></a>Rules 和 Memory 的边界</h2><p>这里也顺便回应上一篇文章里的观点。</p>
+<p>Rules 解决的是“必须遵守什么”。</p>
+<p>Memory 解决的是“过去发生过什么、现在可能需要什么背景”。</p>
+<p>如果一条信息需要每次都约束 AI，就放进 Rule。</p>
+<p>如果一条信息只是未来某些任务可能会用到，就放进 Memory。</p>
+<p>比如：</p>
+<ul>
+<li>“不要在业务组件里直接处理接口错误”适合放进 Rule。</li>
+<li>“上次用户资料页接口失败是因为 token 刷新时序问题”更适合放进 Memory。</li>
+</ul>
+<p>这也是 Elephance 这类本地记忆层存在的意义：不要让 Rule 承担所有上下文。</p>
+<p>Rule 越清晰，Memory 越可检索，AI 的协作体验才会越稳定。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>真正有效的项目 Rules，不是靠一开始拍脑袋写出来的。</p>
+<p>它应该来自真实任务，来自 AI 犯过的错，来自你一次次纠正它时沉淀下来的项目经验。</p>
+<p>我的建议是：</p>
+<ul>
+<li>不要追求一次性写完整。</li>
+<li>不要写空泛口号。</li>
+<li>不要把 Rule 当知识库。</li>
+<li>每次 AI 犯错后，都让它总结一条可复用规则。</li>
+<li>人负责判断和压缩，AI 负责生成和整理。</li>
+</ul>
+<p>Rule 的本质不是“我告诉 AI 怎么做”，而是“我们把已经证明容易出错的地方，变成下一次自动生效的约束”。</p>
+<p>这才是一份项目 Rules 真正有效的原因。</p>
+<h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
+<li>上一篇：<a href="/blog/2026/03/02/Skill%EF%BC%9A%E6%8A%8A%E7%BB%8F%E9%AA%8C%E6%B2%89%E6%B7%80%E6%88%90%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/">Skill：把经验沉淀成操作手册</a></li>
+<li>下一篇：<a href="/blog/2026/03/18/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E5%9E%8BContext%E5%86%B3%E5%AE%9AAI%E7%BC%96%E7%A8%8B%E6%95%88%E6%9E%9C/">为什么模型 Context 决定 AI 编程效果</a></li>
+</ul>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.cursor.com/en/context/rules">Cursor Rules 官方文档</a>，作为 Project Rules 的一个具体示例。</li>
+</ul>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/AI-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Cursor/">Cursor</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Rules/">Rules</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Prompt/">Prompt</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/blog/2026/03/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E5%9E%8BContext%E5%86%B3%E5%AE%9AAI%E7%BC%96%E7%A8%8B%E6%95%88%E6%9E%9C/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          为什么模型 Context 决定 AI 编程效果
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/blog/2026/03/14/Skill%EF%BC%9A%E6%8A%8A%E7%BB%8F%E9%AA%8C%E6%B2%89%E6%B7%80%E6%88%90%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          Skill：把经验沉淀成操作手册
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/blog/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "base",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/blog/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/blog/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/blog/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

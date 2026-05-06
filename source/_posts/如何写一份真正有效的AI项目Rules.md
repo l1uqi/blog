@@ -1,6 +1,6 @@
 ---
 title: 如何写一份真正有效的 AI 项目 Rules
-date: 2026-03-04 10:00:00
+date: 2026-03-15 10:00:00
 categories:
   - AI
 tags:

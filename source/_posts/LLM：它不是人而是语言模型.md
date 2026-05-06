@@ -1,6 +1,6 @@
 ---
 title: LLM：它不是人，而是语言模型
-date: 2026-02-25 10:00:00
+date: 2026-02-22 10:00:00
 categories:
   - AI
 tags:

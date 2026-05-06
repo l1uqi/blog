@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="L1uqi">
+
+
+
+  <meta name="description" content="记录生活点滴">
+
+
+
+<title>为什么模型 Context 决定 AI 编程效果 | L1uqi</title>
+
+
+
+<link rel="icon" href="/blog/favicon.png">
+
+
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/nprogress/nprogress.css">
+
+
+
+<script src="/blog/lib/jquery.min.js"></script>
+
+
+<script src="/blog/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/blog/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/blog/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/blog/images/logo.svg" alt="L1uqi" />
+          L1uqi
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        为什么模型 Context 决定 AI 编程效果
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/blog/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/blog/categories">Categories</a>
+        
+          <a class="hidden sm:flex" href="/blog/tags">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/l1uqi">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/categories" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/tags" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/blog/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        为什么模型 Context 决定 AI 编程效果
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2026-05-06</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>8 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.3k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/blog/categories/AI/">AI</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>经验声明：本文是 AI 编程协作系列的第四篇。上一篇讲 Rules，这一篇单独讲 Context。因为模型能不能写对代码，很多时候不是能力问题，而是它当前到底看到了什么。</p>
+</blockquote>
+<p>很多人评价 AI 编程工具时，会说一句话：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个模型不懂我的项目。</span><br></pre></td></tr></table></figure>
+
+<p>这句话很多时候是对的。</p>
+<p>但更准确地说，不是模型完全不懂，而是它当前这一次任务的 Context 不够好。</p>
+<p>模型不像人类同事。人类同事会记得昨天开会讲过什么，会知道这个模块谁改过，会记住上次线上问题的结论。AI 如果没有被提供这些信息，或者没有工具帮它检索这些信息，它就只能根据当前窗口里能看到的内容推理。</p>
+<p>所以 Context 决定了一个很基础的问题：</p>
+<p><strong>模型这次到底是在“看着项目写代码”，还是在“凭经验猜代码”。</strong></p>
+<h2 id="Context-不是资料越多越好"><a href="#Context-不是资料越多越好" class="headerlink" title="Context 不是资料越多越好"></a>Context 不是资料越多越好</h2><p>很多人会误以为，Context 就是把更多资料塞给 AI。</p>
+<p>比如：</p>
+<ul>
+<li>把整个项目说明贴进去。</li>
+<li>把所有 Rules 都塞进去。</li>
+<li>把几十个相关文件一次性打开。</li>
+<li>把历史聊天记录全部丢进去。</li>
+</ul>
+<p>这看起来是在帮 AI，实际经常会让效果变差。</p>
+<p>因为模型的注意力不是无限的。</p>
+<p>上下文越多，噪音也越多。真正关键的错误日志、类型定义、调用链，反而可能被大量无关内容冲淡。</p>
+<p>所以我更愿意把 Context 理解成一个工作台。</p>
+<p>工作台太空，AI 没工具。</p>
+<p>工作台太乱，AI 找不到重点。</p>
+<p>好的 Context 不是“大”，而是“准”。</p>
+<h2 id="如果公司里有一个拥有完整上下文的人"><a href="#如果公司里有一个拥有完整上下文的人" class="headerlink" title="如果公司里有一个拥有完整上下文的人"></a>如果公司里有一个拥有完整上下文的人</h2><p>可以换一个更生活化的例子。</p>
+<p>假设一家公司里有一个员工。</p>
+<p>他从公司成立第一天就在。</p>
+<p>公司为什么做这个产品，他知道。</p>
+<p>第一批客户怎么来的，他知道。</p>
+<p>哪些功能做过又删掉，他知道。</p>
+<p>哪些技术债是当年为了赶上线留下的，他知道。</p>
+<p>销售、产品、研发、测试、客服、财务之间怎么协作，他也知道。</p>
+<p>甚至每一次重大决策为什么发生、后来造成了什么结果、谁踩过什么坑，他都知道。</p>
+<p>那这个人是不是可以帮公司做任何决策？</p>
+<p>我的答案是：<strong>他不一定能替所有人做决策，但他一定会显著提高几乎所有决策的质量。</strong></p>
+<p>因为决策不只需要信息。</p>
+<p>决策还需要目标、责任、风险偏好和价值取舍。</p>
+<p>比如公司要不要砍掉一个老功能，不只是看历史数据，还要看当前战略、客户承诺、团队资源和未来方向。</p>
+<p>这些不能简单交给“知道最多的人”自动决定。</p>
+<p>但一个拥有完整上下文的人，会非常接近公司里的超级参谋。</p>
+<p>他可以提醒你：</p>
+<ul>
+<li>这个方案三年前试过，失败原因不是技术，而是销售流程没跟上。</li>
+<li>这个客户现在看起来很小，但曾经推动过一个关键行业案例。</li>
+<li>这个字段不能随便删，因为还有一批老版本客户端依赖它。</li>
+<li>这个需求表面是产品问题，背后其实是客服每天重复处理的成本。</li>
+<li>这个技术方案短期快，但会让下个季度的迁移更痛。</li>
+</ul>
+<p>这就是 Context 的价值。</p>
+<p>很多错误决策，并不是因为人不聪明，而是因为只拿到了局部上下文。</p>
+<p>产品只看到用户需求。</p>
+<p>研发只看到技术实现。</p>
+<p>销售只看到客户压力。</p>
+<p>客服只看到问题反馈。</p>
+<p>财务只看到成本数字。</p>
+<p>每个人都看到了真实的一部分，但没有人看到完整关系。</p>
+<p>AI 也是一样。</p>
+<p>当我们说模型需要更好的 Context，本质上不是让它背更多资料，而是让它在当前任务里，尽可能接近那个“从公司成立第一天就在场的人”。</p>
+<p>它知道历史，知道约束，知道关联，知道过去踩过的坑，也知道当前任务真正不能碰的边界。</p>
+<p>这样的 AI 才不只是一个代码生成器，而更像一个懂项目的协作对象。</p>
+<h2 id="模型只能基于当前可见信息推理"><a href="#模型只能基于当前可见信息推理" class="headerlink" title="模型只能基于当前可见信息推理"></a>模型只能基于当前可见信息推理</h2><p>AI 编程最容易被误解的一点是：模型看起来很聪明，所以我们会默认它知道很多项目背景。</p>
+<p>但真实情况是，它在一次任务里主要依赖三类信息：</p>
+<ul>
+<li>模型参数里学到的通用知识。</li>
+<li>当前上下文窗口里的内容。</li>
+<li>工具临时读取或检索到的信息。</li>
+</ul>
+<p>通用知识可以让它知道 React、Vue、TypeScript、Node 怎么写。</p>
+<p>但通用知识不会告诉它：</p>
+<ul>
+<li>你们项目为什么不能改某个字段。</li>
+<li>某个目录是不是已经废弃。</li>
+<li>某个组件是不是被十几个页面复用。</li>
+<li>某个接口错误是不是必须走统一处理。</li>
+<li>某个状态值是不是为了兼容旧版本保留下来的。</li>
+</ul>
+<p>这些都是项目 Context。</p>
+<p>如果 Context 没给到，AI 就只能用通用经验补空白。</p>
+<p>而真实业务代码里，最容易出问题的地方，往往就是这些通用经验覆盖不了的空白。</p>
+<h2 id="Context-缺失会造成什么问题"><a href="#Context-缺失会造成什么问题" class="headerlink" title="Context 缺失会造成什么问题"></a>Context 缺失会造成什么问题</h2><p>Context 缺失时，AI 通常不会直接说“我不知道”。</p>
+<p>它更可能做三件事。</p>
+<h3 id="第一，生成看起来合理但不符合项目的代码"><a href="#第一，生成看起来合理但不符合项目的代码" class="headerlink" title="第一，生成看起来合理但不符合项目的代码"></a>第一，生成看起来合理但不符合项目的代码</h3><p>比如项目明明有统一请求层，它却在组件里直接 <code>try/catch</code>。</p>
+<p>代码语法没问题，甚至看起来还挺完整，但项目规范错了。</p>
+<h3 id="第二，重复造轮子"><a href="#第二，重复造轮子" class="headerlink" title="第二，重复造轮子"></a>第二，重复造轮子</h3><p>它不知道项目里已经有工具函数，就会新写一个。</p>
+<p>它不知道已有组件模式，就会新建一个不一致的实现。</p>
+<p>这种问题短期看不严重，长期会让项目越来越碎。</p>
+<h3 id="第三，误判影响范围"><a href="#第三，误判影响范围" class="headerlink" title="第三，误判影响范围"></a>第三，误判影响范围</h3><p>它只看到当前文件，就以为改动只影响当前页面。</p>
+<p>但真实项目里，一个公共组件、一个 request 封装、一个权限判断，可能影响很多地方。</p>
+<p>如果 Context 没包含调用方和模块关系，AI 就很难判断风险。</p>
+<h2 id="好-Context-应该包含什么"><a href="#好-Context-应该包含什么" class="headerlink" title="好 Context 应该包含什么"></a>好 Context 应该包含什么</h2><p>我觉得一次 AI 编程任务，比较理想的 Context 至少包括几类信息。</p>
+<h3 id="当前任务"><a href="#当前任务" class="headerlink" title="当前任务"></a>当前任务</h3><p>它要知道你到底想做什么。</p>
+<p>比如是修 bug、新增需求、重构、排查问题，还是只做代码解释。</p>
+<p>任务类型不同，需要的 Context 完全不同。</p>
+<h3 id="相关代码"><a href="#相关代码" class="headerlink" title="相关代码"></a>相关代码</h3><p>不是整个项目，而是和当前任务相关的代码。</p>
+<p>比如：</p>
+<ul>
+<li>当前文件。</li>
+<li>调用方。</li>
+<li>被调用的 service。</li>
+<li>类型定义。</li>
+<li>测试文件。</li>
+<li>相似实现。</li>
+</ul>
+<h3 id="项目规则"><a href="#项目规则" class="headerlink" title="项目规则"></a>项目规则</h3><p>这里只需要和当前任务相关的规则。</p>
+<p>比如改接口时，需要接口错误处理规则；改组件时，需要组件规范；改测试时，需要测试约定。</p>
+<h3 id="运行反馈"><a href="#运行反馈" class="headerlink" title="运行反馈"></a>运行反馈</h3><p>包括：</p>
+<ul>
+<li>错误日志。</li>
+<li>TypeScript 报错。</li>
+<li>单测输出。</li>
+<li>浏览器截图。</li>
+<li>构建结果。</li>
+</ul>
+<p>这些反馈能让 AI 从“猜”变成“验证后再改”。</p>
+<h3 id="历史背景"><a href="#历史背景" class="headerlink" title="历史背景"></a>历史背景</h3><p>这部分不一定每次都需要。</p>
+<p>但如果任务涉及历史兼容、业务字段、线上问题、用户偏好，就需要从 Memory 或文档里取回来。</p>
+<h2 id="Context-和-Rules-的关系"><a href="#Context-和-Rules-的关系" class="headerlink" title="Context 和 Rules 的关系"></a>Context 和 Rules 的关系</h2><p>Rules 不是 Context 的全部。</p>
+<p>Rules 是长期稳定的约束。</p>
+<p>Context 是当前任务需要的工作材料。</p>
+<p>比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不要在业务组件里直接处理接口错误。</span><br></pre></td></tr></table></figure>
+
+<p>这适合放进 Rule。</p>
+<p>但下面这些就不适合长期常驻：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这次保存失败的接口返回 401。</span><br><span class="line">用户资料页的调用链是 A -&gt; B -&gt; C。</span><br><span class="line">当前分支新增了一个 profileService。</span><br></pre></td></tr></table></figure>
+
+<p>这些是当前任务 Context。</p>
+<p>它们非常重要，但不应该永远塞在 Rule 里。</p>
+<h2 id="Context-和-Memory-的区别"><a href="#Context-和-Memory-的区别" class="headerlink" title="Context 和 Memory 的区别"></a>Context 和 Memory 的区别</h2><p>Context 是模型当前能看到的内容。</p>
+<p>Memory 是可以长期保存、未来按需取回的内容。</p>
+<p>两者关系可以这样理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Memory 是仓库。</span><br><span class="line">Context 是这次拿到桌面上的材料。</span><br></pre></td></tr></table></figure>
+
+<p>如果所有材料都放桌面上，桌面会乱。</p>
+<p>如果仓库里没有材料，下一次又要重新找。</p>
+<p>所以合理的做法是：</p>
+<ul>
+<li>Rules 常驻少量红线。</li>
+<li>Project Map 告诉 AI 去哪里找。</li>
+<li>Memory 保存长期背景。</li>
+<li>Context 只放当前任务真正需要的信息。</li>
+</ul>
+<p>这就是后面要讲渐进式披露的原因。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>模型 Context 的重要性，常常被低估。</p>
+<p>很多时候，AI 不是不会写代码，而是它没有看到该看的东西。</p>
+<p>Context 太少，AI 会瞎猜。</p>
+<p>Context 太多，AI 会迷路。</p>
+<p>真正有效的 AI 编程，不是无限堆资料，而是让模型在每一步都看到刚好需要的信息。</p>
+<h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
+<li>上一篇：<a href="/blog/2026/03/04/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%BB%BD%E7%9C%9F%E6%AD%A3%E6%9C%89%E6%95%88%E7%9A%84AI%E9%A1%B9%E7%9B%AERules/">如何写一份真正有效的 AI 项目 Rules</a></li>
+<li>下一篇：<a href="/blog/2026/04/02/%E4%B8%BA%E4%BB%80%E4%B9%88Rules%E5%92%8CSkills%E9%83%BD%E9%9C%80%E8%A6%81%E6%B8%90%E8%BF%9B%E5%BC%8F%E6%8A%AB%E9%9C%B2/">为什么 Rules 和 Skills 都需要渐进式披露</a></li>
+</ul>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/AI-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Context/">Context</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Cursor/">Cursor</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Rules/">Rules</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/blog/2026/04/04/%E4%B8%BA%E4%BB%80%E4%B9%88Rules%E5%92%8CSkills%E9%83%BD%E9%9C%80%E8%A6%81%E6%B8%90%E8%BF%9B%E5%BC%8F%E6%8A%AB%E9%9C%B2/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          为什么 Rules 和 Skills 都需要渐进式披露
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/blog/2026/03/15/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E4%BB%BD%E7%9C%9F%E6%AD%A3%E6%9C%89%E6%95%88%E7%9A%84AI%E9%A1%B9%E7%9B%AERules/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          如何写一份真正有效的 AI 项目 Rules
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/blog/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "base",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#111111",
+        primaryBorderColor: "#111111",
+        secondaryColor: "#ffffff",
+        secondaryTextColor: "#111111",
+        secondaryBorderColor: "#111111",
+        tertiaryColor: "#ffffff",
+        tertiaryTextColor: "#111111",
+        tertiaryBorderColor: "#111111",
+        lineColor: "#111111",
+        textColor: "#111111",
+        actorBkg: "#ffffff",
+        actorBorder: "#111111",
+        actorTextColor: "#111111",
+        actorLineColor: "#111111",
+        signalColor: "#111111",
+        signalTextColor: "#111111",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#111111",
+        labelTextColor: "#111111",
+        loopTextColor: "#111111",
+        noteBkgColor: "#ffffff",
+        noteTextColor: "#111111",
+        noteBorderColor: "#111111",
+      },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/blog/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/blog/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/blog/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

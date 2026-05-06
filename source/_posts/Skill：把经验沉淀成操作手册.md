@@ -1,6 +1,6 @@
 ---
 title: Skill：把经验沉淀成操作手册
-date: 2026-03-02 10:00:00
+date: 2026-03-14 10:00:00
 categories:
   - AI
 tags:
