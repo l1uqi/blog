@@ -313,5 +313,5 @@ Context 太多，AI 会迷路。
 
 ## 上一篇 / 下一篇
 
-- 上一篇：[如何写一份真正有效的 AI 项目 Rules](/blog/2026/03/04/如何写一份真正有效的AI项目Rules/)
-- 下一篇：[为什么 Rules 和 Skills 都需要渐进式披露](/blog/2026/04/02/为什么Rules和Skills都需要渐进式披露/)
+- 上一篇：[如何写一份真正有效的 AI 项目 Rules](/blog/2026/03/15/如何写一份真正有效的AI项目Rules/)
+- 下一篇：[为什么 Rules 和 Skills 都需要渐进式披露](/blog/2026/04/04/为什么Rules和Skills都需要渐进式披露/)
