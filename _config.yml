@@ -63,6 +63,9 @@ prismjs:
   preprocess: true
   line_number: true
   tab_replace: ''
+marked:
+  prependRoot: true
+  postAsset: false
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -105,7 +108,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: pretext
+theme: maple
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment

@@ -1,188 +1,311 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="L1uqi">
+
+
+
+  <meta name="description" content="记录生活点滴">
+
+
+
 <title>从TAPD到跨项目协作：利用Skills提升自动化与效率 | L1uqi</title>
 
-<meta name="description" content="记录生活点滴">
 
 
-<meta name="author" content="L1uqi">
-<meta property="og:type" content="article">
-<meta property="og:title" content="从TAPD到跨项目协作：利用Skills提升自动化与效率">
-<meta property="og:site_name" content="L1uqi">
-
-<meta property="og:description" content="记录生活点滴">
-
-<link rel="icon" href="/blog/favicon.png" type="image/png">
-<link rel="canonical" href="https://l1uqi.github.io/blog/2026/04/30/%E4%BB%8ETAPD%E5%88%B0%E8%B7%A8%E9%A1%B9%E7%9B%AE%E5%8D%8F%E4%BD%9C%EF%BC%9A%E5%88%A9%E7%94%A8Skills%E6%8F%90%E5%8D%87%E8%87%AA%E5%8A%A8%E5%8C%96%E4%B8%8E%E6%95%88%E7%8E%87/index.html">
-
-<link rel="alternate" href="/blog/atom.xml" title="L1uqi" type="application/atom+xml">
+<link rel="icon" href="/blog/favicon.png">
 
 
 
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;700&family=Shippori+Mincho:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
+<link rel="stylesheet" href="/blog/lib/nprogress/nprogress.css">
 
-<link rel="stylesheet" href="/blog/css/style.css">
 
 
+<script src="/blog/lib/jquery.min.js"></script>
+
+
+<script src="/blog/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/blog/lib/nprogress/nprogress.js"></script>
 
 <script>
-(function(){
-  var t = localStorage.getItem('theme');
-  if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark');
-  }
-})();
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
 </script>
 
 
 
-<meta name="generator" content="Hexo 5.4.2"></head>
-<body class="bg-bg-light dark:bg-bg-dark text-text-primary dark:text-text-primary-dark font-body leading-relaxed min-h-screen flex flex-col ">
-  <header class="w-full border-b border-border-light dark:border-border-dark">
-  <nav class="max-w-wide mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-    <a href="/blog/" class="font-heading text-xl font-medium tracking-wide hover:text-accent dark:hover:text-accent-dark transition-colors">
-      L1uqi
-    </a>
-    <div class="flex items-center gap-6">
-      <ul class="hidden sm:flex items-center gap-6 text-sm">
-        
-        <li>
-          <a href="/blog/" class="text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-            首页
-          </a>
-        </li>
-        
-        <li>
-          <a href="/blog/archives" class="text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-            归档
-          </a>
-        </li>
-        
-        <li>
-          <a href="/blog/tags" class="text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-            标签
-          </a>
-        </li>
-        
-      </ul>
-      <button id="dark-mode-toggle" class="p-1.5 text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors" aria-label="Toggle dark mode">
-  <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-  <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-</button>
 
-      <button id="mobile-menu-btn" class="sm:hidden p-1 text-text-secondary dark:text-text-secondary-dark" aria-label="首页">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-    </div>
-  </nav>
-  <div id="mobile-menu" class="sm:hidden hidden border-t border-border-light dark:border-border-dark">
-    <ul class="px-4 py-3 space-y-2">
-      
-      <li>
-        <a href="/blog/" class="block py-1 text-sm text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-          首页
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/blog/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/blog/images/logo.svg" alt="L1uqi" />
+          L1uqi
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        从TAPD到跨项目协作：利用Skills提升自动化与效率
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/blog/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/blog/categories">Categories</a>
+        
+          <a class="hidden sm:flex" href="/blog/tags">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/l1uqi">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
         </a>
-      </li>
-      
-      <li>
-        <a href="/blog/archives" class="block py-1 text-sm text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-          归档
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
         </a>
-      </li>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
       
-      <li>
-        <a href="/blog/tags" class="block py-1 text-sm text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-          标签
-        </a>
-      </li>
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/categories" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/blog/tags" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
       
     </ul>
   </div>
-</header>
-
-  <main class="flex-1 w-full max-w-wide mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <article class="max-w-content mx-auto">
-  <header class="mb-8 sm:mb-12">
-    <div class="flex items-start gap-4">
-      
-      
-<div class="pretext-ornament flex-shrink-0 mt-1" aria-hidden="true">
-  <canvas
-    id="pretext-ornament-canvas"
-    width="80"
-    height="56"
-    class="w-[80px] h-[56px]"
-  ></canvas>
-  <noscript>
-    <div class="w-[80px] h-[56px] flex items-center justify-center">
-      <span class="block w-3 h-3 bg-accent dark:bg-accent-dark rotate-45"></span>
-    </div>
-  </noscript>
-  <div id="pretext-ornament-fallback" class="hidden w-[80px] h-[56px] items-center justify-center">
-    <span class="block w-3 h-3 bg-accent dark:bg-accent-dark rotate-45"></span>
-  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
 </div>
-<script type="module" src="/blog/js/pretext-ornament.js"></script>
 
-      
-      <div class="flex-1">
-        <h1 class="font-heading text-3xl sm:text-4xl font-medium leading-tight">
-          从TAPD到跨项目协作：利用Skills提升自动化与效率
-        </h1>
-        <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-text-secondary dark:text-text-secondary-dark">
-          <time datetime="2026-04-30T10:10:00.000Z">
-            发布于 2026-04-30
-          </time>
-          
-          <span>
-            &middot; 更新于 2026-04-30
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/blog/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/blog/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        从TAPD到跨项目协作：利用Skills提升自动化与效率
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2026-04-30</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>10 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>3k words</span>
           </span>
           
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/blog/categories/AI/">AI</a>
+            </span>
           
-          <span>&middot; 5042 字</span>
-          
-        </div>
+        </section>
       </div>
     </div>
-    
   </header>
-
-  
-  
-
-<details class="mb-8 p-4 border border-border-light dark:border-border-dark rounded-lg" open>
-  <summary class="cursor-pointer font-heading text-sm font-medium text-text-secondary dark:text-text-secondary-dark uppercase tracking-wider">
-    目录
-  </summary>
-  <nav class="mt-3 toc-nav text-sm leading-loose text-text-secondary dark:text-text-secondary-dark">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E5%88%B0-TAPD-%E5%88%B0%E4%BB%A3%E7%A0%81%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E5%AE%9E%E8%B7%B5"><span class="toc-text">回到 TAPD 到代码的自动化实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-Rule-%E5%88%B0-Skills-%E7%9A%84%E8%B0%83%E6%95%B4"><span class="toc-text">从 Rule 到 Skills 的调整</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E7%BC%BA%E7%82%B9"><span class="toc-text">现有缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%94%B9%E8%BF%9B%EF%BC%9A%E5%BC%95%E5%85%A5-Skills-%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9D%97%E5%8C%96%E7%AE%A1%E7%90%86"><span class="toc-text">如何改进：引入 Skills 进行模块化管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E6%A0%A1%E5%87%86"><span class="toc-text">概念校准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-%E6%A8%A1%E5%9D%97%E5%8C%96-Skills"><span class="toc-text">配置文件 + 模块化 Skills</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%93%B2%E5%AD%A6%EF%BC%9ASkill-%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%98%AF%E2%80%9C%E6%84%8F%E5%9B%BE%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E2%80%9D"><span class="toc-text">核心哲学：Skill 的本质是“意图的自动化”</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Skills-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="toc-text">Skills 使用指南</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9A%E5%BC%80%E5%A7%8B%E4%B8%80%E5%A4%A9%E7%9A%84%E5%BC%80%E5%8F%91"><span class="toc-text">场景一：开始一天的开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9A%E4%BF%AE%E5%A4%8D-Bug-%E5%90%8E%E7%9A%84%E5%9B%9E%E5%86%99"><span class="toc-text">场景二：修复 Bug 后的回写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%89%EF%BC%9A%E8%B7%A8%E9%A1%B9%E7%9B%AE%E5%88%87%E6%8D%A2"><span class="toc-text">场景三：跨项目切换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%EF%BC%9A%E5%BC%95%E5%85%A5-Script-%E5%A2%9E%E5%BC%BA-Skills"><span class="toc-text">进阶：引入 Script 增强 Skills</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%A5-Skill-%E4%B8%BA%E6%A1%A5%E6%A2%81%E7%9A%84%E5%89%8D%E7%AB%AF-TDD-%E9%97%AD%E7%8E%AF"><span class="toc-text">深度实战：以 Skill 为桥梁的前端 TDD 闭环</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E6%84%9F%E7%9F%A5%E4%B8%8E-TDD-%E8%BD%AC%E6%8D%A2"><span class="toc-text">需求感知与 TDD 转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%A8%E5%B7%A5%E5%85%B7%E5%8D%8F%E5%90%8C"><span class="toc-text">跨工具协同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E9%AA%8C%E8%AF%81"><span class="toc-text">可视化验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%BC%80%E5%8F%91%E5%88%B0%E4%BA%A4%E4%BB%98%E7%9A%84%E8%B7%83%E8%BF%81"><span class="toc-text">从开发到交付的跃迁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%80%83%EF%BC%9ARule-%E6%98%AF%E7%BA%A2%E7%BA%BF%EF%BC%8CSkill-%E6%98%AF%E6%A1%A5%E6%A2%81"><span class="toc-text">核心思考：Rule 是红线，Skill 是桥梁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="toc-text">总结与下一步</span></a></li></ol>
-  </nav>
-</details>
-
-
-  
-
-  <div class="prose prose-lg dark:prose-invert max-w-none overflow-x-hidden
-    prose-headings:font-heading prose-headings:font-medium
-    prose-a:text-accent dark:prose-a:text-accent-dark prose-a:no-underline hover:prose-a:underline
-    prose-img:rounded prose-img:mx-auto
-    prose-code:font-mono prose-code:text-sm
-    prose-pre:bg-gray-50 dark:prose-pre:bg-gray-900 prose-pre:rounded-lg
-    prose-blockquote:border-accent dark:prose-blockquote:border-accent-dark
-    prose-blockquote:not-italic">
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
     <blockquote>
 <p>经验声明：以上心得和实践均来自我的真实项目开发经验。同时，本篇文章是在 Gemini 和 GPT-5.4 的协助下共同创作完成。配图由 Nano Banana 2 创作。</p>
 </blockquote>
 <p>本文通过一个简单的例子聊聊 Skills 是什么、能做什么，以及它和其它工具的区别。更具体地说，我想分享如何利用 Skills 提升多项目之间的协作效率，以及如何把原本散落在 Rule 里的流程规则模块化，让跨项目管理变得更加灵活、高效。</p>
-<p><img src="/img/tapd-skills/tapd-skills-cover.png" alt="从 TAPD 到代码：模块化 Skills SOP 导航"></p>
+<p><img src="/blog/img/tapd-skills/tapd-skills-cover.png" alt="从 TAPD 到代码：模块化 Skills SOP 导航"></p>
 <p>虽然在之前的文章中，我提到过我的项目里很少依赖 Skills，但这并不代表我从未使用过它们。</p>
 <p>我想先抛出一个核心观点：<strong>编码应当是模型自身的原生行为。</strong></p>
 <p>换句话说，Skill 对纯编码能力的提升并不大，它更多是业务流程上的“方向性辅助”。如果一个 AI 还需要通过 Skill 来学习如何写逻辑或重构代码，那它显然还没达到一个合格“AI 程序员”的水准。在我的体系中，编码靠模型天赋，流程靠 Skill 导航。Skill 的存在，是为了让具备强大编码能力的模型，能够像“熟练工”一样精准对接 TAPD 空间、识别项目配置，并完成自动化闭环。</p>
@@ -200,7 +323,7 @@
 <h4 id="跨项目灵活性不足"><a href="#跨项目灵活性不足" class="headerlink" title="跨项目灵活性不足"></a>跨项目灵活性不足</h4><p>当前的 Rule 解决方案很难应对团队同时管理多个项目的情况。当一个项目需要与另一个项目共享规则时，我们需要手动在每个项目中配置并同步 Rule。</p>
 <p>这不仅带来冗余操作，也增加了潜在错误。每次新项目启动时，都需要重新创建相同规则，无法实现真正的跨项目复用。</p>
 <h2 id="如何改进：引入-Skills-进行模块化管理"><a href="#如何改进：引入-Skills-进行模块化管理" class="headerlink" title="如何改进：引入 Skills 进行模块化管理"></a>如何改进：引入 Skills 进行模块化管理</h2><p>为了解决 Rule 的局限性，我们可以将原有 Rule 重构为 Skills，也就是模块化的标准作业程序（SOP）。</p>
-<p><img src="/img/tapd-skills/tapd-skills-architecture.png" alt="模块化架构与配置"></p>
+<p><img src="/blog/img/tapd-skills/tapd-skills-architecture.png" alt="模块化架构与配置"></p>
 <h3 id="概念校准"><a href="#概念校准" class="headerlink" title="概念校准"></a>概念校准</h3><ul>
 <li><strong>Rule（<code>.cursorrules</code>）</strong>：被动触发的全局上下文。AI 在每一轮对话都会读取，适合存放通用编码规范。</li>
 <li><strong>Skills（<code>.md</code> 文件）</strong>：模块化的“技能库”。在 Cursor 中，可以将这些 Skill 文件存放在项目的 <code>.cursor/skills/</code>，或全局目录 <code>~/.cursor/skills/</code> 中。执行时，可以通过 <code>@filename</code> 显式激活，也可以在全局规则中告知 AI：“你是具备技能库的专家，必要时请主动检索技能文件夹。”</li>
@@ -245,7 +368,7 @@
 <p>这种方式可以把复杂的数据处理、报告生成、变更摘要等逻辑交给脚本，而让 Skill 负责“何时调用、如何串联、如何解释结果”。</p>
 <h2 id="深度实战：以-Skill-为桥梁的前端-TDD-闭环"><a href="#深度实战：以-Skill-为桥梁的前端-TDD-闭环" class="headerlink" title="深度实战：以 Skill 为桥梁的前端 TDD 闭环"></a>深度实战：以 Skill 为桥梁的前端 TDD 闭环</h2><p>目前，我正在本地环境中探索一个更复杂的自动化场景：如何利用 Skill 连通从需求到上线测试的全链路。</p>
 <p>在这个实验中，我构建了一个名为 <code>tapd-story-tdd</code> 的 Skill。它不再是死板的全局约束（Rule），而是一座引导 AI 程序员跨越不同开发阶段的逻辑桥梁。</p>
-<p><img src="/img/tapd-skills/tapd-skills-tdd.png" alt="高级 TDD 流程与工具链闭环"></p>
+<p><img src="/blog/img/tapd-skills/tapd-skills-tdd.png" alt="高级 TDD 流程与工具链闭环"></p>
 <h3 id="需求感知与-TDD-转换"><a href="#需求感知与-TDD-转换" class="headerlink" title="需求感知与 TDD 转换"></a>需求感知与 TDD 转换</h3><p>当你对 AI 说“要 TDD”时，Skill 会引导 AI 从 TAPD 获取 Story 详情，并立刻切换到测试先行模式。</p>
 <h3 id="跨工具协同"><a href="#跨工具协同" class="headerlink" title="跨工具协同"></a>跨工具协同</h3><p>Skill 像导航员一样，指引 AI 先写会失败的 Vitest/Jest 单测。在代码实现“转绿”后，再无缝衔接到 Playwright E2E 测试。</p>
 <h3 id="可视化验证"><a href="#可视化验证" class="headerlink" title="可视化验证"></a>可视化验证</h3><p>在 Skill 的指引下，AI 会主动在本地以 <code>--headed</code> 模式运行浏览器。你可以亲眼看到 AI 像真人一样操作页面、断言，并在失败时根据 Trace Log 自动进行“自愈”修复。</p>
@@ -266,103 +389,229 @@
 <p>最后多说一句，我其实只是通过 TAPD 这个具体场景，为大家演示了一个 Skills 模块化落地的最小闭环。</p>
 <p>重点不在于 TAPD 工具本身，而在于通过“Skill 导航”把那些琐碎流程规范化。未来的多项目协作，不再是我们为每个项目写一套规则，而是建立一套“技能母版”，让 AI 能够根据每个项目的 <code>project.json</code>，在自然语言的指引下，像经验丰富的老员工一样自动“悟出”该如何操作。</p>
 
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/AI-%E7%BC%96%E7%A8%8B/">AI 编程</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/MCP/">MCP</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Skills/">Skills</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/TAPD/">TAPD</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a>
+        </span>
+      
+    
   </div>
-
-  <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
-    
-    <div class="flex flex-wrap items-center gap-2 mb-6">
-      <span class="text-sm text-text-secondary dark:text-text-secondary-dark">标签:</span>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
       
-      <a href="/blog/tags/AI-%E7%BC%96%E7%A8%8B/" class="inline-block px-2.5 py-0.5 text-xs rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
-        #AI 编程
-      </a>
-      
-      <a href="/blog/tags/Skills/" class="inline-block px-2.5 py-0.5 text-xs rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
-        #Skills
-      </a>
-      
-      <a href="/blog/tags/MCP/" class="inline-block px-2.5 py-0.5 text-xs rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
-        #MCP
-      </a>
-      
-      <a href="/blog/tags/TAPD/" class="inline-block px-2.5 py-0.5 text-xs rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
-        #TAPD
-      </a>
-      
-      <a href="/blog/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" class="inline-block px-2.5 py-0.5 text-xs rounded-full border border-border-light dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark hover:border-accent dark:hover:border-accent-dark transition-colors">
-        #自动化
-      </a>
+        <a href="/blog/2026/04/30/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E8%A6%81%E5%81%9AElephance/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          为什么我要做 Elephance：给 AI 一个本地长期记忆层
+        </a>
       
     </div>
-    
-
-    
-    <div class="flex flex-wrap items-center gap-2 mb-6">
-      <span class="text-sm text-text-secondary dark:text-text-secondary-dark">分类:</span>
+    <div>
       
-      <a href="/blog/categories/AI/" class="text-sm text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-        AI
-      </a>
+        <a href="/blog/2026/04/16/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          为什么 AI 还需要一张项目 Map
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
       
     </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
     
 
-    <nav class="flex justify-between items-center mt-8">
-      
-      <a href="/blog/2026/04/30/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E8%A6%81%E5%81%9AElephance/" class="group flex items-center gap-2 text-sm text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
-        <span>&larr;</span>
-        <span>上一篇: 为什么我要做 Elephance：给 AI 一个本地长期记忆层</span>
-      </a>
-      
-      
-      <a href="/blog/2026/04/16/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/" class="group flex items-center gap-2 text-sm text-text-secondary dark:text-text-secondary-dark hover:text-accent dark:hover:text-accent-dark transition-colors text-right">
-        <span>下一篇: 为什么 AI 还需要一张项目 Map</span>
-        <span>&rarr;</span>
-      </a>
-      
-    </nav>
-  </footer>
-</article>
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/blog/lib/clipboard.min.js"></script>
 
 
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/blog/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/blog/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
 
 
   </main>
-  <footer class="w-full border-t border-border-light dark:border-border-dark mt-auto">
-  <div class="max-w-wide mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-text-secondary dark:text-text-secondary-dark">
-    <p>
-      &copy; 2026 L1uqi
-    </p>
-    <p class="mt-1">
-      驱动 <a href="https://hexo.io" class="hover:text-accent dark:hover:text-accent-dark transition-colors" target="_blank" rel="noopener">Hexo</a>
-      &middot;
-      主题 <a href="https://github.com/hexo-theme-pretext" class="hover:text-accent dark:hover:text-accent-dark transition-colors" target="_blank" rel="noopener">Pretext</a>
-    </p>
-    
-    <div class="mt-4 flex items-center justify-center gap-4">
-      
-      <a href="https://github.com/l1uqi" class="hover:text-accent dark:hover:text-accent-dark transition-colors" target="_blank" rel="noopener" aria-label="GitHub">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-      </a>
-      
-      
-      
-      <a href="mailto:chyi_fox@foxmail.com" class="hover:text-accent dark:hover:text-accent-dark transition-colors" aria-label="Email">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-      </a>
-      
-    </div>
-    
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
   </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
 </footer>
 
-  
-  <button id="back-to-top" class="fixed bottom-6 right-6 w-10 h-10 bg-accent dark:bg-accent-dark text-white rounded-full opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center hover:opacity-90 z-50" aria-label="Back to top">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
-  </button>
-  
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
   
 <script src="/blog/js/main.js"></script>
 
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
 </body>
+
 </html>
