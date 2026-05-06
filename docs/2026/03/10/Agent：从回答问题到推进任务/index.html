@@ -17,7 +17,7 @@
 
 
 
-<title>MCP：工具接入 AI 的标准接口 | L1uqi</title>
+<title>Agent：从回答问题到推进任务 | L1uqi</title>
 
 
 
@@ -194,7 +194,7 @@
         </h2>
       </a>
       <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
-        MCP：工具接入 AI 的标准接口
+        Agent：从回答问题到推进任务
       </div>
       <div class="flex-1"></div>
       <div class="flex items-center gap-3">
@@ -270,7 +270,7 @@
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
       <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
-        MCP：工具接入 AI 的标准接口
+        Agent：从回答问题到推进任务
       </h1>
       <div>
         <section class="flex items-center gap-3 text-sm">
@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>5 min</span>
+            <span>8 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>1.4k words</span>
+            <span>2.3k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -302,125 +302,242 @@
   <!-- content -->
   <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
     <blockquote>
-<p>经验声明：本文是 AI 编程基础概念系列的第五篇。上一篇讲 Tool，这一篇讲 MCP。MCP 不是某个神奇工具，而是一套让 AI 更容易连接外部世界的协议。</p>
+<p>经验声明：本文是 AI 编程基础概念系列的第六篇。上一篇讲 MCP，这一篇讲 Agent。Agent 不是一个更酷的名字，而是 AI 从“回答问题”走向“推进任务”的关键形态。</p>
 </blockquote>
-<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>如果 Tool 是 AI 的手和眼睛，那么 MCP 更像是<strong>让这些手和眼睛可以被统一接入的插座标准</strong>。</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AI 客户端</span><br><span class="line">  ↓ 通过 MCP 协议调用</span><br><span class="line">MCP Server</span><br><span class="line">  ↓ 封装真实能力</span><br><span class="line">文件系统 / 数据库 / 浏览器 / 业务系统 / 知识库</span><br></pre></td></tr></table></figure>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>Agent 可以先理解成：<strong>围绕目标，能自己规划、调用工具、观察结果并继续推进的 AI 工作单元。</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">普通问答</span><br><span class="line">  你提问</span><br><span class="line">  AI 回答</span><br><span class="line">  对话结束</span><br><span class="line"></span><br><span class="line">Agent 工作</span><br><span class="line">  接收目标</span><br><span class="line">  制定计划</span><br><span class="line">  调用工具</span><br><span class="line">  观察结果</span><br><span class="line">  调整下一步</span><br><span class="line">  直到完成或遇到边界</span><br></pre></td></tr></table></figure>
 
-<p>MCP 的价值不在于“又多了一个工具名词”，而在于它把工具接入从一次性的插件适配，变成了一种更稳定的工程接口。</p>
+<p>Agent 的重点不是“能不能自动化一切”，而是它开始具备一个任务循环：</p>
 <table>
 <thead>
 <tr>
-<th>没有统一协议</th>
-<th>有 MCP 之后</th>
+<th>环节</th>
+<th>Agent 在做什么</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>每个工具都要单独适配</td>
-<td>工具可以用统一方式暴露能力</td>
+<td>Goal</td>
+<td>明确这次要完成什么</td>
 </tr>
 <tr>
-<td>AI 客户端和工具强绑定</td>
-<td>客户端、工具、服务可以解耦</td>
+<td>Plan</td>
+<td>拆出步骤和顺序</td>
 </tr>
 <tr>
-<td>能力难复用</td>
-<td>同一套能力可以给多个 AI 客户端使用</td>
+<td>Act</td>
+<td>调用 Tool 或 MCP Server 做事</td>
 </tr>
 <tr>
-<td>权限边界不清晰</td>
-<td>可以围绕 server 设计能力和权限</td>
+<td>Observe</td>
+<td>读取执行结果、日志、文件变化</td>
+</tr>
+<tr>
+<td>Reflect</td>
+<td>判断下一步是继续、修正还是停下</td>
 </tr>
 </tbody></table>
-<p>当 AI 需要使用外部工具时，很快会遇到一个工程问题：</p>
-<p>工具太多，平台也太多。</p>
-<p>文件系统、数据库、浏览器、GitHub、TAPD、飞书、Notion、Jira、公司内部系统，每个系统都有自己的接口和权限模型。</p>
-<p>如果每个 AI 应用都要为每个工具单独适配一遍，整个生态会非常碎。</p>
-<p>MCP 就是为了解决这类问题出现的。</p>
-<h2 id="MCP-是什么"><a href="#MCP-是什么" class="headerlink" title="MCP 是什么"></a>MCP 是什么</h2><p>MCP，全称 Model Context Protocol，模型上下文协议。</p>
-<p>你可以先把它理解成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">让外部工具、数据和提示词用统一方式接入 AI 应用的协议。</span><br></pre></td></tr></table></figure>
+<p>如果只记一句话，可以记这一句：<strong>LLM 负责生成和推理，Agent 负责把推理组织成连续行动。</strong></p>
+<p>很多人第一次听到 Agent，会以为它就是“自动帮我干活的 AI”。</p>
+<p>这个理解有一部分是对的，但还不够准确。</p>
+<p>如果只是模型回答你一句话，那它还只是聊天助手。</p>
+<p>如果模型能调用一个工具，比如读取文件或运行测试，那它有了 Tool。</p>
+<p>但如果它能围绕一个目标，自己决定先读哪些文件、再跑哪些命令、发现失败后调整方案、最后给出结果，那它才更接近 Agent。</p>
+<h2 id="Agent-不是模型本身"><a href="#Agent-不是模型本身" class="headerlink" title="Agent 不是模型本身"></a>Agent 不是模型本身</h2><p>Agent 很容易和 LLM 混在一起。</p>
+<p>但它们不是一回事。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LLM 是推理和生成能力。</span><br><span class="line">Agent 是围绕目标组织推理、工具和反馈的运行方式。</span><br></pre></td></tr></table></figure>
 
-<p>更大白话一点：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Tool 是具体能力。</span><br><span class="line">MCP 是这些能力接入 AI 的标准插座。</span><br></pre></td></tr></table></figure>
+<p>同一个 LLM，可以被用成普通聊天，也可以被放进 Agent 循环里。</p>
+<p>区别在于：它有没有持续推进任务的结构。</p>
+<p>比如你问：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个登录接口为什么报错？</span><br></pre></td></tr></table></figure>
 
-<p>比如一个数据库查询能力可以通过 MCP 暴露出来。</p>
-<p>一个 GitHub issue 查询能力也可以通过 MCP 暴露出来。</p>
-<p>一个公司内部工单系统也可以通过 MCP 暴露出来。</p>
-<p>AI 应用不用为每个系统从零设计一套接入方式，而是按 MCP 的规范发现和调用这些能力。</p>
-<h2 id="MCP-里有哪些角色"><a href="#MCP-里有哪些角色" class="headerlink" title="MCP 里有哪些角色"></a>MCP 里有哪些角色</h2><p>可以先粗略理解几个角色。</p>
-<p>Host 是用户正在使用的 AI 应用。</p>
-<p>比如 IDE、聊天应用、AI 编程工具。</p>
-<p>Client 是 Host 里负责连接 MCP Server 的部分。</p>
-<p>它负责和 Server 通信。</p>
-<p>Server 是暴露具体能力的一端。</p>
-<p>比如文件系统 Server、数据库 Server、GitHub Server、浏览器 Server。</p>
-<p>Server 可以暴露几类东西：</p>
-<ul>
-<li>Tool：可以执行的动作。</li>
-<li>Resource：可以读取的数据。</li>
-<li>Prompt：可以复用的提示模板。</li>
-</ul>
-<p>这些概念不用一开始背得很细。</p>
-<p>新人先抓住主线就够了：</p>
-<p><strong>MCP 让 AI 应用可以用更统一的方式发现和使用外部能力。</strong></p>
-<h2 id="MCP-不是-Tool-本身"><a href="#MCP-不是-Tool-本身" class="headerlink" title="MCP 不是 Tool 本身"></a>MCP 不是 Tool 本身</h2><p>很多人会把 MCP 和 Tool 混成一个东西。</p>
-<p>它们相关，但不是一回事。</p>
-<p>Tool 是具体能做的事。</p>
-<p>比如：</p>
-<ul>
-<li>查询数据库。</li>
-<li>搜索代码。</li>
-<li>创建 issue。</li>
-<li>读取文件。</li>
-<li>打开浏览器。</li>
-</ul>
-<p>MCP 是让这些能力接入 AI 的协议。</p>
-<p>比如你写了一个 MCP Server，里面暴露了一个 <code>search_ticket</code> 工具。</p>
-<p>AI 应用通过 MCP 知道这个工具叫什么、需要什么参数、会返回什么结果，然后才能调用它。</p>
-<p>所以 MCP 更像接口规范，不是某个具体动作。</p>
-<h2 id="为什么-MCP-对-AI-编程重要"><a href="#为什么-MCP-对-AI-编程重要" class="headerlink" title="为什么 MCP 对 AI 编程重要"></a>为什么 MCP 对 AI 编程重要</h2><p>AI 编程不是只写代码。</p>
-<p>真实工作里，代码往往和很多系统连在一起：</p>
-<ul>
-<li>需求在 TAPD 或 Jira。</li>
-<li>代码在 GitHub 或 GitLab。</li>
-<li>文档在 Notion 或飞书。</li>
-<li>数据在数据库。</li>
-<li>页面要在浏览器里验证。</li>
-<li>线上问题可能在日志系统里。</li>
-</ul>
-<p>如果 AI 只能看到你手动贴的一点代码，它做事就很受限。</p>
-<p>如果这些系统都能通过标准协议接进来，AI 就可以更自然地获取信息、执行动作和验证结果。</p>
-<p>这就是 MCP 的价值。</p>
-<p>它不是让模型本身突然变聪明。</p>
-<p>它是让模型更容易连接真实工作现场。</p>
-<h2 id="MCP-更像基础设施"><a href="#MCP-更像基础设施" class="headerlink" title="MCP 更像基础设施"></a>MCP 更像基础设施</h2><p>对新人来说，不需要一开始就会写 MCP Server。</p>
-<p>更重要的是理解它解决的问题。</p>
-<p>当你听到别人说“接一个 MCP”，通常不是说换一个模型，而是说：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">把某个外部系统或工具，用 MCP 的方式暴露给 AI 使用。</span><br></pre></td></tr></table></figure>
+<p>普通问答可能会根据你贴出来的错误信息猜原因。</p>
+<p>Agent 会更像这样工作：</p>
+<ol>
+<li>先确认报错现象和复现方式。</li>
+<li>搜索登录接口相关代码。</li>
+<li>阅读路由、service、数据库模型和测试。</li>
+<li>根据日志提出假设。</li>
+<li>修改最小范围代码。</li>
+<li>运行测试或复现命令。</li>
+<li>如果失败，继续根据结果调整。</li>
+</ol>
+<p>这中间每一步都需要 LLM 推理，但整体不只是一次回答。</p>
+<h2 id="一个更具体的调用案例"><a href="#一个更具体的调用案例" class="headerlink" title="一个更具体的调用案例"></a>一个更具体的调用案例</h2><p>只讲“Agent 会规划、会调用工具、会观察结果”还是有点抽象。</p>
+<p>可以用一个登录接口报错的例子来看。</p>
+<p>用户给 Agent 一个目标：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">登录接口现在返回 500，请帮我定位原因并修复。</span><br><span class="line">要求：不要大改认证结构，改完后跑相关测试。</span><br></pre></td></tr></table></figure>
 
-<p>比如：</p>
+<p>普通问答可能会直接给出几个猜测：</p>
 <ul>
-<li>接文件系统 MCP，让 AI 能读写指定目录。</li>
-<li>接数据库 MCP，让 AI 能查结构和数据。</li>
-<li>接浏览器 MCP，让 AI 能打开页面检查结果。</li>
-<li>接内部系统 MCP，让 AI 能读取公司业务信息。</li>
+<li>可能是数据库连接失败。</li>
+<li>可能是密码校验逻辑有问题。</li>
+<li>可能是 token 生成失败。</li>
 </ul>
-<p>这些能力最终都会变成 AI 可以使用的上下文和工具。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>MCP 的重点不是“神奇”，而是“标准化连接”。</p>
+<p>这些猜测不一定错，但它还没有真正进入项目现场。</p>
+<p>Agent 的工作更像下面这个时序：</p>
+<pre class="mermaid">sequenceDiagram
+    participant U as 用户
+    participant A as Agent
+    participant M as LLM
+    participant T as Tool
+
+    U->>A: 登录接口返回 500，请定位并修复
+    A->>M: 理解目标、约束和验收标准
+    M-->>A: 先查看路由、service、日志和测试
+
+    A->>T: 搜索登录接口相关文件
+    T-->>A: 返回 auth route、auth service、测试文件
+
+    A->>T: 读取相关代码和错误日志
+    T-->>A: 返回错误栈，指向 passwordHash 为空
+
+    A->>M: 根据代码和日志分析原因
+    M-->>A: 旧用户数据可能缺少 passwordHash
+
+    A->>T: 检查用户模型和历史迁移
+    T-->>A: 确认 passwordHash 是后加字段
+
+    A->>M: 生成最小修改方案
+    M-->>A: 增加空值判断，并返回统一错误
+
+    A->>T: 修改代码
+    T-->>A: 写入变更
+
+    A->>T: 运行相关测试
+    T-->>A: 测试失败，错误信息不符合断言
+
+    A->>M: 根据失败结果调整方案
+    M-->>A: 复用项目统一 errorHandler 的错误类型
+
+    A->>T: 修正代码并再次运行测试
+    T-->>A: 测试通过
+
+    A-->>U: 说明原因、修改内容、验证结果和剩余风险</pre>
+
+<p>这张图里真正重要的不是“调用了多少工具”，而是 Agent 一直在做一个循环：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">理解目标</span><br><span class="line">  ↓</span><br><span class="line">决定下一步需要什么证据</span><br><span class="line">  ↓</span><br><span class="line">调用工具获取证据或执行动作</span><br><span class="line">  ↓</span><br><span class="line">观察结果</span><br><span class="line">  ↓</span><br><span class="line">修正判断</span><br><span class="line">  ↓</span><br><span class="line">继续推进或停止</span><br></pre></td></tr></table></figure>
+
+<p>所以更准确的表达不是“Agent 会自动调用工具”，而是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Agent 会围绕一个目标，持续决定下一步该看什么、做什么、如何根据结果调整。</span><br></pre></td></tr></table></figure>
+
+<p>这也是 Agent 和普通聊天最核心的区别。</p>
+<h2 id="Agent-和-Tool-的关系"><a href="#Agent-和-Tool-的关系" class="headerlink" title="Agent 和 Tool 的关系"></a>Agent 和 Tool 的关系</h2><p>Tool 是 Agent 能采取的动作。</p>
+<p>Agent 是决定什么时候用什么 Tool 的任务循环。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Tool：读文件、搜代码、跑测试、打开浏览器、查数据库</span><br><span class="line">Agent：为了完成目标，选择并编排这些 Tool</span><br></pre></td></tr></table></figure>
+
+<p>没有 Tool 的 Agent，很容易停留在“想得很完整，但做不了事”。</p>
+<p>只有 Tool、没有 Agent，AI 也可能变成“你让它点哪里，它就点哪里”的遥控器。</p>
+<p>真正有用的是二者结合：</p>
+<ul>
+<li>Agent 判断下一步需要什么证据。</li>
+<li>Tool 帮它拿到证据或执行动作。</li>
+<li>Agent 根据结果继续调整计划。</li>
+</ul>
+<h2 id="Agent-和-MCP-的关系"><a href="#Agent-和-MCP-的关系" class="headerlink" title="Agent 和 MCP 的关系"></a>Agent 和 MCP 的关系</h2><p>MCP 解决的是工具和外部系统怎么标准化接入。</p>
+<p>Agent 解决的是接入之后，AI 怎么围绕目标持续使用这些能力。</p>
+<p>可以这么看：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MCP 提供能力入口。</span><br><span class="line">Tool 暴露具体动作。</span><br><span class="line">Agent 编排动作并推进任务。</span><br></pre></td></tr></table></figure>
+
+<p>比如一个 AI 编程 Agent 可能会用到：</p>
+<ul>
+<li>文件系统 MCP，读取项目代码。</li>
+<li>Git MCP，查看 diff 或提交历史。</li>
+<li>浏览器 MCP，打开页面验证问题。</li>
+<li>数据库 MCP，检查 schema 或数据。</li>
+<li>任务系统 MCP，读取需求和回写状态。</li>
+</ul>
+<p>这些 MCP Server 本身不等于 Agent。</p>
+<p>它们更像 Agent 可以使用的工作现场。</p>
+<h2 id="Agent-为什么对-AI-编程重要"><a href="#Agent-为什么对-AI-编程重要" class="headerlink" title="Agent 为什么对 AI 编程重要"></a>Agent 为什么对 AI 编程重要</h2><p>AI 编程和普通问答最大的区别在于：真实任务通常不是一步完成的。</p>
+<p>一个 bug 修复可能需要：</p>
+<ul>
+<li>复现问题。</li>
+<li>定位模块。</li>
+<li>阅读调用链。</li>
+<li>修改代码。</li>
+<li>跑测试。</li>
+<li>看失败日志。</li>
+<li>再次修改。</li>
+<li>总结变更。</li>
+</ul>
+<p>一个需求实现可能需要：</p>
+<ul>
+<li>理解业务目标。</li>
+<li>找入口。</li>
+<li>设计方案。</li>
+<li>修改前端和后端。</li>
+<li>补类型和测试。</li>
+<li>验证页面。</li>
+<li>输出变更说明。</li>
+</ul>
+<p>这些任务天然就是多步骤的。</p>
+<p>所以 AI 编程工具如果只停留在“问一句，答一句”，很快就会卡住。</p>
+<p>Agent 的价值在于，它把 AI 从一次性回答，推进到连续协作。</p>
+<h2 id="Agent-也需要边界"><a href="#Agent-也需要边界" class="headerlink" title="Agent 也需要边界"></a>Agent 也需要边界</h2><p>Agent 听起来很强，但越能行动，越需要边界。</p>
+<p>因为它不只是生成文本，还可能真的读文件、改代码、跑命令、访问外部系统。</p>
+<p>所以一个可靠的 Agent 至少需要几类约束：</p>
+<table>
+<thead>
+<tr>
+<th>约束</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>权限边界</td>
+<td>哪些文件、系统、命令可以碰</td>
+</tr>
+<tr>
+<td>任务边界</td>
+<td>这次只解决什么，不顺手扩大范围</td>
+</tr>
+<tr>
+<td>验证边界</td>
+<td>改完必须如何确认结果</td>
+</tr>
+<tr>
+<td>停止条件</td>
+<td>什么时候应该停下来问人</td>
+</tr>
+<tr>
+<td>审计记录</td>
+<td>做过什么、为什么这么做</td>
+</tr>
+</tbody></table>
+<p>这也是为什么后面还要讲 Rules、Context、Project Map 和 Memory。</p>
+<p>Agent 负责推进任务，但它不能替代这些基础设施。</p>
+<p>没有 Rules，Agent 可能越努力越容易越界。</p>
+<p>没有 Context，Agent 会在错误材料上行动。</p>
+<p>没有 Project Map，Agent 不知道先去哪里找。</p>
+<p>没有 Memory，Agent 每次都像从零开始。</p>
+<h2 id="Agent-和-Skill-的区别"><a href="#Agent-和-Skill-的区别" class="headerlink" title="Agent 和 Skill 的区别"></a>Agent 和 Skill 的区别</h2><p>Agent 和 Skill 也容易混。</p>
+<p>可以这样区分：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Agent 是执行任务的工作单元。</span><br><span class="line">Skill 是某类任务的操作手册。</span><br></pre></td></tr></table></figure>
+
+<p>Agent 像一个能干活的人。</p>
+<p>Skill 像这个人可以翻阅的 SOP。</p>
+<p>比如“修复一个线上 bug”这件事：</p>
+<ul>
+<li>Agent 负责接收目标、分析现状、调用工具、推进修改。</li>
+<li>Bug 修复 Skill 告诉 Agent 应该先复现、再定位、再最小修改、最后验证。</li>
+</ul>
+<p>所以 Skill 不是 Agent。</p>
+<p>Skill 是让 Agent 做事更稳定的方法。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Agent 的核心不是“自动化”三个字，而是“围绕目标持续推进”。</p>
 <p>可以先记住这几句话：</p>
 <ul>
-<li>MCP 是 Model Context Protocol。</li>
-<li>MCP 是一种协议，不是某个具体工具。</li>
-<li>Tool 是具体能力，MCP 是能力接入 AI 的标准方式。</li>
-<li>MCP Server 可以暴露 Tool、Resource 和 Prompt。</li>
-<li>MCP 让 AI 更容易连接文件、数据库、浏览器和业务系统。</li>
+<li>LLM 是推理和生成能力。</li>
+<li>Tool 是 AI 可以采取的动作。</li>
+<li>MCP 是外部能力的标准接入方式。</li>
+<li>Agent 是把目标、推理、工具和反馈组织起来的任务循环。</li>
+<li>Agent 越能行动，越需要 Rules、Context、Project Map 和 Memory 提供边界和背景。</li>
 </ul>
-<p>下一篇讲 Agent。</p>
-<p>如果说 MCP 解决的是“外部能力怎么接进来”，那么 Agent 解决的是“接进来之后，AI 如何围绕目标持续推进任务”。</p>
+<p>下一篇讲 Skill。</p>
+<p>如果说 Agent 解决的是“AI 如何持续推进任务”，那么 Skill 解决的是“某一类任务应该按什么方法推进”。</p>
 <h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
-<li>上一篇：<a href="/blog/2026/03/07/Tool%EF%BC%9A%E8%AE%A9AI%E6%8B%A5%E6%9C%89%E6%89%8B%E5%92%8C%E7%9C%BC%E7%9D%9B/">Tool：让 AI 拥有手和眼睛</a></li>
-<li>下一篇：<a href="/blog/2026/03/10/Agent%EF%BC%9A%E4%BB%8E%E5%9B%9E%E7%AD%94%E9%97%AE%E9%A2%98%E5%88%B0%E6%8E%A8%E8%BF%9B%E4%BB%BB%E5%8A%A1/">Agent：从回答问题到推进任务</a></li>
+<li>上一篇：<a href="/blog/2026/03/08/MCP%EF%BC%9A%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%85%A5AI%E7%9A%84%E6%A0%87%E5%87%86%E6%8E%A5%E5%8F%A3/">MCP：工具接入 AI 的标准接口</a></li>
+<li>下一篇：<a href="/blog/2026/03/14/Skill%EF%BC%9A%E6%8A%8A%E7%BB%8F%E9%AA%8C%E6%B2%89%E6%B7%80%E6%88%90%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/">Skill：把经验沉淀成操作手册</a></li>
 </ul>
 
   </article>
@@ -440,22 +557,26 @@
           <a href="/blog/tags/MCP/">MCP</a>
         </span>
       
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/blog/tags/Agent/">Agent</a>
+        </span>
+      
     
   </div>
   <!-- prev and next -->
   <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
     <div>
       
-        <a href="/blog/2026/03/10/Agent%EF%BC%9A%E4%BB%8E%E5%9B%9E%E7%AD%94%E9%97%AE%E9%A2%98%E5%88%B0%E6%8E%A8%E8%BF%9B%E4%BB%BB%E5%8A%A1/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+        <a href="/blog/2026/03/14/Skill%EF%BC%9A%E6%8A%8A%E7%BB%8F%E9%AA%8C%E6%B2%89%E6%B7%80%E6%88%90%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
           <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
-          Agent：从回答问题到推进任务
+          Skill：把经验沉淀成操作手册
         </a>
       
     </div>
     <div>
       
-        <a href="/blog/2026/03/07/Tool%EF%BC%9A%E8%AE%A9AI%E6%8B%A5%E6%9C%89%E6%89%8B%E5%92%8C%E7%9C%BC%E7%9D%9B/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          Tool：让 AI 拥有手和眼睛
+        <a href="/blog/2026/03/08/MCP%EF%BC%9A%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%85%A5AI%E7%9A%84%E6%A0%87%E5%87%86%E6%8E%A5%E5%8F%A3/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          MCP：工具接入 AI 的标准接口
           <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
         </a>
       

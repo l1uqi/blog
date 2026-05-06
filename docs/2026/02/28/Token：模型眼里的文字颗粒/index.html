@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>4 min</span>
+            <span>5 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>1.3k words</span>
+            <span>1.5k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,34 @@
     <blockquote>
 <p>经验声明：本文是 AI 编程基础概念系列的第二篇。上一篇讲 LLM，这一篇讲 Token。Token 看起来很底层，但它直接影响上下文长度、成本、速度和 AI 是否容易抓住重点。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>Token 可以先理解成模型处理文字时的“颗粒”。它不是中文里的字数，也不是英文里的单词数，而是模型把文本切开之后看到的基本单位。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">你的材料</span><br><span class="line">  ↓ 被切成 token</span><br><span class="line">模型当前窗口</span><br><span class="line">  ↓ 容纳有限数量的 token</span><br><span class="line">模型推理</span><br><span class="line">  ↓ 基于这些 token 预测下一步</span><br><span class="line">输出答案</span><br></pre></td></tr></table></figure>
+
+<p>这意味着，AI 编程里真正稀缺的不是“能不能多塞材料”，而是：<strong>有限 token 里，哪些信息最值得出现。</strong></p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>表面上</th>
+<th>实际风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>把整个项目都丢给 AI</td>
+<td>信息很多</td>
+<td>重点被噪音淹没</td>
+</tr>
+<tr>
+<td>只贴报错截图</td>
+<td>很省 token</td>
+<td>缺少相关代码和调用链</td>
+</tr>
+<tr>
+<td>精准给需求、文件、日志、约束</td>
+<td>材料不一定多</td>
+<td>模型更容易抓住关键路径</td>
+</tr>
+</tbody></table>
 <p>人看文字，通常是按字、词、句子来理解。</p>
 <p>模型看文字，不是这样。</p>
 <p>LLM 在处理文字之前，会先把文字切成一小块一小块的 token。</p>
@@ -318,6 +346,7 @@
 
 <p>在人眼里，这就是一句很短的话。</p>
 <p>但在模型眼里，它会先被 tokenizer 切成若干 token，然后再转成模型可以处理的数字。</p>
+<p>如果你想直观看一下这件事，可以打开 OpenAI 的在线工具：<a target="_blank" rel="noopener" href="https://platform.openai.com/tokenizer">Tokenizer</a>，把一段中文、英文或代码粘进去，观察它会被切成多少个 token。</p>
 <p>英文、中文、空格、标点、代码里的括号、引号、缩进，都可能占 token。</p>
 <p>所以你不能简单用“我贴了多少行”来判断上下文大小。</p>
 <p>一大段报错日志、一整个组件文件、一份接口文档、几条项目规则，只要放进对话里，都会消耗 token。</p>

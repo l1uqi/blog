@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>8 min</span>
+            <span>9 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>2.4k words</span>
+            <span>2.6k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,34 @@
     <blockquote>
 <p>经验声明：本文是 AI 编程协作系列的第六篇。上一篇讲渐进式披露，这一篇继续补上另一个关键环节：除了 Rules 和 Context，AI 还需要一张项目 Map 来导航。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>项目 Map 解决的是“AI 应该先去哪里看”的问题。它不是完整文档，也不是规则全集，而是一张给 AI 的项目导航图。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">任务来了</span><br><span class="line">  ↓</span><br><span class="line">Project Map 告诉 AI 入口在哪里</span><br><span class="line">  ↓</span><br><span class="line">AI 找到相关模块、规则、风险区域</span><br><span class="line">  ↓</span><br><span class="line">再按任务加载具体 Context</span><br><span class="line">  ↓</span><br><span class="line">开始分析或修改</span><br></pre></td></tr></table></figure>
+
+<p>一张有用的项目 Map，至少应该回答四类问题：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>Map 里应该有什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>这个项目分成哪些区域</td>
+<td>模块列表和职责边界</td>
+</tr>
+<tr>
+<td>常见任务从哪里入口</td>
+<td>新增接口、改页面、查权限等入口线索</td>
+</tr>
+<tr>
+<td>哪些地方风险高</td>
+<td>公共组件、兼容逻辑、历史包袱</td>
+</tr>
+<tr>
+<td>规则散落在哪里</td>
+<td>Rules、Skills、Memory 的索引</td>
+</tr>
+</tbody></table>
 <p>前面两篇分别讲了 Rules 和渐进式披露。</p>
 <p>但这里还有一个问题：</p>
 <p>就算你写了很多 Rules，AI 也未必知道当前任务应该先看哪里。</p>

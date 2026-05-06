@@ -286,7 +286,7 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>3.9k words</span>
+            <span>4.1k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -302,8 +302,32 @@
   <!-- content -->
   <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
     <blockquote>
-<p>经验声明：本文是 AI 编程协作系列的第三篇。前面先讲了为什么很多人用不好 AI 编程工具，也把 LLM、Token、Context、Tool、MCP 和 Skill 这些基础词说清楚了。这一篇重点讨论项目 Rules。</p>
+<p>经验声明：本文是 AI 编程协作系列的第三篇。前面先讲了为什么很多人用不好 AI 编程工具，也把 LLM、Token、Context、Tool、MCP、Agent 和 Skill 这些基础词说清楚了。这一篇重点讨论项目 Rules。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>Rules 最容易被写成口号，但真正有用的 Rules 应该来自真实错误。它不是为了让 AI “更听话”，而是为了把项目里反复出现的边界沉淀下来。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AI 犯错</span><br><span class="line">  ↓</span><br><span class="line">人工纠正</span><br><span class="line">  ↓</span><br><span class="line">提炼原因</span><br><span class="line">  ↓</span><br><span class="line">写成具体 Rule</span><br><span class="line">  ↓</span><br><span class="line">下次同类任务自动避坑</span><br></pre></td></tr></table></figure>
+
+<p>判断一条 Rule 有没有价值，可以先问三个问题：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>好 Rule 的答案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>它是否来自具体场景</td>
+<td>是，能说清楚曾经踩过什么坑</td>
+</tr>
+<tr>
+<td>它是否可执行</td>
+<td>是，AI 能据此改变操作</td>
+</tr>
+<tr>
+<td>它是否有边界</td>
+<td>是，知道什么时候适用，什么时候不适用</td>
+</tr>
+</tbody></table>
 <p>上一篇讲 Skill 时，我们把它理解成“某类任务的操作手册”。</p>
 <p>但 Skill 讲完之后，最容易产生一个问题：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">既然 Skill 已经告诉 AI 怎么做事了，为什么还要单独讲 Rules？</span><br><span class="line">Rule 不就是 Skill 吗？</span><br></pre></td></tr></table></figure>
@@ -499,7 +523,7 @@
 <p>Rule 的本质不是“我告诉 AI 怎么做”，而是“我们把已经证明容易出错的地方，变成下一次自动生效的约束”。</p>
 <p>这才是一份项目 Rules 真正有效的原因。</p>
 <h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
-<li>上一篇：<a href="/blog/2026/03/02/Skill%EF%BC%9A%E6%8A%8A%E7%BB%8F%E9%AA%8C%E6%B2%89%E6%B7%80%E6%88%90%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/">Skill：把经验沉淀成操作手册</a></li>
+<li>上一篇：<a href="/blog/2026/03/14/Skill%EF%BC%9A%E6%8A%8A%E7%BB%8F%E9%AA%8C%E6%B2%89%E6%B7%80%E6%88%90%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/">Skill：把经验沉淀成操作手册</a></li>
 <li>下一篇：<a href="/blog/2026/03/18/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E5%9E%8BContext%E5%86%B3%E5%AE%9AAI%E7%BC%96%E7%A8%8B%E6%95%88%E6%9E%9C/">为什么模型 Context 决定 AI 编程效果</a></li>
 </ul>
 <p>参考：</p>

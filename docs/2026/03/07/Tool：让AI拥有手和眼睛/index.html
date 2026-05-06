@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>4 min</span>
+            <span>5 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>1.3k words</span>
+            <span>1.5k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,34 @@
     <blockquote>
 <p>经验声明：本文是 AI 编程基础概念系列的第四篇。上一篇讲 Context，这一篇讲 Tool。没有 Tool，AI 更像聊天窗口；有了 Tool，它才开始真正参与工作。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>Tool 解决的是一个很朴素的问题：<strong>AI 不能只靠你复制粘贴材料，它需要能自己观察和操作环境。</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">没有 Tool</span><br><span class="line">  你贴代码、贴日志、贴截图</span><br><span class="line">  AI 基于你给的片段回答</span><br><span class="line"></span><br><span class="line">有 Tool</span><br><span class="line">  AI 可以读文件、搜代码、跑测试、看日志</span><br><span class="line">  AI 基于真实环境推进任务</span><br></pre></td></tr></table></figure>
+
+<p>但 Tool 不是越多越好。真正重要的是：工具能不能帮 AI 补齐当前任务缺失的证据。</p>
+<table>
+<thead>
+<tr>
+<th>任务</th>
+<th>有用的 Tool 能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>修 bug</td>
+<td>搜代码、读文件、跑测试、查看错误日志</td>
+</tr>
+<tr>
+<td>改页面</td>
+<td>打开浏览器、截图、检查 DOM 或样式</td>
+</tr>
+<tr>
+<td>查数据问题</td>
+<td>查询数据库、查看 schema、比对数据</td>
+</tr>
+<tr>
+<td>做重构</td>
+<td>找引用、跑类型检查、跑回归测试</td>
+</tr>
+</tbody></table>
 <p>单纯的 LLM 只能生成文字。</p>
 <p>它不能自己读取你的项目文件，不能运行测试，不能查看浏览器页面，不能查询数据库，也不能知道你电脑里刚刚发生了什么。</p>
 <p>但我们现在用的 AI 编程工具，确实可以做这些事。</p>
@@ -428,7 +456,7 @@
 <p>这就是 MCP 要解决的问题。</p>
 <h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
 <li>上一篇：<a href="/blog/2026/02/27/Context%EF%BC%9A%E6%A8%A1%E5%9E%8B%E5%BD%93%E5%89%8D%E8%83%BD%E7%9C%8B%E5%88%B0%E4%BB%80%E4%B9%88/">Context：模型当前能看到什么</a></li>
-<li>下一篇：<a href="/blog/2026/03/01/MCP%EF%BC%9A%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%85%A5AI%E7%9A%84%E6%A0%87%E5%87%86%E6%8E%A5%E5%8F%A3/">MCP：工具接入 AI 的标准接口</a></li>
+<li>下一篇：<a href="/blog/2026/03/08/MCP%EF%BC%9A%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%85%A5AI%E7%9A%84%E6%A0%87%E5%87%86%E6%8E%A5%E5%8F%A3/">MCP：工具接入 AI 的标准接口</a></li>
 </ul>
 
   </article>

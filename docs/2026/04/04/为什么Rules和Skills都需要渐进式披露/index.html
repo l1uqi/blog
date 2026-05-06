@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>8 min</span>
+            <span>9 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>2.4k words</span>
+            <span>2.6k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,34 @@
     <blockquote>
 <p>经验声明：本文是 AI 编程协作系列的第五篇。前面分别讲了 Rules 和 Context，这一篇继续往下讲：为什么规则、流程和上下文不能一次性全部塞给 AI，而要按任务逐步披露。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>渐进式披露要解决的不是“资料不够”，而是“资料太多时，模型会抓不住重点”。真正好的协作方式，是先给任务必需的最小上下文，再按需要补充。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">第一轮：任务目标 + 必须遵守的核心规则 + 入口线索</span><br><span class="line">  ↓</span><br><span class="line">AI 先分析需要看什么</span><br><span class="line">  ↓</span><br><span class="line">第二轮：补充相关 Skill、模块规则、历史背景</span><br><span class="line">  ↓</span><br><span class="line">AI 开始执行或给出计划</span><br><span class="line">  ↓</span><br><span class="line">必要时继续披露更细的资料</span><br></pre></td></tr></table></figure>
+
+<p>判断什么时候该披露更多信息，可以看这几个信号：</p>
+<table>
+<thead>
+<tr>
+<th>信号</th>
+<th>应该补什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI 开始泛泛而谈</td>
+<td>补具体文件、错误日志或验收标准</td>
+</tr>
+<tr>
+<td>AI 要改公共模块</td>
+<td>补模块规则、调用方和风险边界</td>
+</tr>
+<tr>
+<td>AI 不知道从哪里开始</td>
+<td>补项目 Map 或入口说明</td>
+</tr>
+<tr>
+<td>AI 重复问同类流程</td>
+<td>把流程沉淀成 Skill</td>
+</tr>
+</tbody></table>
 <p>前面两篇分别讲了 Rules 和 Context。Rules 解决边界问题，Context 解决模型当前到底看到了什么。</p>
 <p>但当 Rule 越来越多之后，又会出现一个新问题：</p>
 <p><strong>如果把所有 Rules、Skills、项目说明、流程文档都一次性塞给 AI，效果反而会变差。</strong></p>

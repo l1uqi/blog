@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>5 min</span>
+            <span>6 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>1.6k words</span>
+            <span>1.9k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,11 @@
     <blockquote>
 <p>经验声明：本文来自我在团队内观察 AI 编程工具落地时的一些真实感受。这里讨论的不是“AI 有没有用”，而是为什么同样的工具，在不同人手里会产生完全不同的效果。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>这篇文章想讲的不是“哪个 AI 编程工具更强”，而是一个更底层的问题：<strong>AI 编程效果，取决于你有没有给它搭好工作环境。</strong></p>
+<p>可以先把这篇文章理解成下面这张关系图：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">AI 编程效果差</span><br><span class="line">  ├─ Rules 缺失：不知道项目边界、团队约定和不可踩的线</span><br><span class="line">  ├─ Context 不准：当前任务真正需要的信息没有被放到模型面前</span><br><span class="line">  └─ 工作方式错误：把 AI 当临时问答工具，而不是协作成员</span><br><span class="line"></span><br><span class="line">更稳定的 AI 协作</span><br><span class="line">  ├─ Rules：边界</span><br><span class="line">  ├─ Agent：围绕目标持续推进任务</span><br><span class="line">  ├─ Skills：流程</span><br><span class="line">  ├─ Context：当前工作台</span><br><span class="line">  ├─ Project Map：项目导航</span><br><span class="line">  └─ Memory：长期背景</span><br></pre></td></tr></table></figure>
+
+<p>如果只记一句话，可以记这一句：<strong>AI 编程不是一次 prompt 的胜负，而是一套协作基础设施的结果。</strong></p>
 <p>最近我发现一个很有意思的现象：公司里越来越多人开始使用 AI 编程工具，比如 Cursor、Claude Code、Codex、Copilot 等等，但实际效果往往没有想象中那么好。</p>
 <p>有些人用了几天之后，会觉得 AI 不稳定、答非所问、改代码容易乱来；也有人觉得 AI 很适合写 demo，但一进入真实业务项目就开始失控。</p>
 <p>我的判断是：这并不完全是模型的问题。很多时候，问题出在我们没有给 AI 一个可靠的工作环境。</p>
@@ -339,7 +344,7 @@
 <p>第二个是 <strong>Context 组织得不好</strong>。</p>
 <p>Context 不是“你给 AI 的资料越多越好”。它是模型当前这一次推理真正能看到的工作台。工作台上缺关键代码，AI 就会瞎猜；工作台上堆满无关文档，AI 又会抓不住重点。</p>
 <p>所以 AI 编程真正难的不是“怎么写一句神奇 prompt”，而是怎么让模型在正确的时机看到正确的信息。</p>
-<h2 id="我认为更合理的结构"><a href="#我认为更合理的结构" class="headerlink" title="我认为更合理的结构"></a>我认为更合理的结构</h2><p>要让 AI 真正进入工程协作，而不是停留在临时问答，我认为至少需要五层结构：</p>
+<h2 id="我认为更合理的结构"><a href="#我认为更合理的结构" class="headerlink" title="我认为更合理的结构"></a>我认为更合理的结构</h2><p>要让 AI 真正进入工程协作，而不是停留在临时问答，我认为至少需要六层结构：</p>
 <h3 id="第一层：Rules"><a href="#第一层：Rules" class="headerlink" title="第一层：Rules"></a>第一层：Rules</h3><p>Rules 负责放稳定、通用、必须遵守的规则。</p>
 <p>例如：</p>
 <ul>
@@ -361,7 +366,10 @@
 <li>如何完成发布前检查。</li>
 </ul>
 <p>Rule 是红线，Skill 是流程。前者保证 AI 不乱来，后者引导 AI 把复杂任务一步步做完。</p>
-<h3 id="第三层：Context"><a href="#第三层：Context" class="headerlink" title="第三层：Context"></a>第三层：Context</h3><p>Context 负责承载模型当前这一次任务真正需要看的信息。</p>
+<h3 id="第三层：Agent"><a href="#第三层：Agent" class="headerlink" title="第三层：Agent"></a>第三层：Agent</h3><p>Agent 负责把目标、推理、工具调用和反馈组织成连续行动。</p>
+<p>它和单次问答不同。单次问答通常是“你问一句，AI 答一句”；Agent 更像是围绕一个目标持续推进：先分析、再查证、再行动、再根据结果调整。</p>
+<p>例如修一个 bug 时，Agent 不只是给出猜测，而是应该能先找相关代码、查看日志、提出修改方案、运行测试，并在失败后继续缩小范围。</p>
+<h3 id="第四层：Context"><a href="#第四层：Context" class="headerlink" title="第四层：Context"></a>第四层：Context</h3><p>Context 负责承载模型当前这一次任务真正需要看的信息。</p>
 <p>例如：</p>
 <ul>
 <li>当前需求。</li>
@@ -371,9 +379,9 @@
 <li>必要的规则和文档片段。</li>
 </ul>
 <p>Context 的核心不是多，而是准。</p>
-<h3 id="第四层：Project-Map"><a href="#第四层：Project-Map" class="headerlink" title="第四层：Project Map"></a>第四层：Project Map</h3><p>Project Map 负责告诉 AI 应该先去哪里找。</p>
+<h3 id="第五层：Project-Map"><a href="#第五层：Project-Map" class="headerlink" title="第五层：Project Map"></a>第五层：Project Map</h3><p>Project Map 负责告诉 AI 应该先去哪里找。</p>
 <p>比如新增接口看哪里，修改权限看哪里，公共组件修改前要检查哪些调用方。</p>
-<h3 id="第五层：Memory"><a href="#第五层：Memory" class="headerlink" title="第五层：Memory"></a>第五层：Memory</h3><p>Memory 负责保存长期上下文，并在需要时检索出来。</p>
+<h3 id="第六层：Memory"><a href="#第六层：Memory" class="headerlink" title="第六层：Memory"></a>第六层：Memory</h3><p>Memory 负责保存长期上下文，并在需要时检索出来。</p>
 <p>例如：</p>
 <ul>
 <li>用户偏好。</li>
@@ -389,15 +397,17 @@
 <ol>
 <li><strong>它必须遵守什么规则？</strong></li>
 <li><strong>它当前这次任务应该看到什么上下文？</strong></li>
+<li><strong>它应该如何围绕目标持续推进？</strong></li>
 <li><strong>它应该按什么流程完成任务？</strong></li>
 <li><strong>它应该先去项目哪里找？</strong></li>
 <li><strong>它如何获取当前窗口之外的长期上下文？</strong></li>
 </ol>
 <p>Rules 解决第一个问题。</p>
 <p>Context 解决第二个问题。</p>
-<p>Skills 解决第三个问题。</p>
-<p>Project Map 解决第四个问题。</p>
-<p>Memory 解决第五个问题。</p>
+<p>Agent 解决第三个问题。</p>
+<p>Skills 解决第四个问题。</p>
+<p>Project Map 解决第五个问题。</p>
+<p>Memory 解决第六个问题。</p>
 <p>缺任何一个，AI 都很容易回到“临时问答工具”的状态。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>AI 编程工具真正的价值，不在于它能不能帮我们写几行代码，而在于它能不能逐渐理解项目、遵守规则、记住背景，并参与到真实工程流程中。</p>
 <p>如果没有 Rules，AI 不知道边界。</p>

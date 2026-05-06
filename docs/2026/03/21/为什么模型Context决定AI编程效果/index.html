@@ -286,7 +286,7 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>2.3k words</span>
+            <span>2.6k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,35 @@
     <blockquote>
 <p>经验声明：本文是 AI 编程协作系列的第四篇。上一篇讲 Rules，这一篇单独讲 Context。因为模型能不能写对代码，很多时候不是能力问题，而是它当前到底看到了什么。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>这篇文章讲的是 AI 编程里一个经常被低估的判断：<strong>模型不是在“理解你的项目”，而是在基于当前可见 Context 做推理。</strong></p>
+<p>同一个模型，在不同 Context 下会像两个完全不同的助手：</p>
+<table>
+<thead>
+<tr>
+<th>Context 质量</th>
+<th>模型表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>只给一句需求</td>
+<td>容易给通用方案</td>
+</tr>
+<tr>
+<td>给需求和当前文件</td>
+<td>能改局部，但可能忽略调用方</td>
+</tr>
+<tr>
+<td>给需求、相关文件、错误日志、约束</td>
+<td>更可能做出贴合项目的修改</td>
+</tr>
+<tr>
+<td>给一堆无关文档</td>
+<td>看似信息充分，实际注意力被稀释</td>
+</tr>
+</tbody></table>
+<p>可以把有效 Context 拆成四块：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">目标：这次要解决什么</span><br><span class="line">证据：日志、报错、现象、相关代码</span><br><span class="line">边界：哪些不能改，哪些约定必须遵守</span><br><span class="line">验收：怎样算完成，改完要如何验证</span><br></pre></td></tr></table></figure>
+
 <p>很多人评价 AI 编程工具时，会说一句话：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个模型不懂我的项目。</span><br></pre></td></tr></table></figure>
 

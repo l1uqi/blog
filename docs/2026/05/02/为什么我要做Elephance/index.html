@@ -286,7 +286,7 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>3.1k words</span>
+            <span>3.3k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,44 @@
     <blockquote>
 <p>经验声明：本文是 AI 编程协作系列里正式进入 Memory 的第一篇。前面几篇讲了 Rules、Skills、渐进式披露和项目 Map，这一篇不重点讲产品，而是讲为什么 AI 协作需要一个长期记忆层。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>Memory 解决的是“这次窗口之外的长期背景如何被再次使用”。它不是把所有东西塞进 prompt，也不是让 AI 永久记住一切，而是让可复用经验可以被检索回来。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">真实协作中产生的信息</span><br><span class="line">  ↓</span><br><span class="line">筛选：哪些值得长期保存</span><br><span class="line">  ↓</span><br><span class="line">结构化：写清楚来源、适用范围、更新时间</span><br><span class="line">  ↓</span><br><span class="line">检索：当前任务需要时再取回</span><br><span class="line">  ↓</span><br><span class="line">进入 Context，参与这一次推理</span><br></pre></td></tr></table></figure>
+
+<p>Memory 和前面几个概念的关系可以这样看：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>更像什么</th>
+<th>保存周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Context</td>
+<td>当前工作台</td>
+<td>本次任务</td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>必须遵守的边界</td>
+<td>稳定长期</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>可复用流程</td>
+<td>稳定长期</td>
+</tr>
+<tr>
+<td>Project Map</td>
+<td>项目导航</td>
+<td>中长期维护</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>可检索的历史经验</td>
+<td>长期积累</td>
+</tr>
+</tbody></table>
 <p>前面几篇文章一直在讲同一个问题：</p>
 <p>AI 编程工具想在真实项目里稳定工作，不能只靠模型本身。</p>
 <p>它至少需要几层外部结构：</p>

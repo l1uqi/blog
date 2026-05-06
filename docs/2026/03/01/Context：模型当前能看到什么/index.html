@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>4 min</span>
+            <span>5 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>1.2k words</span>
+            <span>1.4k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -304,6 +304,35 @@
     <blockquote>
 <p>经验声明：本文是 AI 编程基础概念系列的第三篇。上一篇讲 Token，这一篇讲 Context。很多 AI 编程问题，本质不是模型不够聪明，而是它当前看到的材料不对。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>Context 不是“项目里客观存在的所有资料”，而是<strong>模型这一次回答时真正看得到的东西</strong>。</p>
+<p>可以把它理解成一张临时工作台：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">工作台上有：</span><br><span class="line">  需求目标</span><br><span class="line">  相关代码</span><br><span class="line">  报错日志</span><br><span class="line">  约束规则</span><br><span class="line">  验收标准</span><br><span class="line"></span><br><span class="line">工作台上没有：</span><br><span class="line">  模型就不能稳定引用</span><br><span class="line">  模型只能靠猜</span><br></pre></td></tr></table></figure>
+
+<p>所以好的提问，本质上不是把 prompt 写得更玄，而是把 Context 组织得更准。</p>
+<table>
+<thead>
+<tr>
+<th>Context 状态</th>
+<th>AI 的表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>缺少关键文件</td>
+<td>容易写出看似合理但接不上项目的代码</td>
+</tr>
+<tr>
+<td>只有结论，没有背景</td>
+<td>容易误判需求动机</td>
+</tr>
+<tr>
+<td>材料太多且无重点</td>
+<td>容易抓错主线</td>
+</tr>
+<tr>
+<td>目标、约束、证据都清楚</td>
+<td>更像在真实项目里协作</td>
+</tr>
+</tbody></table>
 <p>Context 翻译成中文是上下文。</p>
 <p>但在 AI 编程里，这个词很容易被误解。</p>
 <p>很多人以为 Context 是“AI 知道的一切”。</p>

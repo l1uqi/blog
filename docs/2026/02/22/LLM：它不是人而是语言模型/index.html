@@ -281,12 +281,12 @@
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>4 min</span>
+            <span>5 min</span>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>1.3k words</span>
+            <span>1.6k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
@@ -302,8 +302,39 @@
   <!-- content -->
   <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
     <blockquote>
-<p>经验声明：本文是 AI 编程基础概念系列的第一篇。这个系列会把 LLM、Token、Context、Tool、MCP 和 Skill 拆开讲。先从最容易被神化的 LLM 开始。</p>
+<p>经验声明：本文是 AI 编程基础概念系列的第一篇。这个系列会把 LLM、Token、Context、Tool、MCP、Agent 和 Skill 拆开讲。先从最容易被神化的 LLM 开始。</p>
 </blockquote>
+<h2 id="先抓住这篇的模型"><a href="#先抓住这篇的模型" class="headerlink" title="先抓住这篇的模型"></a>先抓住这篇的模型</h2><p>理解 LLM 时，最容易出错的地方是把它想成“一个懂项目的人”。更准确的理解是：<strong>LLM 是一个极强的语言续写和模式推断系统。</strong></p>
+<table>
+<thead>
+<tr>
+<th>你以为它在做什么</th>
+<th>它实际更接近什么</th>
+<th>对 AI 编程的影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>理解整个项目</td>
+<td>基于当前可见文本推断下一步</td>
+<td>没看到的信息，它很难可靠使用</td>
+</tr>
+<tr>
+<td>记得你的长期背景</td>
+<td>使用这次对话和工具带来的上下文</td>
+<td>长期经验需要 Memory 或文档承接</td>
+</tr>
+<tr>
+<td>自动遵守团队习惯</td>
+<td>根据通用模式生成合理答案</td>
+<td>项目规则必须显式给出来</td>
+</tr>
+<tr>
+<td>像人一样判断风险</td>
+<td>从文本线索里估计风险</td>
+<td>关键边界要写清楚，不能只靠感觉</td>
+</tr>
+</tbody></table>
+<p>所以这篇文章的核心不是削弱 LLM，而是把它放回正确位置：<strong>LLM 是 AI 编程系统的大脑，但不是完整的工程协作系统。</strong></p>
 <p>很多人第一次用 ChatGPT、Claude、Cursor 或 Codex，会下意识觉得它们像一个“懂编程的人”。</p>
 <p>这个感觉不奇怪。</p>
 <p>因为它们会解释代码，会写函数，会看报错，会总结需求，有时候甚至能给出很像资深工程师的建议。</p>
@@ -369,6 +400,7 @@
 <li>Context 决定模型这次看到了什么。</li>
 <li>Tool 让模型可以读取文件、运行命令、搜索代码。</li>
 <li>MCP 让外部工具用标准方式接进来。</li>
+<li>Agent 让模型围绕目标持续推进任务。</li>
 <li>Skill 告诉模型某类任务应该按什么流程做。</li>
 </ul>
 <p>所以可以先记住一句话：</p>
@@ -383,7 +415,7 @@
 <li>它的核心能力是基于上下文生成后续内容。</li>
 <li>它很擅长处理文字、代码、日志和文档。</li>
 <li>它不天然知道你的项目和业务背景。</li>
-<li>它需要 Context、Tool 和 Skill 才能真正进入工作流程。</li>
+<li>它需要 Context、Tool、Agent 和 Skill 才能真正进入工作流程。</li>
 </ul>
 <p>把 LLM 理解清楚之后，再看 Token 就会容易很多。</p>
 <p>因为模型不是直接“读懂文字”，它会先把文字切成一小块一小块的 token。</p>
