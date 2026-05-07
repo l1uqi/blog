@@ -262,10 +262,10 @@
 <!-- toc -->
 
   <!-- tocbot -->
-<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+<nav class="post-toc toc text-sm w-48 relative top-32 right-8 2xl:right-16 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
 
 
-<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+<section class="px-6 max-w-4xl lg:max-w-5xl mx-auto pt-4 md:px-8 md:pt-6">
   <!-- header -->
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
@@ -273,24 +273,31 @@
         ESLint 初体验
       </h1>
       <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
+        <section class="flex flex-nowrap items-center gap-3 overflow-x-auto whitespace-nowrap text-sm">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <span>创建</span>
+            <time>2022-03-11 00:00</time>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
+            <iconify-icon width="18" icon="carbon-update-now" ></iconify-icon>
+            <span>更新</span>
+            <time>2026-05-06 21:21</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
             <span>3 min</span>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
             <span>777 words</span>
           </span>
           
             <span class="text-gray-400">·</span>
-            <span class="flex items-center gap-1">
+            <span class="flex shrink-0 items-center gap-1">
               <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
               <a class="article-category-link" href="/blog/categories/%E5%89%8D%E7%AB%AF/">前端</a>
             </span>
@@ -300,7 +307,7 @@
     </div>
   </header>
   <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+  <article class="post-content prose max-w-none m-auto slide-enter-content dark:prose-invert">
     <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>ESLint是一个用来识别 ECMAScript 并且按照规则给出报告的代码检测工具，使用它可以避免低级错误和统一代码的风格。如果每次在代码提交之前都进行一次eslint代码检查，就不会因为某个字段未定义为undefined或null这样的错误而导致服务崩溃，可以有效的控制项目代码的质量</p>
 <h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><p>俗话说的好没有规矩不成方圆 代码规范是程序员的根本，入门第一步，从规范代码开始。<br>eslint根本目的是统一项目的代码风格规范，养成规范的写代码习惯，减少不必要的错误和隐患。</p>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g eslint // 全局安装</span><br><span class="line"></span><br><span class="line">npm install --save-dev eslint // 项目安装</span><br></pre></td></tr></table></figure>

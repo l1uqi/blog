@@ -262,10 +262,10 @@
 <!-- toc -->
 
   <!-- tocbot -->
-<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+<nav class="post-toc toc text-sm w-48 relative top-32 right-8 2xl:right-16 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
 
 
-<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+<section class="px-6 max-w-4xl lg:max-w-5xl mx-auto pt-4 md:px-8 md:pt-6">
   <!-- header -->
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
@@ -273,24 +273,31 @@
         Flutter Andoird 返回键退出友好处理
       </h1>
       <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
+        <section class="flex flex-nowrap items-center gap-3 overflow-x-auto whitespace-nowrap text-sm">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <span>创建</span>
+            <time>2022-06-05 00:00</time>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
+            <iconify-icon width="18" icon="carbon-update-now" ></iconify-icon>
+            <span>更新</span>
+            <time>2026-05-06 21:21</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
             <span>1 min</span>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
             <span>266 words</span>
           </span>
           
             <span class="text-gray-400">·</span>
-            <span class="flex items-center gap-1">
+            <span class="flex shrink-0 items-center gap-1">
               <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
               <a class="article-category-link" href="/blog/categories/%E5%89%8D%E7%AB%AF/">前端</a>
             </span>
@@ -300,7 +307,7 @@
     </div>
   </header>
   <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+  <article class="post-content prose max-w-none m-auto slide-enter-content dark:prose-invert">
     <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Android手机会有虚拟按键, 或者实体按键。 用户点击返回按键或误触时 如果刚打开或者路由栈没有更多页面则会退出应用<br>直接退出应用的话 用户体验就太差了, 所以大多数的做法是在一定时间内再按返回才进行退出操作 </p>
 <h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>在Flutter中我们可以通过 <a target="_blank" rel="noopener" href="https://api.flutter.dev/flutter/widgets/WillPopScope-class.html">WillPopScope</a> 来实现返回按钮拦截</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> WillPopScope(&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="keyword">required</span> WillPopCallback onWillPop,</span><br><span class="line">  <span class="keyword">required</span> Widget child</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>

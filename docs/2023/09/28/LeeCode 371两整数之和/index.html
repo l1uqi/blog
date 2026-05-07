@@ -262,10 +262,10 @@
 <!-- toc -->
 
   <!-- tocbot -->
-<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+<nav class="post-toc toc text-sm w-48 relative top-32 right-8 2xl:right-16 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
 
 
-<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+<section class="px-6 max-w-4xl lg:max-w-5xl mx-auto pt-4 md:px-8 md:pt-6">
   <!-- header -->
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
@@ -273,24 +273,31 @@
         LeeCode 371两整数之和
       </h1>
       <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
+        <section class="flex flex-nowrap items-center gap-3 overflow-x-auto whitespace-nowrap text-sm">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <span>创建</span>
+            <time>2023-09-28 00:00</time>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
+            <iconify-icon width="18" icon="carbon-update-now" ></iconify-icon>
+            <span>更新</span>
+            <time>2026-05-06 21:21</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
             <span>5 min</span>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
             <span>1.5k words</span>
           </span>
           
             <span class="text-gray-400">·</span>
-            <span class="flex items-center gap-1">
+            <span class="flex shrink-0 items-center gap-1">
               <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
               <a class="article-category-link" href="/blog/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
             </span>
@@ -300,7 +307,7 @@
     </div>
   </header>
   <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+  <article class="post-content prose max-w-none m-auto slide-enter-content dark:prose-invert">
     <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sum-of-two-integers/">leecode 371两整数之和</a><br>给你两个整数 a 和 b ，不使用 运算符 + 和 - ​​​​​​​，计算并返回两整数之和</p>
 <h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>要实现基本运算, 有没有想过这些运算是如何在计算机底层实现的?<br>从半加器开始，逐步介绍计算机如何执行加法和其他数学运算。</p>
 <h1 id="逻辑门"><a href="#逻辑门" class="headerlink" title="逻辑门"></a><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E9%82%8F%E8%BC%AF%E9%96%98">逻辑门</a></h1><p>逻辑门是集成电路的基本组件。简单逻辑门可由晶体管组成。这些晶体管的组合可以使代表两种信号的高低电平在通过它们之后产生高电平或者低电平的信号。高、低电平可以分别代表逻辑上的“真”（T；true）与“假”（F；false）或二进制的1和0，从而实现逻辑运算。常见的逻辑门包括与门，或门，非门，异或门（也称互斥或）。</p>

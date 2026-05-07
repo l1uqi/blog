@@ -18,7 +18,7 @@ how to add a category page:
 <% if(is_category()){ %>
 <%- partial('archive', {pagination: config.category, index: true}) %>
 <% } else { %>
-<div class="px-6 max-w-prose mx-auto md:px-0 mt-6">
+<div class="px-6 max-w-4xl lg:max-w-5xl mx-auto md:px-8 mt-6">
   <h2 class="font-bold text-2xl">Categories</h2>
   <ul class="mt-2">
     <% site.categories.forEach(category =>{ %>

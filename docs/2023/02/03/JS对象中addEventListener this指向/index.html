@@ -262,10 +262,10 @@
 <!-- toc -->
 
   <!-- tocbot -->
-<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+<nav class="post-toc toc text-sm w-48 relative top-32 right-8 2xl:right-16 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
 
 
-<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+<section class="px-6 max-w-4xl lg:max-w-5xl mx-auto pt-4 md:px-8 md:pt-6">
   <!-- header -->
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
@@ -273,24 +273,31 @@
         JS对象中addEventListener this指向
       </h1>
       <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
+        <section class="flex flex-nowrap items-center gap-3 overflow-x-auto whitespace-nowrap text-sm">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <span>创建</span>
+            <time>2023-02-03 00:00</time>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
+            <iconify-icon width="18" icon="carbon-update-now" ></iconify-icon>
+            <span>更新</span>
+            <time>2026-05-06 21:21</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
             <span>2 min</span>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
             <span>461 words</span>
           </span>
           
             <span class="text-gray-400">·</span>
-            <span class="flex items-center gap-1">
+            <span class="flex shrink-0 items-center gap-1">
               <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
               <a class="article-category-link" href="/blog/categories/%E5%89%8D%E7%AB%AF/">前端</a>
             </span>
@@ -300,7 +307,7 @@
     </div>
   </header>
   <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+  <article class="post-content prose max-w-none m-auto slide-enter-content dark:prose-invert">
     <p>最近使用canvas在实现拖拽功能, 需要监听鼠标按下跟移动事件。所以创建canvas js对象来统一管理。<br>但是遇到了addEventListener指向了当前元素, 导致监听事件无法移除出现问题。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> <span class="title class_">FlowChatCanvas</span> &#123;</span><br><span class="line">  <span class="comment">// ...业务代码省略</span></span><br><span class="line">  <span class="title function_">mousedown</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 此时this指向了元素本身 </span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>);</span><br><span class="line">    <span class="comment">// 需要在鼠标按下的同时, 监听鼠标移动</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">canvas</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;mouseup&#x27;</span>, <span class="variable language_">this</span>.<span class="property">mouseup</span>, <span class="literal">false</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">canvas</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;mousemove&#x27;</span>, <span class="variable language_">this</span>.<span class="property">mousemove</span>, <span class="literal">false</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">mouseup</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">mousemove</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">registerEvents</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">canvas</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;mousedown&#x27;</span>, <span class="variable language_">this</span>.<span class="property">mousedown</span>, <span class="literal">false</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 

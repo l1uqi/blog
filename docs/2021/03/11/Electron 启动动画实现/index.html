@@ -262,10 +262,10 @@
 <!-- toc -->
 
   <!-- tocbot -->
-<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+<nav class="post-toc toc text-sm w-48 relative top-32 right-8 2xl:right-16 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
 
 
-<section class="px-6 max-w-prose mx-auto pt-4 md:px-0 md:pt-6">
+<section class="px-6 max-w-4xl lg:max-w-5xl mx-auto pt-4 md:px-8 md:pt-6">
   <!-- header -->
   <header class="overflow-hidden pt-6 pb-6 md:pt-12">
     <div class="pt-4 md:pt-6">
@@ -273,24 +273,31 @@
         Electron 启动动画实现
       </h1>
       <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
+        <section class="flex flex-nowrap items-center gap-3 overflow-x-auto whitespace-nowrap text-sm">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <span>创建</span>
+            <time>2021-03-11 00:00</time>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
+            <iconify-icon width="18" icon="carbon-update-now" ></iconify-icon>
+            <span>更新</span>
+            <time>2026-05-06 21:21</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
             <span>1 min</span>
           </span>
           <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
+          <span class="flex shrink-0 items-center gap-1">
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
             <span>406 words</span>
           </span>
           
             <span class="text-gray-400">·</span>
-            <span class="flex items-center gap-1">
+            <span class="flex shrink-0 items-center gap-1">
               <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
               <a class="article-category-link" href="/blog/categories/%E5%89%8D%E7%AB%AF/">前端</a>
             </span>
@@ -300,7 +307,7 @@
     </div>
   </header>
   <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+  <article class="post-content prose max-w-none m-auto slide-enter-content dark:prose-invert">
     <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Electron是通过Chromium和Node.js集成来达到这一开发体验的, 我们可以用React / Vue 很轻松的搭建一个桌面应用程序。应用启动时就避免不了短暂的白屏或者需要启动时加载基础数据。</p>
 <p>那么怎样解决这一问题呢?</p>
 <p>有APP开发经验的同学肯定立马就想到了 启动动画(开屏广告)。</p>
