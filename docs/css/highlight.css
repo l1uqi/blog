@@ -106,6 +106,44 @@ pre.mermaid svg {
 pre.mermaid foreignObject {
   background: #fff !important;
 }
+.mermaid .actor,
+pre.mermaid .actor,
+.mermaid .actor-top,
+pre.mermaid .actor-top,
+.mermaid .actor-bottom,
+pre.mermaid .actor-bottom,
+.mermaid .labelBox,
+pre.mermaid .labelBox,
+.mermaid .note,
+pre.mermaid .note {
+  fill: #fff !important;
+  stroke: #111 !important;
+}
+.mermaid text,
+pre.mermaid text,
+.mermaid .actor > text,
+pre.mermaid .actor > text,
+.mermaid .messageText,
+pre.mermaid .messageText,
+.mermaid .labelText,
+pre.mermaid .labelText,
+.mermaid .noteText,
+pre.mermaid .noteText,
+.mermaid .loopText,
+pre.mermaid .loopText {
+  fill: #111 !important;
+  color: #111 !important;
+}
+.mermaid .messageLine0,
+pre.mermaid .messageLine0,
+.mermaid .messageLine1,
+pre.mermaid .messageLine1,
+.mermaid .actor-line,
+pre.mermaid .actor-line,
+.mermaid .loopLine,
+pre.mermaid .loopLine {
+  stroke: #111 !important;
+}
 .mermaid .params,
 pre.mermaid .params {
   color: var(--prism-decorator);

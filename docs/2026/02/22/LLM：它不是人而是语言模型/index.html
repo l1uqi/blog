@@ -514,6 +514,7 @@
       sequence: { actorMargin: 50 },
       themeVariables: {
         background: "#ffffff",
+        darkMode: false,
         mainBkg: "#ffffff",
         primaryColor: "#ffffff",
         primaryTextColor: "#111111",
@@ -540,7 +541,12 @@
         noteTextColor: "#111111",
         noteBorderColor: "#111111",
       },
-      themeCSS: ".mermaid, .mermaid svg { background: #ffffff !important; }",
+      themeCSS: [
+        ".mermaid, .mermaid svg { background: #ffffff !important; }",
+        ".mermaid .actor, .mermaid .actor-top, .mermaid .actor-bottom, .mermaid .labelBox, .mermaid .note { fill: #ffffff !important; stroke: #111111 !important; }",
+        ".mermaid text, .mermaid .actor > text, .mermaid .messageText, .mermaid .labelText, .mermaid .noteText, .mermaid .loopText { fill: #111111 !important; color: #111111 !important; }",
+        ".mermaid .messageLine0, .mermaid .messageLine1, .mermaid .actor-line, .mermaid .loopLine { stroke: #111111 !important; }",
+      ].join(" "),
     };
     mermaid.initialize(maraidConfig);
   });
