@@ -276,7 +276,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <time>2026-05-07</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -500,18 +500,12 @@
 <p>Memory 本身要外部化。</p>
 <p>访问 Memory 的方式也要协议化。</p>
 <p>否则你只是把“记忆困在聊天窗口里”，换成了“记忆困在某一个工具里”。</p>
-<h2 id="Elephance-只是这个理念的一个实现"><a href="#Elephance-只是这个理念的一个实现" class="headerlink" title="Elephance 只是这个理念的一个实现"></a>Elephance 只是这个理念的一个实现</h2><p>在这个背景下，我做了 <a target="_blank" rel="noopener" href="https://github.com/l1uqi/elephance">Elephance</a>。</p>
-<p>但对我来说，产品不是重点。</p>
+<h2 id="本地记忆层只是这个理念的一个实现"><a href="#本地记忆层只是这个理念的一个实现" class="headerlink" title="本地记忆层只是这个理念的一个实现"></a>本地记忆层只是这个理念的一个实现</h2><p>在这个背景下，具体产品不是重点。</p>
 <p>重点是这个理念：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AI 编程工具需要一个本地优先、可检索、可协议化接入的长期记忆层。</span><br></pre></td></tr></table></figure>
 
-<p>Elephance 只是我对这个理念的一个实现尝试。</p>
-<p>它目前主要包括两部分：</p>
-<ul>
-<li><code>@elephance/core</code>：核心 SDK，负责记忆和 schema 的存储、查询等能力。</li>
-<li><code>@elephance/mcp</code>：MCP Server，让支持 MCP 的 AI 客户端可以调用这些能力。</li>
-</ul>
-<p>底层使用 LanceDB 做本地向量存储。</p>
+<p>一个可落地的本地记忆层，通常至少需要两部分：存储与检索能力，以及让 AI 工具可以调用这些能力的协议入口。</p>
+<p>底层可以使用向量数据库做本地语义检索。</p>
 <p>对外暴露的能力围绕两类展开：</p>
 <ul>
 <li>Memory：保存和查询长期记忆。</li>
@@ -559,7 +553,7 @@
 </ul>
 <p>Rules、Skills、Project Map、Memory，本质上都是在帮 AI 把原本需要临时猜、临时记、临时组织的东西，变成外部可复用的结构。</p>
 <p>下面这张图来自这篇论文，正好解释了 Memory 在 Agent 系统中的位置。</p>
-<p><img src="/blog/img/elephance/externalized-memory.jpg" alt="Memory as Externalized Agent State"></p>
+<p><img src="/blog/img/memory/externalized-memory.jpg" alt="Memory as Externalized Agent State"></p>
 <p>图源：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.08224">Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering</a>，arXiv:2604.08224，原图随论文以 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> 发布。</p>
 <p>这部分对我来说不是起点，而是确认：</p>
 <p>AI 协作变强，不只是换更强模型，也是在模型外部建立更好的记忆、流程、协议和运行环境。</p>
@@ -573,17 +567,16 @@
 <p>它真正要解决的是：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">过去发生过、未来可能有用的项目经验，如何在正确时机回到 AI 的 Context 里。</span><br></pre></td></tr></table></figure>
 
-<p>Elephance 只是这个理念的一个实现。</p>
+<p>本地记忆层只是这个理念的一个实现方向。</p>
 <p>产品会变，工具会变，模型也会变。</p>
 <p>但我认为这个方向不会变：</p>
 <p><strong>AI 不应该每次都重新认识你的项目。</strong></p>
 <h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
 <li>上一篇：<a href="/blog/2026/04/18/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E8%BF%98%E9%9C%80%E8%A6%81%E4%B8%80%E5%BC%A0%E9%A1%B9%E7%9B%AEMap/">为什么 AI 还需要一张项目 Map</a></li>
-<li>下一篇：如何用 Elephance 给 AI 工具增加本地记忆（待写）</li>
+<li>下一篇：如何给 AI 工具增加本地记忆（待写）</li>
 </ul>
 <p>参考：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/l1uqi/elephance">Elephance GitHub 仓库</a></li>
 <li><a target="_blank" rel="noopener" href="https://lancedb.com/">LanceDB 官方网站</a></li>
 <li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2604.08224">Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering</a></li>
 </ul>
@@ -599,10 +592,6 @@
       
         <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
           <a href="/blog/tags/MCP/">MCP</a>
-        </span>
-      
-        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/blog/tags/Elephance/">Elephance</a>
         </span>
       
         <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
@@ -685,6 +674,7 @@
       sequence: { actorMargin: 50 },
       themeVariables: {
         background: "#ffffff",
+        mainBkg: "#ffffff",
         primaryColor: "#ffffff",
         primaryTextColor: "#111111",
         primaryBorderColor: "#111111",
@@ -710,6 +700,7 @@
         noteTextColor: "#111111",
         noteBorderColor: "#111111",
       },
+      themeCSS: ".mermaid, .mermaid svg { background: #ffffff !important; }",
     };
     mermaid.initialize(maraidConfig);
   });

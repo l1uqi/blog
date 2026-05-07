@@ -415,7 +415,7 @@ Let the shared request layer handle API errors unless this feature has a documen
 - 很少触发的一次性流程。
 - 需要按需检索的历史信息。
 
-这些更适合放进 Memory 或文档里，再通过 MCP、Elephance 这类本地记忆工具按需检索。
+这些更适合放进 Memory 或文档里，再通过 MCP 这类协议化入口按需检索。
 
 Rule 应该是“必须持续生效的约束”，不是项目知识库的垃圾桶。
 
@@ -495,7 +495,7 @@ Memory 解决的是“过去发生过什么、现在可能需要什么背景”�
 - “不要在业务组件里直接处理接口错误”适合放进 Rule。
 - “上次用户资料页接口失败是因为 token 刷新时序问题”更适合放进 Memory。
 
-这也是 Elephance 这类本地记忆层存在的意义：不要让 Rule 承担所有上下文。
+这也是本地记忆层存在的意义：不要让 Rule 承担所有上下文。
 
 Rule 越清晰，Memory 越可检索，AI 的协作体验才会越稳定。
 

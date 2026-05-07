@@ -469,11 +469,11 @@
         </span>
       
         <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/blog/tags/LLM/">LLM</a>
+          <a href="/blog/tags/Tool/">Tool</a>
         </span>
       
         <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/blog/tags/Tool/">Tool</a>
+          <a href="/blog/tags/LLM/">LLM</a>
         </span>
       
     
@@ -553,6 +553,7 @@
       sequence: { actorMargin: 50 },
       themeVariables: {
         background: "#ffffff",
+        mainBkg: "#ffffff",
         primaryColor: "#ffffff",
         primaryTextColor: "#111111",
         primaryBorderColor: "#111111",
@@ -578,6 +579,7 @@
         noteTextColor: "#111111",
         noteBorderColor: "#111111",
       },
+      themeCSS: ".mermaid, .mermaid svg { background: #ffffff !important; }",
     };
     mermaid.initialize(maraidConfig);
   });

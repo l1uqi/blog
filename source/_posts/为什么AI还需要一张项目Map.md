@@ -8,7 +8,6 @@ tags:
   - Cursor
   - Rules
   - Context
-  - Elephance
 cover: /img/ai-rules-series/project-map.png
 top_img: false
 ---
@@ -219,7 +218,7 @@ Map 不需要包含所有 Rule 内容，但应该告诉 AI 有哪些 Rule 可以
 
 ### Memory 查询建议
 
-如果项目接入了 Elephance 这类本地记忆层，Map 里还可以告诉 AI 什么时候应该查 Memory。
+如果项目接入了本地记忆层，Map 里还可以告诉 AI 什么时候应该查 Memory。
 
 比如：
 
@@ -357,7 +356,7 @@ Memory 告诉它“过去发生过什么”。
 
 这部分人类经验非常重要。
 
-## Map 和 Elephance 的关系
+## Map 和 Memory 的关系
 
 Map 负责导航，Memory 负责长期背景。
 
@@ -367,7 +366,7 @@ Map 负责导航，Memory 负责长期背景。
 遇到支付状态字段时，先查询 Memory 中的 payment status 相关记录。
 ```
 
-那么 AI 就可以先通过 Map 找到任务方向，再通过 Elephance 查询历史上下文。
+那么 AI 就可以先通过 Map 找到任务方向，再查询 Memory 里的历史上下文。
 
 这个链路会比“把支付所有历史规则写进 Rule”更健康。
 
@@ -398,4 +397,4 @@ Memory 补历史。
 ## 上一篇 / 下一篇
 
 - 上一篇：[为什么 Rules 和 Skills 都需要渐进式披露](/blog/2026/04/04/为什么Rules和Skills都需要渐进式披露/)
-- 下一篇：[为什么 AI 需要一个本地长期记忆层](/blog/2026/05/02/为什么我要做Elephance/)
+- 下一篇：[为什么 AI 需要一个本地长期记忆层](/blog/2026/05/02/为什么AI需要一个本地长期记忆层/)

@@ -8,7 +8,6 @@ tags:
   - Cursor
   - Rules
   - MCP
-  - Elephance
 cover: /img/ai-rules-series/ai-coding-rules-context.png
 top_img: false
 ---

@@ -276,7 +276,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <time>2026-05-07</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -411,7 +411,7 @@
 
 <p>这就是渐进式披露。</p>
 <p>第一轮只给索引，真正需要时再打开全文。</p>
-<h3 id="Memory-查询建议"><a href="#Memory-查询建议" class="headerlink" title="Memory 查询建议"></a>Memory 查询建议</h3><p>如果项目接入了 Elephance 这类本地记忆层，Map 里还可以告诉 AI 什么时候应该查 Memory。</p>
+<h3 id="Memory-查询建议"><a href="#Memory-查询建议" class="headerlink" title="Memory 查询建议"></a>Memory 查询建议</h3><p>如果项目接入了本地记忆层，Map 里还可以告诉 AI 什么时候应该查 Memory。</p>
 <p>比如：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">遇到业务字段含义、历史兼容、线上问题复盘、用户偏好时，先查询 Memory。</span><br><span class="line">不要把所有历史背景写进 Rule。</span><br></pre></td></tr></table></figure>
 
@@ -465,11 +465,11 @@
 <li>哪些业务字段有历史包袱。</li>
 </ul>
 <p>这部分人类经验非常重要。</p>
-<h2 id="Map-和-Elephance-的关系"><a href="#Map-和-Elephance-的关系" class="headerlink" title="Map 和 Elephance 的关系"></a>Map 和 Elephance 的关系</h2><p>Map 负责导航，Memory 负责长期背景。</p>
+<h2 id="Map-和-Memory-的关系"><a href="#Map-和-Memory-的关系" class="headerlink" title="Map 和 Memory 的关系"></a>Map 和 Memory 的关系</h2><p>Map 负责导航，Memory 负责长期背景。</p>
 <p>如果项目 Map 里写：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">遇到支付状态字段时，先查询 Memory 中的 payment status 相关记录。</span><br></pre></td></tr></table></figure>
 
-<p>那么 AI 就可以先通过 Map 找到任务方向，再通过 Elephance 查询历史上下文。</p>
+<p>那么 AI 就可以先通过 Map 找到任务方向，再查询 Memory 里的历史上下文。</p>
 <p>这个链路会比“把支付所有历史规则写进 Rule”更健康。</p>
 <p>因为 Rule 不会无限膨胀，Memory 又能按需补充细节。</p>
 <p>这也是我认为 Memory 应该排在渐进式披露和项目 Map 之后讲的原因。</p>
@@ -484,7 +484,7 @@
 <p>如果 Map 写得好，AI 第一轮就能少走很多弯路：先定位模块，再读取规则，再打开流程，最后按需查询 Memory。</p>
 <h2 id="上一篇-下一篇"><a href="#上一篇-下一篇" class="headerlink" title="上一篇 / 下一篇"></a>上一篇 / 下一篇</h2><ul>
 <li>上一篇：<a href="/blog/2026/04/04/%E4%B8%BA%E4%BB%80%E4%B9%88Rules%E5%92%8CSkills%E9%83%BD%E9%9C%80%E8%A6%81%E6%B8%90%E8%BF%9B%E5%BC%8F%E6%8A%AB%E9%9C%B2/">为什么 Rules 和 Skills 都需要渐进式披露</a></li>
-<li>下一篇：<a href="/blog/2026/05/02/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E8%A6%81%E5%81%9AElephance/">为什么 AI 需要一个本地长期记忆层</a></li>
+<li>下一篇：<a href="/blog/2026/05/02/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%9C%AC%E5%9C%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E5%B1%82/">为什么 AI 需要一个本地长期记忆层</a></li>
 </ul>
 
   </article>
@@ -508,17 +508,13 @@
           <a href="/blog/tags/Rules/">Rules</a>
         </span>
       
-        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/blog/tags/Elephance/">Elephance</a>
-        </span>
-      
     
   </div>
   <!-- prev and next -->
   <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
     <div>
       
-        <a href="/blog/2026/05/02/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E8%A6%81%E5%81%9AElephance/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+        <a href="/blog/2026/05/02/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E9%9C%80%E8%A6%81%E4%B8%80%E4%B8%AA%E6%9C%AC%E5%9C%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E5%B1%82/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
           <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
           为什么 AI 需要一个本地长期记忆层
         </a>
@@ -589,6 +585,7 @@
       sequence: { actorMargin: 50 },
       themeVariables: {
         background: "#ffffff",
+        mainBkg: "#ffffff",
         primaryColor: "#ffffff",
         primaryTextColor: "#111111",
         primaryBorderColor: "#111111",
@@ -614,6 +611,7 @@
         noteTextColor: "#111111",
         noteBorderColor: "#111111",
       },
+      themeCSS: ".mermaid, .mermaid svg { background: #ffffff !important; }",
     };
     mermaid.initialize(maraidConfig);
   });

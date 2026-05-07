@@ -87,6 +87,7 @@ pre .attr {
 pre .meta {
   color: var(--prism-decorator);
 }
+.mermaid,
 pre.mermaid {
   background: #fff !important;
   color: #111 !important;
@@ -94,9 +95,18 @@ pre.mermaid {
   border-radius: 4px;
   text-align: center;
 }
+.mermaid svg,
 pre.mermaid svg {
   background: #fff !important;
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
 }
+.mermaid foreignObject,
+pre.mermaid foreignObject {
+  background: #fff !important;
+}
+.mermaid .params,
 pre.mermaid .params {
   color: var(--prism-decorator);
 }

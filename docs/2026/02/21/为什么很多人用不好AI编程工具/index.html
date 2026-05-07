@@ -276,7 +276,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-05-06</time>
+            <time>2026-05-07</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -441,10 +441,6 @@
           <a href="/blog/tags/Rules/">Rules</a>
         </span>
       
-        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/blog/tags/Elephance/">Elephance</a>
-        </span>
-      
     
   </div>
   <!-- prev and next -->
@@ -522,6 +518,7 @@
       sequence: { actorMargin: 50 },
       themeVariables: {
         background: "#ffffff",
+        mainBkg: "#ffffff",
         primaryColor: "#ffffff",
         primaryTextColor: "#111111",
         primaryBorderColor: "#111111",
@@ -547,6 +544,7 @@
         noteTextColor: "#111111",
         noteBorderColor: "#111111",
       },
+      themeCSS: ".mermaid, .mermaid svg { background: #ffffff !important; }",
     };
     mermaid.initialize(maraidConfig);
   });

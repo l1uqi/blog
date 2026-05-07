@@ -5,11 +5,10 @@ categories:
   - AI
 tags:
   - AI 编程
-  - Elephance
   - Memory
   - MCP
   - LanceDB
-cover: /img/elephance/why-elephance-cover.png
+cover: /img/memory/memory-layer-cover.png
 top_img: false
 ---
 
@@ -338,11 +337,9 @@ Memory 本身要外部化。
 
 否则你只是把“记忆困在聊天窗口里”，换成了“记忆困在某一个工具里”。
 
-## Elephance 只是这个理念的一个实现
+## 本地记忆层只是这个理念的一个实现
 
-在这个背景下，我做了 [Elephance](https://github.com/l1uqi/elephance)。
-
-但对我来说，产品不是重点。
+在这个背景下，具体产品不是重点。
 
 重点是这个理念：
 
@@ -350,14 +347,9 @@ Memory 本身要外部化。
 AI 编程工具需要一个本地优先、可检索、可协议化接入的长期记忆层。
 ```
 
-Elephance 只是我对这个理念的一个实现尝试。
+一个可落地的本地记忆层，通常至少需要两部分：存储与检索能力，以及让 AI 工具可以调用这些能力的协议入口。
 
-它目前主要包括两部分：
-
-- `@elephance/core`：核心 SDK，负责记忆和 schema 的存储、查询等能力。
-- `@elephance/mcp`：MCP Server，让支持 MCP 的 AI 客户端可以调用这些能力。
-
-底层使用 LanceDB 做本地向量存储。
+底层可以使用向量数据库做本地语义检索。
 
 对外暴露的能力围绕两类展开：
 
@@ -441,7 +433,7 @@ Rules、Skills、Project Map、Memory，本质上都是在帮 AI 把原本需要
 
 下面这张图来自这篇论文，正好解释了 Memory 在 Agent 系统中的位置。
 
-![Memory as Externalized Agent State](/img/elephance/externalized-memory.jpg)
+![Memory as Externalized Agent State](/img/memory/externalized-memory.jpg)
 
 图源：[Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering](https://arxiv.org/abs/2604.08224)，arXiv:2604.08224，原图随论文以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 发布。
 
@@ -471,7 +463,7 @@ Memory 负责长期背景。
 过去发生过、未来可能有用的项目经验，如何在正确时机回到 AI 的 Context 里。
 ```
 
-Elephance 只是这个理念的一个实现。
+本地记忆层只是这个理念的一个实现方向。
 
 产品会变，工具会变，模型也会变。
 
@@ -482,10 +474,9 @@ Elephance 只是这个理念的一个实现。
 ## 上一篇 / 下一篇
 
 - 上一篇：[为什么 AI 还需要一张项目 Map](/blog/2026/04/18/为什么AI还需要一张项目Map/)
-- 下一篇：如何用 Elephance 给 AI 工具增加本地记忆（待写）
+- 下一篇：如何给 AI 工具增加本地记忆（待写）
 
 参考：
 
-- [Elephance GitHub 仓库](https://github.com/l1uqi/elephance)
 - [LanceDB 官方网站](https://lancedb.com/)
 - [Externalization in LLM Agents: A Unified Review of Memory, Skills, Protocols and Harness Engineering](https://arxiv.org/abs/2604.08224)
